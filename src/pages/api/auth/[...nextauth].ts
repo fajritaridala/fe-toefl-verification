@@ -2,7 +2,8 @@ import authServices from '@/services/auth.service';
 import { AUTH_SECRET } from '@/utils/config/env';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { ILogin, JwtExt, SessionExt, UserExt } from '@/utils/interfaces/Auth';
+import { JwtExt, SessionExt, UserExt } from '@/utils/interfaces/Auth';
+import { useRouter } from 'next/router';
 
 export default NextAuth({
   session: {
@@ -24,9 +25,19 @@ export default NextAuth({
           throw new Error('address tidak diterima');
         }
 
+        console.log('di nextauth');
         const result = await authServices.login({ address });
-        const accessToken = result.data.data.user;
 
+        if (result.status === 200 && result.data.needsRegistration) {
+          const user = {
+            address: result.data.data.address,
+            needsRegistration: result.data.needsRegistration,
+          };
+          console.log(user);
+          return user;
+        }
+
+        const accessToken = result.data.data.user;
         const me = await authServices.getProfileWithToken(accessToken);
         const user = me.data.data;
 

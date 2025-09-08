@@ -18,6 +18,8 @@ interface UserExt extends User {
 
 interface SessionExt extends Session {
   accessToken?: string;
+  address?: string;
+  needsRegistration?: boolean;
 }
 
 interface JwtExt extends JWT {

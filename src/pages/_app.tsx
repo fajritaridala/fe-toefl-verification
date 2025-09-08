@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
 
 export default function App({
   Component,
-  pageProps: { session, pageProps },
+  pageProps: { session, ...pageProps },
 }: AppProps) {
   return (
     <SessionProvider session={session}>

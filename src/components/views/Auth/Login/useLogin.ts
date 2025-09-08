@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { ILogin } from '@/utils/interfaces/Auth';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 
 const loginSchema = Yup.object().shape({
   address: Yup.string().required('Address is required'),
@@ -23,15 +23,25 @@ export const useLogin = () => {
       redirect: false,
       callbackUrl,
     });
-    if (result === undefined) throw new Error('Authentication failed');
+
+    console.log(result);
+    if (result === undefined) throw new Error('undefined');
     if (!result.ok && result.status === 401) throw new Error('Login failed!');
     return result;
   };
 
   const { mutate: mutateLogin } = useMutation({
     mutationFn: loginService,
-    onSuccess() {
-      router.push(callbackUrl);
+    async onSuccess() {
+      const session = await getSession();
+      const user = session?.user as {
+        address: string;
+        needsRegistration: boolean;
+      };
+      if (user.needsRegistration) {
+        router.push(`auth/register?address=${user.address}`);
+      }
+      router.push(callbackUrl); // ganti dengan dashboard user
     },
     onError(error) {
       setIsLoading(false);
