@@ -8,13 +8,13 @@ type TSessionExt = Session & {
 };
 
 const headers = {
-  'Content-Type': 'application/json',
+  'Content-Type': 'application/json'
 };
 
 const instance = axios.create({
   baseURL: API_URL,
   headers,
-  timeout: 60 * 1000, // 60 seconds
+  timeout: 60 * 1000 // 60 seconds
 });
 
 // Menyiapkan request sebelum dikirim ke server
@@ -26,13 +26,13 @@ instance.interceptors.request.use(
     }
     return request;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 // Mempersiapkan response dari server
 instance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 export default instance;

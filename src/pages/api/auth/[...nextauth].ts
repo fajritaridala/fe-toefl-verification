@@ -25,6 +25,7 @@ export default NextAuth({
           throw new Error('address tidak diterima');
         }
 
+        console.log(address)
         console.log('di nextauth');
         const result = await authServices.login({ address });
 

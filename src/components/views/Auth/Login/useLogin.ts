@@ -15,6 +15,7 @@ export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [address, setAddress] = useState('');
   const callbackUrl: string = (router.query.callbackUrl as string) || '/';
 
   const loginService = async (payload: ILogin) => {
@@ -41,7 +42,7 @@ export const useLogin = () => {
       if (user.needsRegistration) {
         router.push(`auth/register?address=${user.address}`);
       }
-      router.push(callbackUrl); // ganti dengan dashboard user
+      router.push("/"); // ganti dengan dashboard user
     },
     onError(error) {
       setIsLoading(false);
@@ -56,6 +57,7 @@ export const useLogin = () => {
       setIsLoading(true);
       setAlertOpen(false);
       const { address } = await connectMetamaskWallet();
+      setAddress(address);
       await loginSchema.validate({ address });
       mutateLogin({ address });
     } catch (error) {
@@ -72,5 +74,6 @@ export const useLogin = () => {
     setAlertOpen,
     alertMessage,
     isLoading,
+    address,
   };
 };

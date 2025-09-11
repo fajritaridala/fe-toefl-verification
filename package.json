@@ -2,6 +2,7 @@
   "name": "front-end",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -10,6 +11,7 @@
   },
   "dependencies": {
     "@heroui/react": "^2.8.2",
+    "@hookform/resolvers": "^5.2.1",
     "@metamask/sdk": "^0.33.0",
     "@tanstack/react-query": "^5.87.1",
     "axios": "^1.11.0",
@@ -19,6 +21,7 @@
     "next-auth": "^4.24.11",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-hook-form": "^7.62.0",
     "tailwind-merge": "^3.3.1",
     "yup": "^1.7.0"
   },
