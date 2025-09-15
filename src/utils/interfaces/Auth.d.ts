@@ -26,4 +26,16 @@ interface JwtExt extends JWT {
   user?: UserExt;
 }
 
-export { ILogin, IRegister, UserExt, SessionExt, JwtExt };
+// admin
+interface IBodyInput {
+  nim: string;
+  major: string;
+  dateTest: Date;
+  sessionTest: number;
+  listening: number;
+  reading: number;
+  writing: number;
+}
+
+
+export { ILogin, IRegister, UserExt, SessionExt, JwtExt, IBodyInput };

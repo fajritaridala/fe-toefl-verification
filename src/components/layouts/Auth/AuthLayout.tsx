@@ -10,9 +10,7 @@ const AuthLayout = (props: Props) => {
   return (
     <>
       <Header title={title} />
-      <section className="flex h-[100vh] flex-wrap items-center justify-center-safe">
-        {children}
-      </section>
+      {children}
     </>
   );
 };

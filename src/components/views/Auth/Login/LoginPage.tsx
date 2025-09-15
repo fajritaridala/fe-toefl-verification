@@ -1,13 +1,12 @@
 import { Button, Card, CardBody, Alert, Spinner } from '@heroui/react';
 import { useLogin } from './useLogin';
-import Image from 'next/image';
 
 const LoginPage = () => {
   const { isLoading, alertOpen, setAlertOpen, alertMessage, handleLogin } =
     useLogin();
 
   return (
-    <>
+    <section className="flex h-screen items-center justify-center">
       {alertOpen && (
         <div className="fixed top-[1.5rem] left-1/2 z-50 w-full max-w-md -translate-x-1/2">
           <Alert
@@ -21,7 +20,7 @@ const LoginPage = () => {
       )}
       <Card className="flex h-[20vh] w-[30%] items-center justify-center">
         <CardBody className="flex items-center justify-center gap-[1.5rem]">
-          <h1 className="text-3xl font-bold text-primary">Sign in</h1>
+          <h1 className="text-primary text-3xl font-bold">Sign in</h1>
           <Button
             color="primary"
             variant="ghost"
@@ -36,7 +35,7 @@ const LoginPage = () => {
           </Button>
         </CardBody>
       </Card>
-    </>
+    </section>
   );
 };
 

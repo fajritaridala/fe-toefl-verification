@@ -17,7 +17,6 @@ const RegisterPage = () => {
     handleRegister,
     handleSubmit,
     control,
-    isPending,
     alertOpen,
     alertMessage,
     isLoading,

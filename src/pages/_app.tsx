@@ -1,12 +1,11 @@
 import '@/styles/globals.css';
-import { cn } from '@/utils/className';
-import { HeroUIProvider } from '@heroui/react';
+import { cn, HeroUIProvider } from '@heroui/react';
 import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { AppProps } from 'next/app';
-import { Poppins } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
@@ -28,7 +27,7 @@ export default function App({
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <HeroUIProvider>
-          <main className={cn(poppins.className)}>
+          <main className={cn(inter.className)}>
             <Component {...pageProps} />
           </main>
         </HeroUIProvider>
