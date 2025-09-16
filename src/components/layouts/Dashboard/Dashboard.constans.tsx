@@ -15,19 +15,19 @@ const SIDEBAR_ADMIN = [
   {
     key: 'daftar-peserta',
     label: 'Daftar Peserta',
-    href: '/participants',
+    href: '/admin/participants',
     icon: <BiSolidUserDetail />,
   },
   {
     key: 'belum-aktivasi',
     label: 'Belum Aktivasi',
-    href: '/participants/status/pending',
+    href: '/admin/participants/status/inactive',
     icon: <BiSolidUserX />,
   },
   {
     key: 'sudah-aktivasi',
     label: 'Sudah Aktivasi',
-    href: '/participants/status/completed',
+    href: '/admin/participants/status/active',
     icon: <BiSolidUserCheck />,
   },
 ];

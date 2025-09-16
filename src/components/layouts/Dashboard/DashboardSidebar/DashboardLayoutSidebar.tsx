@@ -43,22 +43,28 @@ function DashboardLayoutSidebar(props: Props) {
           aria-label="Dashboard Menu"
           variant="flat"
         >
-          {(item) => (
-            <ListboxItem
-              key={item.key}
-              className={cn('my-1 h-12 pl-[10%] text-2xl', {
-                'bg-primary text-white': router.pathname.startsWith(item.href),
-              })}
-              startContent={item.icon}
-              textValue={item.label}
-              aria-labelledby={item.label}
-              aria-describedby={item.label}
-              as={Link}
-              href={item.href}
-            >
-              <p className="text-medium">{item.label}</p>
-            </ListboxItem>
-          )}
+          {(item) => {
+            const isActive =
+              item.href === '/admin/participants'
+                ? router.pathname === item.href
+                : router.pathname.startsWith(item.href);
+            return (
+              <ListboxItem
+                key={item.key}
+                className={cn('my-1 h-12 pl-[10%] text-2xl', {
+                  'bg-primary text-white': isActive,
+                })}
+                startContent={item.icon}
+                textValue={item.label}
+                aria-labelledby={item.label}
+                aria-describedby={item.label}
+                as={Link}
+                href={item.href}
+              >
+                <p className="text-medium">{item.label}</p>
+              </ListboxItem>
+            );
+          }}
         </Listbox>
       </div>
       <div className="flex items-center p-1">

@@ -36,7 +36,7 @@ function DashboardLayout(props: Props) {
               onPress={() => setOpen(!open)}
             />
           </Navbar>
-          <p>{description}</p>
+          <p className='my-2.5'>{description}</p>
           {children}
         </div>
       </section>
