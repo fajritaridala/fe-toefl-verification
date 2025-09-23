@@ -27,15 +27,19 @@ interface JwtExt extends JWT {
 }
 
 // admin
-interface IBodyInput {
-  nim: string;
-  major: string;
-  dateTest: Date;
-  sessionTest: number;
+interface InputPayload {
   listening: number;
   reading: number;
   writing: number;
 }
 
+// peserta
+interface ToeflRegister {
+  fullName: string;
+  email: string;
+  nim: string;
+  major: string;
+  sessionTest: string;
+}
 
-export { ILogin, IRegister, UserExt, SessionExt, JwtExt, IBodyInput };
+export { ILogin, IRegister, UserExt, SessionExt, JwtExt, InputPayload, ToeflRegister };

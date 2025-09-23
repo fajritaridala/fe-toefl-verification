@@ -32,11 +32,11 @@ function DashboardLayout(props: Props) {
             <h1 className="text-3xl font-bold">{title}</h1>
             <NavbarMenuToggle
               className="lg:hidden"
-              aria-label={open ? 'Close Menu' : 'Open Menu'}
-              onPress={() => setOpen(!open)}
+              aria-label={open ? 'close menu' : 'open menu'}
+              onClick={() => setOpen(!open)}
             />
           </Navbar>
-          <p className='my-2.5'>{description}</p>
+          <p className="my-2.5">{description}</p>
           {children}
         </div>
       </section>

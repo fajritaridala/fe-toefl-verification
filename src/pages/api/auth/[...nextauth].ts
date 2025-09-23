@@ -3,7 +3,6 @@ import { AUTH_SECRET } from '@/utils/config/env';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { JwtExt, SessionExt, UserExt } from '@/utils/interfaces/Auth';
-import { useRouter } from 'next/router';
 
 export default NextAuth({
   session: {
@@ -24,9 +23,6 @@ export default NextAuth({
         if (!address) {
           throw new Error('address tidak diterima');
         }
-
-        console.log(address)
-        console.log('di nextauth');
         const result = await authServices.login({ address });
 
         if (result.status === 200 && result.data.needsRegistration) {
@@ -34,7 +30,6 @@ export default NextAuth({
             address: result.data.data.address,
             needsRegistration: result.data.needsRegistration,
           };
-          console.log(user);
           return user;
         }
 

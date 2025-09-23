@@ -10,8 +10,9 @@ export async function middleware(request: NextRequest) {
   });
 
   const { pathname } = request.nextUrl;
-  if (pathname === 'auth/login' || pathname === 'auth.register') {
+  if (pathname === 'auth/login' || pathname === 'auth/register') {
     if (token) {
+      console.log('dalam pathname');
       return NextResponse.redirect(new URL('/', request.url));
     }
     return NextResponse.next();
@@ -42,7 +43,9 @@ export async function middleware(request: NextRequest) {
     }
 
     if (pathname === '/participant') {
-      return NextResponse.redirect(new URL('/participant/dashboard', request.url));
+      return NextResponse.redirect(
+        new URL('/participant/dashboard', request.url)
+      );
     }
   }
 
@@ -50,5 +53,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/auth/:path*'],
+  matcher: ['/auth/:path*', '/admin/:path*'],
 };

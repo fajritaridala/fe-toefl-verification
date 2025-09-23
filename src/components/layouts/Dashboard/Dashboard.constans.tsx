@@ -1,9 +1,4 @@
-import {
-  BiSolidGridAlt,
-  BiSolidUserCheck,
-  BiSolidUserDetail,
-  BiSolidUserX,
-} from 'react-icons/bi';
+import { BiSolidGridAlt, BiSolidUserDetail } from 'react-icons/bi';
 
 const SIDEBAR_ADMIN = [
   {
@@ -17,18 +12,6 @@ const SIDEBAR_ADMIN = [
     label: 'Daftar Peserta',
     href: '/admin/participants',
     icon: <BiSolidUserDetail />,
-  },
-  {
-    key: 'belum-aktivasi',
-    label: 'Belum Aktivasi',
-    href: '/admin/participants/status/inactive',
-    icon: <BiSolidUserX />,
-  },
-  {
-    key: 'sudah-aktivasi',
-    label: 'Sudah Aktivasi',
-    href: '/admin/participants/status/active',
-    icon: <BiSolidUserCheck />,
   },
 ];
 const SIDEBAR_PESERTA = [

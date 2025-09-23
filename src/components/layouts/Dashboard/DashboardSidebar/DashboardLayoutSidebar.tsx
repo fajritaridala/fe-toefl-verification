@@ -1,6 +1,5 @@
 import { Button, cn, Listbox, ListboxItem } from '@heroui/react';
 import { signOut } from 'next-auth/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { JSX } from 'react';
 import { BiSolidFlame, BiSolidGroup, BiSolidLogOut } from 'react-icons/bi';
@@ -30,7 +29,10 @@ function DashboardLayoutSidebar(props: Props) {
     >
       <div>
         <div className="mb-4 flex h-[9vh] items-center-safe border-b-1 border-neutral-300">
-          <h1 className="flex pl-[5%] text-3xl font-semibold capitalize">
+          <h1
+            aria-label="Dashboard Panel"
+            className="flex pl-[5%] text-3xl font-semibold capitalize"
+          >
             <BiSolidFlame
               className="mr-3 rounded-md bg-[#006fee] p-[.2rem]"
               color={'#fefefe'}
@@ -40,7 +42,7 @@ function DashboardLayoutSidebar(props: Props) {
         </div>
         <Listbox
           items={sidebarItems}
-          aria-label="Dashboard Menu"
+          aria-label="Dashboard Sidebar"
           variant="flat"
         >
           {(item) => {
@@ -58,8 +60,7 @@ function DashboardLayoutSidebar(props: Props) {
                 textValue={item.label}
                 aria-labelledby={item.label}
                 aria-describedby={item.label}
-                as={Link}
-                href={item.href}
+                onPress={() => router.push(item.href)}
               >
                 <p className="text-medium">{item.label}</p>
               </ListboxItem>

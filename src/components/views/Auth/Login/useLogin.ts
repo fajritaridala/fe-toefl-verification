@@ -25,7 +25,6 @@ export const useLogin = () => {
       callbackUrl,
     });
 
-    console.log(result);
     if (result === undefined) throw new Error('undefined');
     if (!result.ok && result.status === 401) throw new Error('Login failed!');
     return result;
@@ -38,11 +37,18 @@ export const useLogin = () => {
       const user = session?.user as {
         address: string;
         needsRegistration: boolean;
+        role: string;
       };
+      console.log(user);
       if (user.needsRegistration) {
         router.push(`auth/register?address=${user.address}`);
       }
-      router.push("/"); // ganti dengan dashboard user
+      if (user?.role === 'admin') {
+        router.push('/admin/dashboard');
+      }
+      if (user?.role === 'peserta') {
+        router.push('/participant/dashboard');
+      }
     },
     onError(error) {
       setIsLoading(false);
