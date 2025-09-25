@@ -7,6 +7,8 @@ import { useMutation } from '@tanstack/react-query';
 import { IRegister } from '@/utils/interfaces/Auth';
 import authServices from '@/services/auth.service';
 import { useRouter } from 'next/router';
+import randomize from '@/utils/config/randomize';
+import { signIn } from 'next-auth/react';
 
 const registerSchema = Yup.object().shape({
   fullName: Yup.string().required('Silahkan masukan nama lengkap kamu'),
@@ -23,6 +25,11 @@ export function useRegister() {
   const [alertMessage, setAlertMessage] = useState('');
   const [isAddress, setIsAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+
+  async function handleAddressQuery(chiperText: string) {
+    const address = await randomize.decrypt(chiperText);
+    return address;
+  }
 
   const {
     control,
@@ -47,6 +54,7 @@ export function useRegister() {
         const error = result as Error;
         throw new Error(error.message);
       }
+      console.log(result);
       return result;
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
@@ -56,9 +64,26 @@ export function useRegister() {
 
   const { mutate: mutateRegister, isPending } = useMutation({
     mutationFn: registerService,
-    onSuccess() {
-      router.push('/auth/login');
-      reset();
+    async onSuccess(result) {
+      const role = result?.data?.data?.role;
+      try {
+        const Result = await signIn('credentials', {
+          address: isAddress,
+          redirect: false,
+        });
+
+        if (Result?.ok) {
+          if (role === 'admin') {
+            router.push('/admin/dashboard');
+          } else {
+            router.push('/peserta/dashboard');
+          }
+          reset();
+        }
+      } catch (error) {
+        console.error('Auto login failed:', error);
+        router.push('/auth/login');
+      }
     },
     onError(error) {
       setIsLoading(false);
@@ -106,9 +131,14 @@ export function useRegister() {
     control,
     isPending,
     alertOpen,
+    setAlertOpen,
     alertMessage,
     isLoading,
     isConnected,
     errors,
+    setIsConnected,
+    setIsAddress,
+    isAddress,
+    handleAddressQuery,
   };
 }

@@ -8,9 +8,11 @@ type Props = {
 const AuthLayout = (props: Props) => {
   const { title, children } = props;
   return (
-    <>
+    <> 
       <Header title={title} />
-      {children}
+      <main className="flex h-screen items-center justify-center">
+        {children}
+      </main>
     </>
   );
 };

@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { ILogin } from '@/utils/interfaces/Auth';
 import { getSession, signIn } from 'next-auth/react';
+import randomize from '@/utils/config/randomize';
 
 const loginSchema = Yup.object().shape({
   address: Yup.string().required('Address is required'),
@@ -39,10 +40,16 @@ export const useLogin = () => {
         needsRegistration: boolean;
         role: string;
       };
-      console.log(user);
+
+      const address = await randomize.encrypt(user.address);
       if (user.needsRegistration) {
-        router.push(`auth/register?address=${user.address}`);
+        console.log(address);
+        router.push({
+          pathname: '/auth/register',
+          query: { address },
+        });
       }
+      
       if (user?.role === 'admin') {
         router.push('/admin/dashboard');
       }

@@ -10,12 +10,11 @@ export async function middleware(request: NextRequest) {
   });
 
   const { pathname } = request.nextUrl;
-  if (pathname === 'auth/login' || pathname === 'auth/register') {
+  console.log(pathname);
+  if (pathname === '/auth/login' || pathname === '/auth/register') {
     if (token) {
-      console.log('dalam pathname');
       return NextResponse.redirect(new URL('/', request.url));
     }
-    return NextResponse.next();
   }
 
   if (pathname.startsWith('/admin')) {
@@ -42,10 +41,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (pathname === '/participant') {
-      return NextResponse.redirect(
-        new URL('/participant/dashboard', request.url)
-      );
+    if (pathname === '/peserta') {
+      return NextResponse.redirect(new URL('/peserta/dashboard', request.url));
     }
   }
 

@@ -9,23 +9,49 @@ import {
 } from '@heroui/react';
 import { useRegister } from '../Register/useRegister';
 import { Controller } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import AuthCard from '@/components/ui/Cards/AuthCard';
 
 const RegisterPage = () => {
+  const router = useRouter();
+  const addressQuery = router.query.address as string;
   const {
     connectMetamask,
     handleRegister,
     handleSubmit,
     control,
     alertOpen,
+    setAlertOpen,
     alertMessage,
     isLoading,
     isConnected,
     errors,
+    setIsConnected,
+    setIsAddress,
+    handleAddressQuery,
   } = useRegister();
+
+  useEffect(() => {
+    const handleDecrypt = async () => {
+      if (addressQuery) {
+        try {
+          const decrypted = await handleAddressQuery(addressQuery);
+          setIsAddress(decrypted);
+          setIsConnected(true); // anggap kalau ada address, berarti sudah "connect"
+        } catch (error) {
+          console.error('Gagal decrypt address dari query:', error);
+        }
+      }
+    };
+
+    handleDecrypt();
+  }, [addressQuery, handleAddressQuery, setIsAddress, setIsConnected]);
 
   function onError() {
     console.log(errors);
   }
+
   return (
     <>
       {alertOpen && (
@@ -34,34 +60,23 @@ const RegisterPage = () => {
             color="danger"
             title="Login Error"
             description={alertMessage}
-            // isClosable
-            // onClose={() => setAlertOpen(false)}
+            isClosable
+            onClose={() => setAlertOpen(false)}
           />
         </div>
       )}
 
       {!isConnected ? (
-        <Card className="flex h-[20vh] w-[30%] items-center justify-center">
-          <CardBody className="flex items-center justify-center gap-[1.5rem]">
-            <h1 className="text-primary text-3xl font-bold">Sign up</h1>
-            <Button
-              color="primary"
-              variant="ghost"
-              className="w-[80%] font-semibold"
-              onPress={connectMetamask}
-            >
-              {isLoading ? (
-                <Spinner variant="gradient" />
-              ) : (
-                'Connect with metamask'
-              )}
-            </Button>
-          </CardBody>
-        </Card>
+        <AuthCard
+          heading="Register"
+          buttonLabel="Connect MetaMask"
+          isLoading={isLoading}
+          handleOnPress={connectMetamask}
+        />
       ) : (
         <Card className="px-[.8rem] py-[.8rem]">
           <CardBody className="gap-[1.5rem] text-center">
-            <h1 className="text-primary text-3xl font-bold">Sign up</h1>
+            <h1 className="text-3xl font-bold text-black">Register</h1>
             <Form onSubmit={handleSubmit(handleRegister, onError)}>
               <Controller
                 name="fullName"
@@ -119,10 +134,18 @@ const RegisterPage = () => {
               <Button
                 color="primary"
                 type="submit"
-                variant="ghost"
-                className="text-md my-[1rem] w-full font-semibold"
+                variant="solid"
+                className="text-md my-[1rem] w-full bg-black font-semibold text-white"
               >
-                {isLoading ? <Spinner variant="gradient" /> : 'submit'}
+                {isLoading ? (
+                  <Spinner
+                    variant="wave"
+                    color="current"
+                    className="text-white"
+                  />
+                ) : (
+                  'submit'
+                )}
               </Button>
             </Form>
           </CardBody>

@@ -90,7 +90,7 @@ function DataTable(props: Props) {
           <DropdownTrigger>
             <Button
               variant="flat"
-              color="secondary"
+              className='text-black'
               endContent={<BiChevronDown />}
             >
               Status

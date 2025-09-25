@@ -8,6 +8,7 @@ if (typeof window !== 'undefined') {
         name: 'TOEFL Verifications',
         url: window.location.href,
       },
+      checkInstallationImmediately: true,
     });
   } catch (error) {
     console.error('Failed to initialize MetaMask SDK:', error);

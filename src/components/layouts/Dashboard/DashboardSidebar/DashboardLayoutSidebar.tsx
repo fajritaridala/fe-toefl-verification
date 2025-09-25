@@ -34,7 +34,7 @@ function DashboardLayoutSidebar(props: Props) {
             className="flex pl-[5%] text-3xl font-semibold capitalize"
           >
             <BiSolidFlame
-              className="mr-3 rounded-md bg-[#006fee] p-[.2rem]"
+              className="mr-3 rounded-md bg-black p-[.2rem]"
               color={'#fefefe'}
             />
             {panel} panel
@@ -54,7 +54,7 @@ function DashboardLayoutSidebar(props: Props) {
               <ListboxItem
                 key={item.key}
                 className={cn('my-1 h-12 pl-[10%] text-2xl', {
-                  'bg-primary text-white': isActive,
+                  'bg-black text-white': isActive,
                 })}
                 startContent={item.icon}
                 textValue={item.label}
@@ -70,11 +70,10 @@ function DashboardLayoutSidebar(props: Props) {
       </div>
       <div className="flex items-center p-1">
         <Button
-          color="danger"
           fullWidth
           variant="light"
           size="lg"
-          className="flex justify-start rounded-lg px-2 py-1.5 pl-[10%]"
+          className="flex justify-start rounded-lg px-2 py-1.5 pl-[10%] text-black"
           onPress={() => signOut()}
         >
           <BiSolidLogOut size={24} />
