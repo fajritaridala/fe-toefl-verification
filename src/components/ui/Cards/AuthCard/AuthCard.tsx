@@ -11,7 +11,7 @@ function AuthCard(props: Props) {
   const { handleOnPress, isLoading, heading, buttonLabel } = props;
 
   return (
-    <Card className="flex h-[22vh] w-[80%] items-center justify-center lg:h-[25vh] lg:w-[30%]">
+    <Card className="flex h-[22vh] w-[92%] items-center justify-center border-2 shadow-none lg:h-[25vh] lg:w-[30%]">
       <CardBody className="flex items-center justify-center">
         <h1 className="h-[55%] text-[2rem] font-bold text-black">{heading}</h1>
         <Button

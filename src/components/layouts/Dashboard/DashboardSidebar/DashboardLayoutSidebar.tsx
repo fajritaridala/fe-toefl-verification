@@ -1,8 +1,13 @@
-import { Button, cn, Listbox, ListboxItem } from '@heroui/react';
-import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import { JSX } from 'react';
 import { BiSolidFlame, BiSolidGroup, BiSolidLogOut } from 'react-icons/bi';
+import {
+  LuChevronLeft,
+  LuDatabase,
+  LuGalleryVerticalEnd,
+} from 'react-icons/lu';
+import { Button, Listbox, ListboxItem, cn } from '@heroui/react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 export interface SidebarItem {
   key: string;
@@ -23,7 +28,7 @@ function DashboardLayoutSidebar(props: Props) {
   return (
     <section
       className={cn(
-        'fixed z-50 flex h-screen w-full max-w-[20rem] -translate-x-full flex-col justify-between bg-white px-4 py-6 shadow-xl transition-all duration-200 lg:relative lg:translate-x-0',
+        'fixed z-50 flex h-screen w-full max-w-[20rem] -translate-x-full flex-col justify-between bg-white px-4 py-6 shadow-sm transition-all duration-200 lg:relative lg:translate-x-0',
         { 'translate-x-0': isOpen }
       )}
     >
@@ -33,10 +38,7 @@ function DashboardLayoutSidebar(props: Props) {
             aria-label="Dashboard Panel"
             className="flex pl-[5%] text-3xl font-semibold capitalize"
           >
-            <BiSolidFlame
-              className="mr-3 rounded-md bg-black p-[.2rem]"
-              color={'#fefefe'}
-            />
+            <LuDatabase className="mr-3 rounded-md" />
             {panel} panel
           </h1>
         </div>
@@ -76,7 +78,7 @@ function DashboardLayoutSidebar(props: Props) {
           className="flex justify-start rounded-lg px-2 py-1.5 pl-[10%] text-black"
           onPress={() => signOut()}
         >
-          <BiSolidLogOut size={24} />
+          <LuChevronLeft size={24} />
           Logout
         </Button>
       </div>

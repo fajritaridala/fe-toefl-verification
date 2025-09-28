@@ -3,10 +3,7 @@ import ParticipantsPage from '@/components/views/Admin/Participant';
 
 function Participants() {
   return (
-    <DashboardLayout
-      title="Daftar peserta"
-      description="Menampilkan seluruh data peserta terdaftar dengan informasi lengkap"
-    >
+    <DashboardLayout title="Daftar peserta">
       <ParticipantsPage />
     </DashboardLayout>
   );

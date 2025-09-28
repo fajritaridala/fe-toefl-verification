@@ -1,8 +1,8 @@
-import Header from '@/components/common/Header';
-import DashboardLayoutSidebar from './DashboardSidebar';
-import { SIDEBAR_ADMIN, SIDEBAR_PESERTA } from './Dashboard.constans';
 import { ReactNode, useState } from 'react';
 import { Navbar, NavbarMenuToggle } from '@heroui/react';
+import Header from '@/components/common/Header';
+import { SIDEBAR_ADMIN, SIDEBAR_PESERTA } from './Dashboard.constans';
+import DashboardLayoutSidebar from './DashboardSidebar';
 
 type Props = {
   children: ReactNode;
@@ -17,7 +17,7 @@ function DashboardLayout(props: Props) {
   return (
     <>
       <Header title={title} />
-      <section className="max-w-screen-3xl 3xl:container flex">
+      <section className="max-w-screen-3xl 3xl:container bg-default-50 flex">
         <DashboardLayoutSidebar
           sidebarItems={type === 'admin' ? SIDEBAR_ADMIN : SIDEBAR_PESERTA}
           isOpen={open}
@@ -25,8 +25,7 @@ function DashboardLayout(props: Props) {
         />
         <div className="h-screen w-full overflow-y-auto p-8">
           <Navbar
-            isBordered
-            className="flex justify-between px-0"
+            className="bg-default-50 flex justify-between px-0"
             classNames={{ wrapper: 'p-0' }}
           >
             <h1 className="text-3xl font-bold">{title}</h1>
@@ -36,7 +35,6 @@ function DashboardLayout(props: Props) {
               onClick={() => setOpen(!open)}
             />
           </Navbar>
-          <p className="my-2.5">{description}</p>
           {children}
         </div>
       </section>

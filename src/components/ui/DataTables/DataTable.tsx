@@ -1,6 +1,7 @@
-import { FILTER_OPTIONS, LIMIT_LISTS } from '@/constants/list.constants';
+import { ChangeEvent, Key, ReactNode, useMemo, useState } from 'react';
+import { BiChevronDown } from 'react-icons/bi';
+import { CiSearch } from 'react-icons/ci';
 import type { Selection } from '@heroui/react';
-
 import {
   Button,
   Dropdown,
@@ -19,9 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import { ChangeEvent, Key, ReactNode, useMemo, useState } from 'react';
-import { BiChevronDown } from 'react-icons/bi';
-import { CiSearch } from 'react-icons/ci';
+import { FILTER_OPTIONS, LIMIT_LISTS } from '@/constants/list.constants';
 
 type Props = {
   buttonTopContentLabel?: string;
@@ -80,6 +79,9 @@ function DataTable(props: Props) {
           <Input
             isClearable
             className="w-full sm:max-w-[24%]"
+            classNames={{
+              inputWrapper: ['bg-default-100', 'shadow-sm'],
+            }}
             placeholder="Search..."
             startContent={<CiSearch />}
             onClear={onClearSearch}
@@ -88,11 +90,7 @@ function DataTable(props: Props) {
         </div>
         <Dropdown>
           <DropdownTrigger>
-            <Button
-              variant="flat"
-              className='text-black'
-              endContent={<BiChevronDown />}
-            >
+            <Button variant="flat" endContent={<BiChevronDown />}>
               Status
             </Button>
           </DropdownTrigger>
@@ -118,6 +116,9 @@ function DataTable(props: Props) {
       <div className="flex items-center justify-center lg:justify-between">
         <Select
           className="hidden max-w-36 lg:block"
+          classNames={{
+            trigger: 'bg-default-100 ',
+          }}
           size="md"
           selectedKeys={[limit]}
           selectionMode="single"

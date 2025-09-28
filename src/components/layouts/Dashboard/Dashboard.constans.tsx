@@ -1,17 +1,18 @@
 import { BiSolidGridAlt, BiSolidUserDetail } from 'react-icons/bi';
+import { LuLayoutGrid, LuUsers } from 'react-icons/lu';
 
 const SIDEBAR_ADMIN = [
   {
     key: 'dashboard',
     label: 'Dashboard',
     href: '/admin/dashboard',
-    icon: <BiSolidGridAlt />,
+    icon: <LuLayoutGrid />,
   },
   {
     key: 'daftar-peserta',
     label: 'Daftar Peserta',
     href: '/admin/participants',
-    icon: <BiSolidUserDetail />,
+    icon: <LuUsers />,
   },
 ];
 const SIDEBAR_PESERTA = [

@@ -1,6 +1,5 @@
-import DataTable from '@/components/ui/DataTables';
-import ColumnListParticipants from './Participants.constants';
-import { useRouter } from 'next/router';
+import { Key, ReactNode, useCallback, useEffect } from 'react';
+import { BiDotsVerticalRounded, BiPlus, BiTrash } from 'react-icons/bi';
 import {
   Button,
   Dropdown,
@@ -8,9 +7,10 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from '@heroui/react';
-import { Key, ReactNode, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import DataTable from '@/components/ui/DataTables';
+import ColumnListParticipants from './Participants.constants';
 import useParticipants from './useParticipants';
-import { BiDotsVerticalRounded, BiPlus, BiTrash } from 'react-icons/bi';
 
 function ParticipantsPage() {
   const router = useRouter();
@@ -83,7 +83,7 @@ function ParticipantsPage() {
   );
 
   return (
-    <section>
+    <section className="pt-4">
       {Object.keys(router.query).length > 0 && (
         <DataTable
           columns={ColumnListParticipants}

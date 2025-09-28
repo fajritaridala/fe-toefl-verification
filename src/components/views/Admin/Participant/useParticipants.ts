@@ -1,9 +1,9 @@
+import { ChangeEvent } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { PAGINATION_OPTIONS } from '@/constants/list.constants';
 import useDebounce from '@/hooks/useDebounce';
 import toeflService from '@/services/toefl.service';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
-import { ChangeEvent } from 'react';
 
 function useParticipants() {
   const router = useRouter();
