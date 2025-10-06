@@ -1,11 +1,11 @@
-import { connectMetamaskWallet } from '@/utils/libs/metamask/connect';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import * as Yup from 'yup';
-import { useRouter } from 'next/router';
-import { ILogin } from '@/utils/interfaces/Auth';
 import { getSession, signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import * as Yup from 'yup';
 import randomize from '@/utils/config/randomize';
+import { ILogin } from '@/utils/interfaces/Auth';
+import metamask from '@/utils/libs/metamask/metamask';
 
 const loginSchema = Yup.object().shape({
   address: Yup.string().required('Address is required'),
@@ -34,27 +34,41 @@ export const useLogin = () => {
   const { mutate: mutateLogin } = useMutation({
     mutationFn: loginService,
     async onSuccess() {
-      const session = await getSession();
-      const user = session?.user as {
-        address: string;
-        needsRegistration: boolean;
-        role: string;
-      };
-
-      const address = await randomize.encrypt(user.address);
-      if (user.needsRegistration) {
-        console.log(address);
-        router.push({
-          pathname: '/auth/register',
-          query: { address },
-        });
+      // wait for session to be hydrated after signIn
+      async function waitForSession(maxTries = 3, delayMs = 150) {
+        for (let attempt = 0; attempt < maxTries; attempt++) {
+          const session = await getSession();
+          if (session?.user) return session;
+          await new Promise((r) => setTimeout(r, delayMs));
+        }
+        return await getSession();
       }
-      
+
+      const session = await waitForSession(3, 150);
+      const user = session?.user as
+        | {
+            address?: string;
+            needsRegistration?: boolean;
+            role?: string;
+          }
+        | undefined;
+
+      if (user?.needsRegistration && user.address) {
+        const enc = await randomize.encrypt(user.address);
+        await router.push({
+          pathname: '/auth/register',
+          query: { address: enc },
+        });
+        return;
+      }
+
       if (user?.role === 'admin') {
-        router.push('/admin/dashboard');
+        await router.push('/admin/dashboard');
+        return;
       }
       if (user?.role === 'peserta') {
-        router.push('/participant/dashboard');
+        await router.push('/peserta/dashboard');
+        return;
       }
     },
     onError(error) {
@@ -69,7 +83,7 @@ export const useLogin = () => {
     try {
       setIsLoading(true);
       setAlertOpen(false);
-      const { address } = await connectMetamaskWallet();
+      const { address } = await metamask.connect();
       setAddress(address);
       await loginSchema.validate({ address });
       mutateLogin({ address });

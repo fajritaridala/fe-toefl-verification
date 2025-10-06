@@ -76,7 +76,7 @@ function DashboardLayoutSidebar(props: Props) {
           variant="light"
           size="lg"
           className="flex justify-start rounded-lg px-2 py-1.5 pl-[10%] text-black"
-          onPress={() => signOut()}
+          onPress={() => signOut({ callbackUrl: '/auth/login' })}
         >
           <LuChevronLeft size={24} />
           Logout

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 import {
   Alert,
   Button,
@@ -7,11 +9,9 @@ import {
   Input,
   Spinner,
 } from '@heroui/react';
-import { useRegister } from '../Register/useRegister';
-import { Controller } from 'react-hook-form';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AuthCard from '@/components/ui/Cards/AuthCard';
+import { useRegister } from '../Register/useRegister';
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -66,91 +66,99 @@ const RegisterPage = () => {
         </div>
       )}
 
-      {!isConnected ? (
-        <AuthCard
-          heading="Register"
-          buttonLabel="Connect MetaMask"
-          isLoading={isLoading}
-          handleOnPress={connectMetamask}
-        />
-      ) : (
-        <Card className="px-[.8rem] py-[.8rem]">
-          <CardBody className="gap-[1.5rem] text-center">
-            <h1 className="text-3xl font-bold text-black">Register</h1>
-            <Form onSubmit={handleSubmit(handleRegister, onError)}>
-              <Controller
-                name="fullName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    isRequired
-                    label="Fullname"
-                    labelPlacement="outside"
-                    placeholder="Enter your fullname"
-                    type="text"
-                    variant="bordered"
-                    autoComplete="off"
-                    isInvalid={!!errors.fullName}
-                    errorMessage={errors.fullName?.message}
+      <div className="flex min-h-screen w-full items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+        {!isConnected ? (
+          <div className="w-full max-w-md md:max-w-lg lg:max-w-xl">
+            <AuthCard
+              heading="Register"
+              buttonLabel="Connect MetaMask"
+              isLoading={isLoading}
+              handleOnPress={connectMetamask}
+            />
+          </div>
+        ) : (
+          <Card className="w-full max-w-md p-4 md:max-w-lg md:p-6 lg:max-w-xl lg:p-8">
+            <CardBody className="space-y-6">
+              <h1 className="text-center text-2xl font-bold text-black md:text-3xl">
+                Register
+              </h1>
+              <Form onSubmit={handleSubmit(handleRegister, onError)}>
+                <div className="w-full space-y-8 md:space-y-10">
+                  <Controller
+                    name="fullName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        isRequired
+                        label="Fullname"
+                        labelPlacement="outside"
+                        placeholder="Enter your fullname"
+                        type="text"
+                        variant="bordered"
+                        autoComplete="off"
+                        isInvalid={!!errors.fullName}
+                        errorMessage={errors.fullName?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    isRequired
-                    label="Email"
-                    labelPlacement="outside"
-                    placeholder="Enter your email"
-                    type="email"
-                    variant="bordered"
-                    autoComplete="off"
-                    isInvalid={!!errors.email}
-                    errorMessage={errors.email?.message}
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        isRequired
+                        label="Email"
+                        labelPlacement="outside"
+                        placeholder="Enter your email"
+                        type="email"
+                        variant="bordered"
+                        autoComplete="off"
+                        isInvalid={!!errors.email}
+                        errorMessage={errors.email?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="roleToken"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    label="Role Token"
-                    labelPlacement="outside"
-                    placeholder="optional"
-                    type="text"
-                    variant="bordered"
-                    autoComplete="off"
-                    isInvalid={!!errors.roleToken}
-                    errorMessage={errors.roleToken?.message}
+                  <Controller
+                    name="roleToken"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Role Token"
+                        labelPlacement="outside"
+                        placeholder="optional"
+                        type="text"
+                        variant="bordered"
+                        autoComplete="off"
+                        isInvalid={!!errors.roleToken}
+                        errorMessage={errors.roleToken?.message}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Button
-                color="primary"
-                type="submit"
-                variant="solid"
-                className="text-md my-[1rem] w-full bg-black font-semibold text-white"
-              >
-                {isLoading ? (
-                  <Spinner
-                    variant="wave"
-                    color="current"
-                    className="text-white"
-                  />
-                ) : (
-                  'submit'
-                )}
-              </Button>
-            </Form>
-          </CardBody>
-        </Card>
-      )}
+                </div>
+                <Button
+                  color="primary"
+                  type="submit"
+                  variant="solid"
+                  className="text-md mt-6 w-full bg-black font-semibold text-white"
+                >
+                  {isLoading ? (
+                    <Spinner
+                      variant="wave"
+                      color="current"
+                      className="text-white"
+                    />
+                  ) : (
+                    'submit'
+                  )}
+                </Button>
+              </Form>
+            </CardBody>
+          </Card>
+        )}
+      </div>
     </>
   );
 };

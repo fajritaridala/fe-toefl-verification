@@ -1,4 +1,4 @@
-import { Key, ReactNode, useCallback, useEffect } from 'react';
+import { Key, ReactNode, useCallback, useEffect, useState } from 'react';
 import { BiDotsVerticalRounded, BiPlus, BiTrash } from 'react-icons/bi';
 import {
   Button,
@@ -9,11 +9,13 @@ import {
 } from '@heroui/react';
 import { useRouter } from 'next/router';
 import DataTable from '@/components/ui/DataTables';
+import AddInputModal from './AddInputModal';
 import ColumnListParticipants from './Participants.constants';
 import useParticipants from './useParticipants';
 
 function ParticipantsPage() {
   const router = useRouter();
+  const [selectByAddress, setSelectByAddress] = useState('');
   const {
     dataParticipants,
     isLoadingParticipants,
@@ -50,7 +52,9 @@ function ParticipantsPage() {
                 {participant.status === 'belum selesai' ? (
                   <DropdownItem
                     key="input-participants-button"
-                    onPress={() => router.push(`/admin/participants/input`)}
+                    onPress={() =>
+                      setSelectByAddress(String(participant.address_peserta))
+                    }
                     startContent={<BiPlus />}
                   >
                     Input
@@ -98,6 +102,13 @@ function ParticipantsPage() {
           onClearSearch={handleClearSearch}
           renderCell={renderCell}
           totalPages={dataParticipants?.pagination.totalPages}
+        />
+      )}
+      {selectByAddress && (
+        <AddInputModal 
+          address={selectByAddress} 
+          isOpen 
+          onClose={() => setSelectByAddress('')} 
         />
       )}
     </section>

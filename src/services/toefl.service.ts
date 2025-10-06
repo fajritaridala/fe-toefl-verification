@@ -1,4 +1,4 @@
-import { InputPayload, ToeflRegister } from '@/utils/interfaces/Auth';
+import { InputPayload, ToeflRegister } from '@/utils/interfaces/Toefl';
 import instance from '@/utils/libs/axios/instance';
 
 const toeflService = {

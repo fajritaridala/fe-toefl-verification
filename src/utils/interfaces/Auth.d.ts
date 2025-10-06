@@ -1,4 +1,4 @@
-import { User, Session } from 'next-auth';
+import { Session, User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 
 interface ILogin {
@@ -14,6 +14,7 @@ interface IRegister extends ILogin {
 interface UserExt extends User {
   accessToken?: string;
   role?: string;
+  needsRegistration?: boolean;
 }
 
 interface SessionExt extends Session {
@@ -26,20 +27,4 @@ interface JwtExt extends JWT {
   user?: UserExt;
 }
 
-// admin
-interface InputPayload {
-  listening: number;
-  reading: number;
-  writing: number;
-}
-
-// peserta
-interface ToeflRegister {
-  fullName: string;
-  email: string;
-  nim: string;
-  major: string;
-  sessionTest: string;
-}
-
-export { ILogin, IRegister, UserExt, SessionExt, JwtExt, InputPayload, ToeflRegister };
+export { ILogin, IRegister, UserExt, SessionExt, JwtExt };

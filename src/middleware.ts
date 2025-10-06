@@ -1,7 +1,7 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { JwtExt } from './utils/interfaces/Auth';
 import { getToken } from 'next-auth/jwt';
+import { type NextRequest, NextResponse } from 'next/server';
 import { AUTH_SECRET } from './utils/config/env';
+import { JwtExt } from './utils/interfaces/Auth';
 
 export async function middleware(request: NextRequest) {
   const token: JwtExt | null = await getToken({
@@ -10,9 +10,8 @@ export async function middleware(request: NextRequest) {
   });
 
   const { pathname } = request.nextUrl;
-  console.log(pathname);
   if (pathname === '/auth/login' || pathname === '/auth/register') {
-    if (token) {
+    if (token?.user?.accessToken) {
       return NextResponse.redirect(new URL('/', request.url));
     }
   }

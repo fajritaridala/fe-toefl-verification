@@ -1,14 +1,14 @@
-import { connectMetamaskWallet } from '@/utils/libs/metamask/connect';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 import { useMutation } from '@tanstack/react-query';
-import { IRegister } from '@/utils/interfaces/Auth';
-import authServices from '@/services/auth.service';
-import { useRouter } from 'next/router';
-import randomize from '@/utils/config/randomize';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import * as Yup from 'yup';
+import authServices from '@/services/auth.service';
+import randomize from '@/utils/config/randomize';
+import { IRegister } from '@/utils/interfaces/Auth';
+import metamask from '@/utils/libs/metamask/metamask';
 
 const registerSchema = Yup.object().shape({
   fullName: Yup.string().required('Silahkan masukan nama lengkap kamu'),
@@ -54,7 +54,6 @@ export function useRegister() {
         const error = result as Error;
         throw new Error(error.message);
       }
-      console.log(result);
       return result;
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
@@ -81,7 +80,6 @@ export function useRegister() {
           reset();
         }
       } catch (error) {
-        console.error('Auto login failed:', error);
         router.push('/auth/login');
       }
     },
@@ -96,7 +94,7 @@ export function useRegister() {
   async function connectMetamask() {
     try {
       setIsLoading(true);
-      const { address } = await connectMetamaskWallet();
+      const { address } = await metamask.connect();
       if (address) {
         setIsConnected(true);
         setIsAddress(address);
@@ -119,7 +117,6 @@ export function useRegister() {
       email: data.email,
       roleToken: data.roleToken || '',
     };
-    console.log(payload);
 
     mutateRegister(payload);
   }
