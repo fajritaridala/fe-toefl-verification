@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 import toeflService from '@/services/toefl.service';
-import { SessionExt } from '@/utils/interfaces/Auth';
+import { DefaultSessionExt, SessionExt } from '@/utils/interfaces/Auth';
 import { ToeflRegister } from '@/utils/interfaces/Toefl';
 
 const TOEFLRegisterSchema = yup.object().shape({
@@ -23,8 +23,8 @@ const TOEFLRegisterSchema = yup.object().shape({
 
 function useTOEFLRegisterPage() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const sessionExt = session as SessionExt;
+  const { user } = useSession().data as unknown as DefaultSessionExt;
+  const address = user?.address;
   const [isLoading, setIsLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -50,8 +50,6 @@ function useTOEFLRegisterPage() {
 
   async function registerService(payload: ToeflRegister) {
     try {
-      const address = sessionExt?.user?.address;
-      console.log(address)
       if (!address) {
         throw new Error('User address not found');
       }
@@ -59,8 +57,8 @@ function useTOEFLRegisterPage() {
       const result = await toeflService.register(payload, address);
       return result;
     } catch (error) {
-      if (error instanceof Error) throw new Error(error.message);
-      throw new Error('Registration failed');
+      const err = error as unknown as Error;
+      throw new Error(err.message || 'Registration failed');
     }
   }
 
@@ -71,7 +69,7 @@ function useTOEFLRegisterPage() {
       setAlertOpen(false);
       reset();
       // Redirect to success page or dashboard
-      router.push('/peserta/dashboard');
+      router.push('/peserta/toefl');
     },
     onError(error) {
       setIsLoading(false);

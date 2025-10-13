@@ -11,7 +11,7 @@ const LoginPage = () => {
       {alertOpen && (
         <div className="fixed top-[1.5rem] left-1/2 z-50 w-full max-w-md -translate-x-1/2">
           <Alert
-            color="default"
+            color="danger"
             title="Login Error"
             description={alertMessage}
             isClosable

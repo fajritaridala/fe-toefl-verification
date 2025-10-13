@@ -12,7 +12,7 @@ function AuthCard(props: Props) {
   const { handleOnPress, isLoading, heading, buttonLabel } = props;
 
   return (
-    <Card className="flex h-[22vh] w-[92%] items-center justify-center bg-white md:h-[42vh] md:w-[38vw]">
+    <Card className="flex h-[22vh] w-[92%] items-center justify-center bg-white md:h-[38vh] md:w-[38vw]">
       <CardHeader className="mt-3">
         <div className="mx-auto text-center">
           <h1 className="text-primary-800 mb-2 text-[2.3rem] font-bold">

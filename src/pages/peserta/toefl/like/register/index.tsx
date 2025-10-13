@@ -5,7 +5,7 @@ export default function TOEFLLikeRegister() {
   return (
     <div className="bg-default-100">
       <Header title="Register" />
-      <div className="scale-80">
+      <div>
         <TOEFLRegisterPage />
       </div>
     </div>

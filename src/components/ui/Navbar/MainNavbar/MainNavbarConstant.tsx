@@ -1,8 +1,8 @@
 import { LuLogOut, LuUserRound } from 'react-icons/lu';
 
 const NAVBAR_ITEMS = [
-  { label: 'Beranda', href: '/' },
-  { label: 'Tes TOEFL', href: '/' },
+  { label: 'Beranda', href: '/'},
+  { label: 'Layanan', href: '/peserta/toefl' },
 ];
 
 const NAVBAR_DROPDOWN_ITEMS = (router: any, signOut: any) => [

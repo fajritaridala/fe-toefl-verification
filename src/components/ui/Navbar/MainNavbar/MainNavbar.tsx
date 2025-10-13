@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { LuChevronDown } from 'react-icons/lu';
 import {
   Button,
@@ -11,6 +11,7 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  cn,
 } from '@heroui/react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -20,37 +21,52 @@ type Props = {
   isAuthenticated: boolean;
   user: string;
   children: ReactNode;
+  pathname: string;
 };
 
 function MainNavbar(props: Props) {
   const router = useRouter();
-  const { isAuthenticated = false, user = 'User', children } = props;
+  const { isAuthenticated = false, user = 'User', children, pathname } = props;
 
   return (
     <div className="flex flex-col">
       <Navbar
         isBlurred
-        className="fixed mx-auto mt-4 w-full rounded-full shadow-md md:h-[3rem] md:w-[93%]"
+        className="text-primary-800 fixed mx-auto mt-4 h-[3rem] w-full font-semibold shadow-md md:w-[80vw] md:rounded-full lg:h-[3.5rem] lg:w-[70vw]"
       >
         <NavbarBrand>
-          <p className="text-primary-800 text-lg font-bold">Simpeka</p>
+          <p className="text-lg font-extrabold">Simpeka</p>
         </NavbarBrand>
         <NavbarContent justify="center">
           <NavbarItem className="flex gap-4">
-            {NAVBAR_ITEMS.map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className="text-primary-800 font-medium transition-all duration-250 hover:scale-110"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAVBAR_ITEMS.map((item, index) => {
+              return (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className={cn(
+                    'text-primary-800 py-2 transition-all duration-200 hover:scale-105',
+                    {
+                      'border-primary-800 border-b py-3 hover:scale-100':
+                        pathname === item.href,
+                    }
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             {isAuthenticated && (
               <Link
-                key="activities"
-                href="/"
-                className="text-primary-800 font-medium transition-all duration-250 hover:scale-110"
+                key="activity"
+                href="/peserta/activity"
+                className={cn(
+                  'text-primary-800 py-2 transition-all duration-200 hover:scale-105',
+                  {
+                    'border-primary-800 border-b py-3 hover:scale-100':
+                      pathname === '/peserta/activity',
+                  }
+                )}
               >
                 Kegiatan saya
               </Link>
@@ -59,7 +75,7 @@ function MainNavbar(props: Props) {
         </NavbarContent>
         <NavbarContent justify="end">
           {isAuthenticated ? (
-            <Dropdown>
+            <Dropdown className="mt-2">
               <NavbarItem>
                 <DropdownTrigger>
                   <Button

@@ -1,20 +1,20 @@
 import axios from 'axios';
-import { API_URL } from '@/utils/config/env';
-import { getSession } from 'next-auth/react';
 import { Session } from 'next-auth';
+import { getSession } from 'next-auth/react';
+import { API_URL } from '@/utils/config/env';
 
 type TSessionExt = Session & {
   accessToken?: string;
 };
 
 const headers = {
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 };
 
 const instance = axios.create({
   baseURL: API_URL,
   headers,
-  timeout: 60 * 1000 // 60 seconds
+  timeout: 60 * 1000, // 60 seconds
 });
 
 // Menyiapkan request sebelum dikirim ke server
@@ -32,7 +32,12 @@ instance.interceptors.request.use(
 // Mempersiapkan response dari server
 instance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error)
+  (error) => {
+    const response = error.response;
+    const { message } = response.data;
+    error.message = message;
+    return Promise.reject(error);
+  }
 );
 
 export default instance;
