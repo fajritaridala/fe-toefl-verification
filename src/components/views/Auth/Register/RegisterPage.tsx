@@ -10,7 +10,7 @@ import {
   Spinner,
 } from '@heroui/react';
 import { useRouter } from 'next/router';
-import AuthCard from '@/components/ui/Cards/AuthCard';
+import AuthCard from '@/components/ui/Card/AuthCard';
 import { useRegister } from '../Register/useRegister';
 
 const RegisterPage = () => {
@@ -68,19 +68,21 @@ const RegisterPage = () => {
 
       <div className="flex min-h-screen w-full items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
         {!isConnected ? (
-          <div className="w-full max-w-md md:max-w-lg lg:max-w-xl">
-            <AuthCard
-              heading="Register"
-              buttonLabel="Connect MetaMask"
-              isLoading={isLoading}
-              handleOnPress={connectMetamask}
-            />
+          <div className="flex w-full max-w-md md:max-w-lg lg:max-w-xl">
+            <div className="mx-auto">
+              <AuthCard
+                heading="Sign Up"
+                buttonLabel="Connect MetaMask"
+                isLoading={isLoading}
+                handleOnPress={connectMetamask}
+              />
+            </div>
           </div>
         ) : (
           <Card className="w-full max-w-md p-4 md:max-w-lg md:p-6 lg:max-w-xl lg:p-8">
             <CardBody className="space-y-6">
-              <h1 className="text-center text-2xl font-bold text-black md:text-3xl">
-                Register
+              <h1 className="text-primary-800 text-center text-2xl font-bold md:text-3xl">
+                Sign Up
               </h1>
               <Form onSubmit={handleSubmit(handleRegister, onError)}>
                 <div className="w-full space-y-8 md:space-y-10">
@@ -142,7 +144,7 @@ const RegisterPage = () => {
                   color="primary"
                   type="submit"
                   variant="solid"
-                  className="text-md mt-6 w-full bg-black font-semibold text-white"
+                  className="text-md bg-primary-800 mt-6 w-full font-semibold text-white"
                 >
                   {isLoading ? (
                     <Spinner

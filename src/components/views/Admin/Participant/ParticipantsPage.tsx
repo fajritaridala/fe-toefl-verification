@@ -8,7 +8,7 @@ import {
   DropdownTrigger,
 } from '@heroui/react';
 import { useRouter } from 'next/router';
-import DataTable from '@/components/ui/DataTables';
+import DataTable from '@/components/ui/Table/DataTable';
 import AddInputModal from './AddInputModal';
 import ColumnListParticipants from './Participants.constants';
 import useParticipants from './useParticipants';
@@ -105,10 +105,10 @@ function ParticipantsPage() {
         />
       )}
       {selectByAddress && (
-        <AddInputModal 
-          address={selectByAddress} 
-          isOpen 
-          onClose={() => setSelectByAddress('')} 
+        <AddInputModal
+          address={selectByAddress}
+          isOpen
+          onClose={() => setSelectByAddress('')}
         />
       )}
     </section>

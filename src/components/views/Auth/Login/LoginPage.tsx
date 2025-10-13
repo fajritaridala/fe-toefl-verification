@@ -1,6 +1,6 @@
-import { Button, Card, CardBody, Alert, Spinner } from '@heroui/react';
+import { Alert, Button, Card, CardBody, Spinner } from '@heroui/react';
+import AuthCard from '@/components/ui/Card/AuthCard';
 import { useLogin } from './useLogin';
-import AuthCard from '@/components/ui/Cards/AuthCard';
 
 const LoginPage = () => {
   const { isLoading, alertOpen, setAlertOpen, alertMessage, handleLogin } =

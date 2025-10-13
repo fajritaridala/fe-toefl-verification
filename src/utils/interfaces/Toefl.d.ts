@@ -8,9 +8,11 @@ interface InputPayload {
 // peserta
 interface ToeflRegister {
   nama_lengkap: string;
-  email: string;
+  jenis_kelamin: string;
+  tanggal_lahir: string;
   nomor_induk_mahasiswa: string;
-  jurusan: string;
+  fakultas: string;
+  program_studi: string;
   sesi_tes: string;
 }
 

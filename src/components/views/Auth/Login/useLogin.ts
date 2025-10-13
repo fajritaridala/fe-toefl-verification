@@ -67,7 +67,7 @@ export const useLogin = () => {
         return;
       }
       if (user?.role === 'peserta') {
-        await router.push('/peserta/dashboard');
+        await router.push('/peserta/toefl');
         return;
       }
     },

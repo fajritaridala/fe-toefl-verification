@@ -1,9 +1,11 @@
 interface IRecord {
   address_peserta: string;
   nama_lengkap: string;
-  email: string;
+  jenis_kelamin: string;
+  tanggal_lahir: number;
   nomor_induk_mahasiswa: string;
-  jurusan: string;
+  fakultas: string;
+  program_studi: string;
   sesi_tes: string;
   tanggal_tes: number;
   nilai_listening: number;

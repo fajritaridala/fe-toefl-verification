@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith('/participant')) {
+  if (pathname.startsWith('/peserta')) {
     if (!token) {
       const url = new URL('/auth/login', request.url);
       url.searchParams.set('callbackUrl', encodeURI(request.url));

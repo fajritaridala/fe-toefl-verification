@@ -75,7 +75,7 @@ export function useRegister() {
           if (role === 'admin') {
             router.push('/admin/dashboard');
           } else {
-            router.push('/peserta/dashboard');
+            router.push('/peserta/toefl');
           }
           reset();
         }

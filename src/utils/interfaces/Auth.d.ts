@@ -18,6 +18,7 @@ interface UserExt extends User {
 }
 
 interface SessionExt extends Session {
+  fullName?: string;
   accessToken?: string;
   address?: string;
   needsRegistration?: boolean;

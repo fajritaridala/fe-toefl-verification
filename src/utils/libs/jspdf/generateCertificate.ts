@@ -10,6 +10,7 @@ export async function generateCertificate(
   console.log(render);
 
   const doc = new jsPDF({
+    compress: true,
     orientation: 'landscape',
     unit: 'mm',
     format: 'a4',

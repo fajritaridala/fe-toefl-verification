@@ -31,6 +31,7 @@ function useAddInputModal({
       const result = await toeflService.input(payload, address);
       if (!result) throw new Error('Input gagal');
       const { peserta, toefl_hash } = result.data.data;
+      console.log(peserta, payload)
 
       // kirim data ke smart contract
       // await contractService.storedRecord(toefl_hash, peserta);
