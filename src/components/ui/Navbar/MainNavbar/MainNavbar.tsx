@@ -32,10 +32,10 @@ function MainNavbar(props: Props) {
     <div className="flex flex-col">
       <Navbar
         isBlurred
-        className="text-primary-800 fixed mx-auto mt-4 h-[3rem] w-full font-semibold shadow-md md:w-[80vw] md:rounded-full lg:h-[3.5rem] lg:w-[70vw]"
+        className="text-primary-800 fixed mx-auto mt-4 h-[3rem] w-full shadow-md md:w-[80vw] md:rounded-full lg:h-[3.5rem] lg:w-[70vw]"
       >
         <NavbarBrand>
-          <p className="text-lg font-extrabold">Simpeka</p>
+          <p className="text-lg font-bold">Simpeka</p>
         </NavbarBrand>
         <NavbarContent justify="center">
           <NavbarItem className="flex gap-4">
@@ -47,7 +47,7 @@ function MainNavbar(props: Props) {
                   className={cn(
                     'text-primary-800 py-2 transition-all duration-200 hover:scale-105',
                     {
-                      'border-primary-800 border-b py-3 hover:scale-100':
+                      'border-primary-800 scale-110 font-semibold hover:scale-110':
                         pathname === item.href,
                     }
                   )}
@@ -79,7 +79,7 @@ function MainNavbar(props: Props) {
               <NavbarItem>
                 <DropdownTrigger>
                   <Button
-                    className="text-primary-800 bg-transparent p-0 font-bold"
+                    className="text-primary-800 bg-transparent p-0"
                     endContent={<LuChevronDown />}
                   >
                     {user}

@@ -19,26 +19,19 @@ type Props = {
 
 function AddInputModal(props: Props) {
   const { isOpen, address, onClose } = props;
-  const { control, handleInput, handleSubmit, errors } = useAddInputModal({ 
-    address, 
+  const { control, handleInput, handleSubmit, errors } = useAddInputModal({
+    address,
     onSuccess: () => onClose(), // Close modal on success
-    onError: () => {
-      // Keep modal open on error, let user fix the inputs
-    } 
+    onError: () => {},
   });
-  
-  const onSubmit = handleSubmit((data) => {
-    handleInput(data);
-    // Note: The modal will be closed by the parent component on success
-  });
-  
+
   return (
     <Modal isOpen={isOpen} size="md" onClose={onClose}>
       <ModalContent>
         {(modalOnClose) => (
-          <Form onSubmit={onSubmit}>
-            <ModalHeader className="h-12 text-xl">
-              Input Nilai Peserta
+          <Form onSubmit={handleSubmit(handleInput)}>
+            <ModalHeader className="h-12">
+              <h1 className="text-[1.3rem] font-bold">Input Nilai Peserta</h1>
             </ModalHeader>
             <ModalBody className="w-full">
               <Controller
@@ -100,10 +93,18 @@ function AddInputModal(props: Props) {
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="ghost" onPress={onClose}>
+              <Button
+                color="danger"
+                variant="ghost"
+                onPress={onClose}
+                className="font-semibold transition duration-300"
+              >
                 Batal
               </Button>
-              <Button type="submit" className="bg-black text-white">
+              <Button
+                type="submit"
+                className="bg-primary-800 font-semibold text-white"
+              >
                 Simpan
               </Button>
             </ModalFooter>

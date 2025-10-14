@@ -15,13 +15,5 @@ const SIDEBAR_ADMIN = [
     icon: <LuUsers />,
   },
 ];
-const SIDEBAR_PESERTA = [
-  {
-    key: 'dashboard',
-    label: 'Dashboard',
-    href: '/peserta/dashboard',
-    icon: <BiSolidGridAlt />,
-  },
-];
 
-export { SIDEBAR_ADMIN, SIDEBAR_PESERTA };
+export { SIDEBAR_ADMIN };

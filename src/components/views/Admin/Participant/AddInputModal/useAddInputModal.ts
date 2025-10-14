@@ -28,6 +28,7 @@ function useAddInputModal({
   async function inputService(payload: InputPayload, address: string) {
     try {
       // kirim data ke backend
+      console.log('hit')
       const result = await toeflService.input(payload, address);
       if (!result) throw new Error('Input gagal');
       const { peserta, toefl_hash } = result.data.data;

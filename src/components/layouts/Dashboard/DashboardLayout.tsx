@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { Navbar, NavbarMenuToggle } from '@heroui/react';
 import Header from '@/components/common/Header';
-import { SIDEBAR_ADMIN, SIDEBAR_PESERTA } from './Dashboard.constans';
+import { SIDEBAR_ADMIN } from './Dashboard.constans';
 import DashboardLayoutSidebar from './DashboardSidebar';
 
 type Props = {
@@ -17,9 +17,9 @@ function DashboardLayout(props: Props) {
   return (
     <>
       <Header title={title} />
-      <section className="max-w-screen-3xl 3xl:container bg-default-50 flex">
+      <section className="max-w-screen-3xl 3xl:container bg-default-100 flex">
         <DashboardLayoutSidebar
-          sidebarItems={type === 'admin' ? SIDEBAR_ADMIN : SIDEBAR_PESERTA}
+          sidebarItems={SIDEBAR_ADMIN}
           isOpen={open}
           panel={type}
         />

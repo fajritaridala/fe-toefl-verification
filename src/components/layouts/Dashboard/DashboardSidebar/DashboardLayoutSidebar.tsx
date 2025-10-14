@@ -1,10 +1,5 @@
 import { JSX } from 'react';
-import { BiSolidFlame, BiSolidGroup, BiSolidLogOut } from 'react-icons/bi';
-import {
-  LuChevronLeft,
-  LuDatabase,
-  LuGalleryVerticalEnd,
-} from 'react-icons/lu';
+import { LuChevronLeft, LuDatabase } from 'react-icons/lu';
 import { Button, Listbox, ListboxItem, cn } from '@heroui/react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -36,7 +31,7 @@ function DashboardLayoutSidebar(props: Props) {
         <div className="mb-4 flex h-[9vh] items-center-safe border-b-1 border-neutral-300">
           <h1
             aria-label="Dashboard Panel"
-            className="flex pl-[5%] text-3xl font-semibold capitalize"
+            className="text-primary-800 flex pl-[5%] text-3xl font-extrabold capitalize"
           >
             <LuDatabase className="mr-3 rounded-md" />
             {panel} panel
@@ -55,8 +50,8 @@ function DashboardLayoutSidebar(props: Props) {
             return (
               <ListboxItem
                 key={item.key}
-                className={cn('my-1 h-12 pl-[10%] text-2xl', {
-                  'bg-black text-white': isActive,
+                className={cn('my-1 h-12 pl-[10%] text-2xl font-semibold', {
+                  'bg-primary-800 font-semibold text-white': isActive,
                 })}
                 startContent={item.icon}
                 textValue={item.label}
@@ -64,7 +59,7 @@ function DashboardLayoutSidebar(props: Props) {
                 aria-describedby={item.label}
                 onPress={() => router.push(item.href)}
               >
-                <p className="text-medium">{item.label}</p>
+                <p>{item.label}</p>
               </ListboxItem>
             );
           }}
@@ -75,7 +70,7 @@ function DashboardLayoutSidebar(props: Props) {
           fullWidth
           variant="light"
           size="lg"
-          className="flex justify-start rounded-lg px-2 py-1.5 pl-[10%] text-black"
+          className="text-primary-800 hover:!bg-primary-800 flex justify-start rounded-lg px-2 py-1.5 pl-[10%] font-semibold transition-all duration-300 hover:text-white"
           onPress={() => signOut({ callbackUrl: '/auth/login' })}
         >
           <LuChevronLeft size={24} />

@@ -52,9 +52,9 @@ function DataTable(props: Props) {
     onChangeSearch,
     onClearSearch,
     renderCell,
-    totalPages,
   } = props;
   const [statusFilter, setStatusFilter] = useState<Selection>('all');
+  const totalPages = 12;
 
   const filteredData = useMemo(() => {
     if (statusFilter === 'all') {
@@ -78,19 +78,37 @@ function DataTable(props: Props) {
         <div className="flex flex-col-reverse items-start justify-between gap-y-4 lg:w-full">
           <Input
             isClearable
-            className="w-full sm:max-w-[24%]"
+            className="w-full sm:max-w-[20vw]"
             classNames={{
-              inputWrapper: ['bg-default-100', 'shadow-sm'],
+              innerWrapper: ['focus-within:text-primary-800 '],
+              inputWrapper: [
+                'bg-primary-800 ',
+                'shadow-sm',
+                'text-white hover:text-primary-800 active:text-black',
+                'font-bold',
+                'group',
+                'focus-within:bg-default-200',
+              ],
+              input: [
+                'placeholder:text-white placeholder:font-semibold',
+                'group-hover:placeholder:text-primary-800',
+                'transition-all duration-1000',
+                'focus-within:placeholder:text-primary-800 !text-primary-800',
+              ],
             }}
             placeholder="Search..."
-            startContent={<CiSearch />}
+            startContent={<CiSearch size={24} className="stroke-1" />}
             onClear={onClearSearch}
             onChange={onChangeSearch}
           />
         </div>
         <Dropdown>
           <DropdownTrigger>
-            <Button variant="flat" endContent={<BiChevronDown />}>
+            <Button
+              variant="flat"
+              endContent={<BiChevronDown size={32} />}
+              className="bg-primary-800 border font-semibold text-white"
+            >
               Status
             </Button>
           </DropdownTrigger>
@@ -103,7 +121,12 @@ function DataTable(props: Props) {
             onSelectionChange={setStatusFilter}
           >
             {FILTER_OPTIONS.map((status) => (
-              <DropdownItem key={status.uid}>{status.name}</DropdownItem>
+              <DropdownItem
+                key={status.uid}
+                className="hover:!bg-primary-800 focus-within:!bg-primary-800 transition-all duration-300 focus-within:!text-white"
+              >
+                {status.name}
+              </DropdownItem>
             ))}
           </DropdownMenu>
         </Dropdown>
@@ -117,7 +140,14 @@ function DataTable(props: Props) {
         <Select
           className="hidden max-w-36 lg:block"
           classNames={{
-            trigger: 'bg-default-100 ',
+            trigger: [
+              'bg-primary-800',
+              'transition-all duration-300',
+              'text-white font-semibold hover:text-primary-800',
+              'groub',
+            ],
+            selectorIcon: ['stroke-2'],
+            value: ['!text-white group-hover:!text-primary-800'],
           }}
           size="md"
           selectedKeys={[limit]}
@@ -142,6 +172,19 @@ function DataTable(props: Props) {
             onChange={onChangePage}
             variant="light"
             loop
+            classNames={{
+              cursor: ['bg-primary-800'],
+              next: [
+                'bg-primary-800 hover:!bg-primary-800 active:!bg-primary-800/90',
+                'transition-all duration-300',
+                'text-white',
+              ],
+              prev: [
+                'bg-primary-800 hover:!bg-primary-800 active:!bg-primary-800/90',
+                'transition-all duration-300',
+                'text-white',
+              ],
+            }}
           />
         )}
       </div>
