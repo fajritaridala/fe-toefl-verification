@@ -1,10 +1,5 @@
-import { Button } from "@heroui/react";
-import Link from "next/link";
+import UploaderCard from '@/components/ui/Card/UploaderCard';
 
-export function HomePage() {
-  return (
-    <Button color="primary" href="./auth/login">
-      <Link href="./auth/login" className="text-white">Click</Link>
-    </Button>
-  )
+export default function HomePage() {
+  return <UploaderCard></UploaderCard>;
 }
