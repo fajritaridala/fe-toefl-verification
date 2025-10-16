@@ -6,8 +6,7 @@ export async function generateCertificate(
   data: ICertificatePayload,
   qrCode: string
 ): Promise<jsPDF> {
-  const render = await preparedData(data);
-  console.log(render);
+  const render = preparedData(data);
 
   const doc = new jsPDF({
     compress: true,

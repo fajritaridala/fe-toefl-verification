@@ -5,6 +5,7 @@ import QRCode from 'qrcode';
 import * as yup from 'yup';
 import contractService from '@/services/contract.service';
 import toeflService from '@/services/toefl.service';
+import { CERTIFICATE_LINK } from '@/utils/config/env';
 import { InputPayload } from '@/utils/interfaces/Toefl';
 import { generateCertificate } from '@/utils/libs/jspdf/generateCertificate';
 
@@ -28,18 +29,16 @@ function useAddInputModal({
   async function inputService(payload: InputPayload, address: string) {
     try {
       // kirim data ke backend
-      console.log('hit')
       const result = await toeflService.input(payload, address);
       if (!result) throw new Error('Input gagal');
       const { peserta, toefl_hash } = result.data.data;
-      console.log(peserta, payload)
 
       // kirim data ke smart contract
       // await contractService.storedRecord(toefl_hash, peserta);
 
       // buat kode qr
-      const qrCode = await QRCode.toDataURL(toefl_hash);
-      
+      const qrMsg = `${CERTIFICATE_LINK}/${toefl_hash}`;
+      const qrCode = await QRCode.toDataURL(qrMsg);
 
       // membuat sertifikat dengan data peserta dan QR code
       const certificate = await generateCertificate(peserta, qrCode); // true untuk langsung mengunduh sertifikat

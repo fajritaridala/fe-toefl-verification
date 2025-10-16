@@ -14,20 +14,24 @@ export async function middleware(request: NextRequest) {
   });
   const { pathname } = request.nextUrl;
 
-  if (AUTH_PAGES.includes(pathname) && token?.user?.accessToken)
+  // Menolak akses jika token tidak ada dan halaman yang diakses adalah halaman auth
+  if (AUTH_PAGES.includes(pathname) && !token)
     NextResponse.redirect(new URL('/', request.url));
 
   // middleware admin
   if (pathname.startsWith(ADMIN)) {
+    // tolak akses jika token tidak ada
     if (!token) {
       const url = new URL(AUTH_PAGES[0], request.url);
       url.searchParams.set('callbackUrl', encodeURI(request.url));
       return NextResponse.redirect(url);
     }
 
+    // tolak akses jika role bukan admin
     if (token?.user?.role !== 'admin')
       NextResponse.redirect(new URL('/', request.url));
 
+    // mengarahkan ke dashboard jika path adalah /admin
     if (pathname === ADMIN) {
       return NextResponse.redirect(new URL(`${ADMIN}/dashboard`, request.url));
     }
@@ -41,6 +45,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // mengarahkan ke dashboard jika path adalah /peserta
   if (pathname === PESERTA)
     NextResponse.redirect(new URL(`${PESERTA}/dashboard`, request.url));
 

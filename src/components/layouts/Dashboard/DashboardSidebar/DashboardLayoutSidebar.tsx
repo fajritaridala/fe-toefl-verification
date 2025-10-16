@@ -14,11 +14,10 @@ export interface SidebarItem {
 type Props = {
   sidebarItems: SidebarItem[];
   isOpen: boolean;
-  panel: string;
 };
 
 function DashboardLayoutSidebar(props: Props) {
-  const { sidebarItems, isOpen, panel } = props;
+  const { sidebarItems, isOpen } = props;
   const router = useRouter();
   return (
     <section
@@ -34,7 +33,7 @@ function DashboardLayoutSidebar(props: Props) {
             className="text-primary-800 flex pl-[5%] text-3xl font-extrabold capitalize"
           >
             <LuDatabase className="mr-3 rounded-md" />
-            {panel} panel
+            Admin panel
           </h1>
         </div>
         <Listbox
