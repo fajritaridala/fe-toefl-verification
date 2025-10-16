@@ -1,127 +1,80 @@
-'use client';
 
-import { Card, CardBody, CardHeader } from '@heroui/react';
-import { LuUploadCloud } from 'react-icons/lu';
-import { FaFilePdf, FaCheckCircle } from 'react-icons/fa';
-import { MdError } from 'react-icons/md';
+import { ChangeEvent, RefObject, useRef } from 'react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Input,
+  cn,
+} from '@heroui/react';
+import Image from 'next/image';
 
-type UploaderCardProps = {
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onDragEnter: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
-  isDragging: boolean;
-  isLoading: boolean;
-  preview: string | null;
-  fileName: string | undefined;
-  error: string | null;
-  isVerifying: boolean;
-  verificationResult: any | null;
-  verificationError: string | null;
+type Props = {
+  error?: string;
+  handleSubmit: () => void;
+  isPreview?: string;
+  handleClick: () => void;
+  handleFile: (e: ChangeEvent<HTMLInputElement>) => void;
+  fileInputRef: RefObject<HTMLInputElement | null>;
 };
 
-export default function UploaderCard({
-  onFileChange,
-  onDragEnter,
-  onDragLeave,
-  onDragOver,
-  onDrop,
-  isDragging,
-  isLoading,
-  preview,
-  fileName,
-  error,
-  isVerifying,
-  verificationResult,
-  verificationError,
-}: UploaderCardProps) {
-  const renderVerificationResult = () => {
-    if (isVerifying) {
-      return <p className="text-sm text-gray-500">Verifying on blockchain...</p>;
-    }
-    if (verificationError) {
-      return (
-        <div className="mt-4 flex items-center text-red-500">
-          <MdError className="mr-2" />
-          <p>{verificationError}</p>
-        </div>
-      );
-    }
-    if (verificationResult) {
-      return (
-        <div className="mt-4 text-green-500">
-          <div className="flex items-center">
-            <FaCheckCircle className="mr-2" />
-            <p className="font-semibold">Certificate Verified!</p>
-          </div>
-          <div className="mt-2 text-xs text-gray-600 dark:text-gray-300">
-            <p>Nama: {verificationResult.nama_lengkap}</p>
-            <p>NIM: {verificationResult.nomor_induk_mahasiswa}</p>
-            <p>Fakultas: {verificationResult.fakultas}</p>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+export default function UploaderCard(props: Props) {
+  const { handleSubmit, isPreview, handleClick, handleFile, fileInputRef } =
+    props;
 
   return (
-    <Card
-      className={`max-w-3xl ${isDragging ? 'border-blue-500' : ''}`}
-      onDragEnter={onDragEnter}
-      onDragLeave={onDragLeave}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
-    >
-      <CardHeader>Unggah Sertifikat</CardHeader>
+    <Card className="mx-auto w-full max-w-2xl p-4 md:p-6 lg:p-8">
+      <CardHeader className="text-center">
+        <div className="w-full">
+          <h1 className="text-primary-800 mb-2 text-[2rem] font-bold">
+            Upload Sertifikat
+          </h1>
+          <p className="text-default-500 text-sm">
+            Unggah file sertifikat kamu (pdf/jpg/png)
+          </p>
+        </div>
+      </CardHeader>
       <CardBody>
-        {isLoading ? (
-          <div className="flex h-64 w-full flex-col items-center justify-center">
-            <p>Processing PDF...</p>
-          </div>
-        ) : preview ? (
-          <div className="flex flex-col items-center justify-center">
-            <img
-              src={preview}
-              alt="PDF Preview"
-              className="h-48 w-auto rounded-lg border"
-            />
-            <p className="mt-2 text-sm text-gray-500">{fileName}</p>
-            {renderVerificationResult()}
-          </div>
-        ) : (
-          <div className="flex w-full items-center justify-center">
-            <label
-              htmlFor="dropzone-file"
-              className={`dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 ${
-                isDragging ? 'bg-blue-100 border-blue-500' : ''
-              }`}
-            >
-              <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                <LuUploadCloud className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400" />
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  PDF only
-                </p>
-              </div>
-              <input
-                id="dropzone-file"
-                type="file"
-                className="hidden"
-                onChange={onFileChange}
-                accept="application/pdf"
+        <div
+          onClick={handleClick}
+          className={cn(
+            'bg-default-100 border-primary-800 hover:bg-default-200 cursor-pointer rounded-lg border-2 border-dashed p-[5rem] text-center transition-all duration-300',
+            { 'p-2': isPreview }
+          )}
+        >
+          <Input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFile}
+            className="hidden"
+          />
+          <span className="font-medium">
+            {isPreview ? (
+              <Image
+                src={isPreview}
+                alt="preview image"
+                width={24}
+                height={24}
+                className="w-fit"
               />
-            </label>
-          </div>
-        )}
-        {error && (
-          <p className="mt-2 text-sm text-red-500">{error}</p>
-        )}
+            ) : (
+              'Drop file di sini atau klik untuk memilih'
+            )}
+          </span>
+        </div>
       </CardBody>
+      <CardFooter>
+        <div className="flex w-full justify-around">
+          <Button
+            onPress={handleSubmit}
+            className="text-medium bg-primary-800 w-[50%] font-semibold text-white"
+          >
+            Verifikasi
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

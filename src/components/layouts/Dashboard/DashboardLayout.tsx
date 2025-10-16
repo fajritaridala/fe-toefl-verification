@@ -7,22 +7,17 @@ import DashboardLayoutSidebar from './DashboardSidebar';
 type Props = {
   children: ReactNode;
   title?: string;
-  type?: string;
   description?: string;
 };
 
 function DashboardLayout(props: Props) {
-  const { title, children, description, type = 'admin' } = props;
+  const { title, children, description } = props;
   const [open, setOpen] = useState(false);
   return (
     <>
       <Header title={title} />
       <section className="max-w-screen-3xl 3xl:container bg-default-100 flex">
-        <DashboardLayoutSidebar
-          sidebarItems={SIDEBAR_ADMIN}
-          isOpen={open}
-          panel={type}
-        />
+        <DashboardLayoutSidebar sidebarItems={SIDEBAR_ADMIN} isOpen={open} />
         <div className="h-screen w-full overflow-y-auto p-8">
           <Navbar
             className="bg-default-50 flex justify-between px-0"
