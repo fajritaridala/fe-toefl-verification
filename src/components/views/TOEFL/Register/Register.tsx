@@ -1,5 +1,4 @@
 import { FieldErrors } from 'react-hook-form';
-import { LuArrowLeft } from 'react-icons/lu';
 import { Alert } from '@heroui/react';
 import TOEFLRegisterCard from '@/components/ui/Card/TOEFLRegister';
 import BaseFooter from '@/components/ui/Footer/Base';

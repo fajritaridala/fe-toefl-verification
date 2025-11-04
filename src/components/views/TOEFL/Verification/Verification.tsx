@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import UploaderCard from '@/components/ui/Card/Uploader';
 import BaseFooter from '@/components/ui/Footer/Base';
@@ -8,7 +7,7 @@ import useVerification from './useVerification';
 
 const Verification = () => {
   const pathname = usePathname();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const { data, isAuthenticated } = useUserSession();
   const {
     isPreview,
@@ -18,7 +17,8 @@ const Verification = () => {
     isLoading,
     isDragging,
     dragHandlers,
-  } = useVerification(fileInputRef);
+    fileInputRef,
+  } = useVerification();
 
   return (
     <div className="bg-bg min-h-screen">

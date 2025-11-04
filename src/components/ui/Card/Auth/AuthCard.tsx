@@ -12,7 +12,7 @@ function AuthCard(props: Props) {
   const { handleOnPress, isLoading, heading, buttonLabel } = props;
 
   return (
-    <Card className="bg-bg-light !shadow-base flex h-full w-full items-center justify-center rounded-lg py-4">
+    <Card className="bg-bg-light !shadow-base flex h-full w-full items-center justify-center rounded-xl py-4">
       <CardHeader>
         <div className="mx-auto text-center">
           <h1 className="text-text my-5 text-5xl font-bold">{heading}</h1>
@@ -26,8 +26,9 @@ function AuthCard(props: Props) {
       <CardBody>
         <div className="mx-auto w-[90%]">
           <Button
-            data-hover={false}
-            className="bg-primary w-full rounded-sm text-lg font-bold text-white transition-all delay-75 duration-100 hover:-translate-y-0.5 active:translate-y-0.5"
+            data-hover="false"
+            data-active="false"
+            className="bg-primary w-full rounded-full text-lg font-bold text-white transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
             onPress={handleOnPress}
           >
             {isLoading ? (

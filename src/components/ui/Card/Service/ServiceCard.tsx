@@ -1,4 +1,4 @@
-import { LuCalendarRange, LuTag } from 'react-icons/lu';
+import { LuArrowRight, LuCalendarRange, LuTag } from 'react-icons/lu';
 import {
   Button,
   Card,
@@ -53,10 +53,10 @@ function ServiceCard(props: Props) {
           <Button
             data-hover={false}
             radius="full"
-            className="bg-primary w-full text-lg font-bold text-white delay-75 duration-0 active:translate-y-0.5 active:!scale-100"
+            className="bg-primary w-full font-bold text-white delay-75 duration-0 active:translate-y-1 active:!scale-100"
             onPress={handleRegister}
           >
-            Daftar
+            Daftar Sekarang
           </Button>
         </div>
       </CardFooter>

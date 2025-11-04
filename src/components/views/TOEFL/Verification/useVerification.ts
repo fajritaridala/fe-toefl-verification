@@ -1,9 +1,10 @@
-import { ChangeEvent, RefObject, useState } from 'react';
+import { ChangeEvent, RefObject, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import readCertificatePdf from '@/utils/libs/pdfjs-dist/readCertificatePdf';
 
-const useVerification = (fileInputRef: RefObject<HTMLInputElement | null>) => {
+const useVerification = () => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [isPreview, setIsPreview] = useState<string>('');
   const [isQrMsg, setIsQrMsg] = useState<string>('');
@@ -20,6 +21,7 @@ const useVerification = (fileInputRef: RefObject<HTMLInputElement | null>) => {
       setIsPreview(previewUrl);
     } catch (error) {
       console.error('Error processing file:', error);
+    } finally {
       setIsLoading(false);
     }
   }
@@ -30,10 +32,15 @@ const useVerification = (fileInputRef: RefObject<HTMLInputElement | null>) => {
   }
 
   async function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    console.log(e);
     const files = e.target.files;
     if (!files) throw new Error('file tidak dapat dimuat');
     const file = files[0];
     await processFile(file);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   }
 
   // Handle file drop
@@ -59,6 +66,7 @@ const useVerification = (fileInputRef: RefObject<HTMLInputElement | null>) => {
     isLoading,
     isDragging,
     dragHandlers,
+    fileInputRef,
   };
 };
 

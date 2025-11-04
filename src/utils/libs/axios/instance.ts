@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Session } from 'next-auth';
 import { getSession } from 'next-auth/react';
 import { API_URL } from '@/utils/config/env';
+import { SessionExt } from '@/utils/interfaces/Auth';
 
 type TSessionExt = Session & {
   accessToken?: string;
@@ -20,9 +21,10 @@ const instance = axios.create({
 // Menyiapkan request sebelum dikirim ke server
 instance.interceptors.request.use(
   async (request) => {
-    const session: TSessionExt | null = await getSession();
-    if (session && session.accessToken) {
-      request.headers.Authorization = `Bearer ${session.accessToken}`;
+    const session = (await getSession()) as SessionExt | null;
+    console.log(session);
+    if (session && session.user?.accessToken) {
+      request.headers.Authorization = `Bearer ${session.user.accessToken}`;
     }
     return request;
   },

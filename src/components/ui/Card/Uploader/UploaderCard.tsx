@@ -1,5 +1,10 @@
 import { ChangeEvent, DragEvent, RefObject } from 'react';
-import { LuCloudUpload } from 'react-icons/lu';
+import {
+  LuBadgeCheck,
+  LuCircleCheck,
+  LuCloudUpload,
+  LuFilePlus,
+} from 'react-icons/lu';
 import {
   Button,
   Card,
@@ -38,7 +43,7 @@ export default function UploaderCard(props: Props) {
     handleClick,
     handleFile,
     fileInputRef,
-    loading,
+    loading = true,
     isDragging = false,
     dragHandlers,
   } = props;
@@ -51,24 +56,28 @@ export default function UploaderCard(props: Props) {
             onClick={handleClick}
             {...dragHandlers}
             className={cn(
-              'bg-bg border-secondary/60 hover:border-secondary hover:bg-bg-dark cursor-pointer rounded-lg border-2 border-dashed py-18 text-center transition-all delay-100 duration-300',
+              'bg-bg border-secondary/60 hover:border-secondary hover:bg-bg-dark cursor-pointer rounded-lg border-2 border-dashed py-32 text-center transition-all delay-100 duration-300',
               {
-                'p-2': isPreview,
+                'hover:bg-bg hover:border-secondary/60 p-2': isPreview,
                 'bg-bg-dark scale-102': isDragging && !isPreview,
               }
             )}
           >
-            {loading ? (
-              <Spinner className={cn('', { hidden: isPreview })} />
-            ) : (
-              <Input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFile}
-                accept="application/pdf"
-                className="hidden"
+            {loading && (
+              <Spinner
+                className={cn('', { hidden: isPreview })}
+                classNames={{
+                  circle1: ['border-b-secondary'],
+                }}
               />
             )}
+            <Input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFile}
+              accept="application/pdf"
+              className="hidden"
+            />
             <span>
               {isPreview ? (
                 <Image
@@ -106,6 +115,7 @@ export default function UploaderCard(props: Props) {
             <Button
               onPress={handleClick}
               data-hover="false"
+              startContent={<LuFilePlus strokeWidth={3} />}
               className="border-secondary/60 text-secondary/90 rounded-lg border-2 bg-transparent font-semibold transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
             >
               Pilih File
@@ -113,6 +123,7 @@ export default function UploaderCard(props: Props) {
             <Button
               onPress={handleSubmit}
               data-hover="false"
+              startContent={<LuCircleCheck strokeWidth={3} />}
               className="text-medium bg-primary rounded-lg font-semibold text-white transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
               isDisabled={!isPreview}
             >

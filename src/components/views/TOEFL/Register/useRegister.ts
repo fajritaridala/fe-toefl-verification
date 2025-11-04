@@ -66,7 +66,7 @@ const useTOEFLRegister = (address: string) => {
       setAlertOpen(false);
       reset();
       // Redirect to success page or dashboard
-      router.push('/peserta/toefl');
+      router.back();
     },
     onError(error) {
       setIsLoading(false);

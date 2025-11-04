@@ -12,6 +12,7 @@ const toeflService = {
     return instance.patch(`/toefls/${address}/upload-certificate`, payload);
   },
   register(payload: ToeflRegister, address: string) {
+    console.log(payload, address);
     return instance.post(`/toefls/${address}/register`, payload);
   },
 };
