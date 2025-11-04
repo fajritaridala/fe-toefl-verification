@@ -34,14 +34,16 @@ function useAddInputModal({
       const { peserta, toefl_hash } = result.data.data;
 
       // kirim data ke smart contract
-      // await contractService.storedRecord(toefl_hash, peserta);
+      await contractService.storedRecord(toefl_hash, peserta);
+      console.log('kena hit');
+      const data = await contractService.getRecord(toefl_hash);
 
       // buat kode qr
       const qrMsg = `${CERTIFICATE_LINK}/${toefl_hash}`;
       const qrCode = await QRCode.toDataURL(qrMsg);
 
       // membuat sertifikat dengan data peserta dan QR code
-      const certificate = await generateCertificate(peserta, qrCode); // true untuk langsung mengunduh sertifikat
+      const certificate = await generateCertificate(data, qrCode); // true untuk langsung mengunduh sertifikat
       certificate.save(
         `${peserta.nomor_induk_mahasiswa}_${peserta.nama_lengkap}.pdf`
       );

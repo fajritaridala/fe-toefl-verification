@@ -36,8 +36,7 @@ export async function generateCertificate(
   const logoWidth = 32;
   const logoHeight = 32;
 
-  const logoUHO =
-    'https://res.cloudinary.com/dm0oo1005/image/upload/v1759669805/Universitas_Halu_Oleo_KoleksiLogo.com_nqa4sv.png';
+  const logoUHO = '/img/logo-uho.png';
 
   doc.addImage(
     logoUHO,

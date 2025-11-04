@@ -13,23 +13,16 @@ interface IRegister extends ILogin {
 
 interface UserExt extends User {
   accessToken?: string;
-  role?: string;
   needsRegistration?: boolean;
 }
 
 interface SessionExt extends Session {
-  fullName?: string;
-  accessToken?: string;
-  address?: string;
-  needsRegistration?: boolean;
-}
-
-interface DefaultSessionExt extends DefaultSession {
   user?: {
-    name?: string;
-    email?: string;
-    image?: string;
-    address?: string;
+    address: string;
+    fullName: string;
+    email: string;
+    role: string;
+    accessToken?: string;
   };
 }
 
@@ -37,4 +30,4 @@ interface JwtExt extends JWT {
   user?: UserExt;
 }
 
-export { ILogin, IRegister, UserExt, SessionExt, JwtExt, DefaultSessionExt };
+export { ILogin, IRegister, UserExt, SessionExt, JwtExt };

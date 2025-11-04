@@ -2,3 +2,29 @@
 @plugin './hero.ts';
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
+@theme {
+  /* custom color */
+  --color-bg-dark: hsl(0 0% 85%);
+  --color-bg: hsl(300 0% 95%);
+  --color-bg-light: hsl(300 50% 100%);
+  --color-text: hsl(300 0% 4%);
+  --color-text-muted: hsl(0 0% 50%);
+  --color-highlight: hsl(300 50% 100%);
+  --color-border: hsl(0 0% 50%);
+  --color-border-muted: hsl(211.49 94.39% 20.98%);
+  --color-primary: hsl(239 33% 36%);
+  --color-secondary: hsl(30.94 89.72% 58.04%);
+  --color-danger: hsl(359.67 95.77% 62.94%);
+  --color-warning: hsl(52 82% 24%);
+  --color-success: hsl(154 58% 29%);
+  --color-info: hsl(217 42% 43%);
+  --color-custom: hsl(239 33% 90%);
+
+  /* custom shadow */
+  --shadow-base: 0 2px 2px hsl(0 0% 50%);
+  --shadow-card: 0 40px 8px -10px hsl(0 0% 90%);
+  --shadow-box: 15px 15px 30px #bebebe, -15px -15px 30px #ffffff;
+
+  /* custom text size */
+  --text-extrasmall: 0.75rem;
+}

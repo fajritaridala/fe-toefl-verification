@@ -19,9 +19,9 @@ export const useLogin = () => {
   const [address, setAddress] = useState('');
   const callbackUrl: string = (router.query.callbackUrl as string) || '/';
 
-  const loginService = async (payload: ILogin) => {
+  const loginService = async (address: string) => {
     const result = await signIn('credentials', {
-      ...payload,
+      address,
       redirect: false,
       callbackUrl,
     });
@@ -67,7 +67,7 @@ export const useLogin = () => {
         return;
       }
       if (user?.role === 'peserta') {
-        await router.push('/peserta/toefl');
+        await router.push('/toefl');
         return;
       }
     },
@@ -86,7 +86,7 @@ export const useLogin = () => {
       const { address } = await metamask.connect();
       setAddress(address);
       await loginSchema.validate({ address });
-      mutateLogin({ address });
+      mutateLogin(address);
     } catch (error) {
       setIsLoading(false);
       const err = error as Error;

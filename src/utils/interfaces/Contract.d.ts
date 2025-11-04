@@ -11,6 +11,7 @@ interface IRecord {
   nilai_listening: number;
   nilai_structure: number;
   nilai_reading: number;
+  nilai_total: number;
 }
 
 export { IRecord };

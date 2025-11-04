@@ -50,27 +50,26 @@ const contractService = {
         nilai_listening: peserta.nilai_listening,
         nilai_structure: peserta.nilai_structure,
         nilai_reading: peserta.nilai_reading,
+        nilai_total: peserta.nilai_total,
         tanggal_terbit: Math.floor(Date.now() / 1000),
         address_admin: signer.address,
       };
 
       await StoredRecord.validate(record);
 
-      console.log('hit');
-      console.log(record);
-
       const tx = await contract.storedRecord(toefl_hash, record);
       await tx.wait();
 
       return 'success store record';
-    } catch (error) {
-      console.error('Error storing record:', error);
+    } catch (error: any) {
+      console.log(error.reason);
+      console.log(error?.error);
+      return { success: false, error: 'Hash telah terdaftar' };
       throw error;
     }
   },
   async getRecord(toefl_hash: string) {
     try {
-      console.log(toefl_hash);
       const { contract } = await getContract();
       if (!contract) throw new Error('Contract not available');
 

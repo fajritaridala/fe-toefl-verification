@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import contractAbi from '@/abi/ToeflRecord.json';
-import { CONTRACT_ADDRESS } from '@/utils/config/env';
+import { CONTRACT_ADDRESS, IP_PROVIDER, RPC_URL } from '@/utils/config/env';
 import metamask from '../metamask/metamask';
 import MMSDK from '../metamask/sdk';
 
@@ -13,10 +13,9 @@ export async function getContractWithSigner() {
 }
 
 export async function getContract() {
-  // const { provider } = await metamask.connectAndSign();
-  const web3Provider = MMSDK?.getProvider();
-  if (!web3Provider) throw new Error('web3 provider tidak tersedia');
-  const provider = new ethers.BrowserProvider(web3Provider);
+  if (!RPC_URL) throw new Error('RPC_URL tidak ditemukan');
+  // const provider = new ethers.JsonRpcProvider(RPC_URL);
+  const provider = new ethers.JsonRpcProvider(IP_PROVIDER); // utk dev, menggunakan provider langsung ke ip komputer
   const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
   return { contract };
 }

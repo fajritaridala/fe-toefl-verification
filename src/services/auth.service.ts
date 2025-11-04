@@ -3,8 +3,8 @@ import instance from '@/utils/libs/axios/instance';
 import endpoint from './endpoint';
 
 const authServices = {
-  login(payload: ILogin) {
-    return instance.post(`auth/login`, payload);
+  login(address: string) {
+    return instance.post(`auth/login`, { address });
   },
   register(payload: IRegister) {
     return instance.post(`auth/register`, payload);

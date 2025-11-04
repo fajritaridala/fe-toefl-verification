@@ -10,7 +10,7 @@ const AuthLayout = (props: Props) => {
   return (
     <>
       <Header title={title} />
-      <main className="flex h-screen items-center justify-center bg-gray-100">
+      <main className="flex h-screen items-center justify-center bg-bg-dark">
         {children}
       </main>
     </>

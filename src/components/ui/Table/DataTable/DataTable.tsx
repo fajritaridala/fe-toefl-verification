@@ -217,7 +217,7 @@ function DataTable(props: Props) {
         }
       >
         {(item) => (
-          <TableRow key={item._id as Key}>
+          <TableRow key={item.address_peserta as Key}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

@@ -13,9 +13,12 @@ export async function middleware(request: NextRequest) {
     secret: AUTH_SECRET,
   });
   const { pathname } = request.nextUrl;
+  console.log(pathname);
+  console.log('Middleware');
+  console.log(token);
 
   // Menolak akses jika token tidak ada dan halaman yang diakses adalah halaman auth
-  if (AUTH_PAGES.includes(pathname) && !token)
+  if (AUTH_PAGES.includes(pathname) && token)
     NextResponse.redirect(new URL('/', request.url));
 
   // middleware admin
@@ -28,7 +31,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // tolak akses jika role bukan admin
-    if (token?.user?.role !== 'admin')
+    if (token?.role !== 'admin')
       NextResponse.redirect(new URL('/', request.url));
 
     // mengarahkan ke dashboard jika path adalah /admin
@@ -46,8 +49,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // mengarahkan ke dashboard jika path adalah /peserta
-  if (pathname === PESERTA)
-    NextResponse.redirect(new URL(`${PESERTA}/dashboard`, request.url));
+  if (pathname === PESERTA) NextResponse.redirect(new URL('/', request.url));
 
   return NextResponse.next();
 }

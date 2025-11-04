@@ -1,12 +1,12 @@
-import AuthLayout from "@/components/layouts/Auth";
-import LoginPage from "@/components/views/Auth/Login/LoginPage";
+import AuthLayout from '@/components/layouts/Auth';
+import Login from '@/components/views/Auth/Login/Login';
 
-const Login = () => {
+const LoginPage = () => {
   return (
     <AuthLayout title="Login">
-      <LoginPage />
+      <Login />
     </AuthLayout>
   );
 };
 
-export default Login;
+export default LoginPage;

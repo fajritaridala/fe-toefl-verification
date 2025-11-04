@@ -5,17 +5,32 @@ import {
 } from '@/utils/interfaces/Certificate';
 
 export function preparedData(data: ICertificatePayload) {
-  const { tanggal_tes, tanggal_lahir } = data;
-  const tanggal_valid = moment(tanggal_tes * 1000)
+  const {
+    tanggal_tes,
+    tanggal_lahir,
+    nilai_listening,
+    nilai_reading,
+    nilai_structure,
+    nilai_total,
+  } = data;
+
+  const tanggalTes = Number(tanggal_tes);
+  const tanggalLahir = Number(tanggal_lahir);
+  const nilaiListening = Number(nilai_listening);
+  const nilaiReading = Number(nilai_reading);
+  const nilaiStructure = Number(nilai_structure);
+  const nilaiTotal = Number(nilai_total);
+
+  const tanggal_valid = moment(tanggalTes * 1000)
     .add(2, 'years')
     .locale('id')
     .format('D MMMM YYYY');
   const _tanggal_tes = moment
-    .unix(tanggal_tes)
+    .unix(tanggalTes)
     .locale('id')
     .format('D MMMM YYYY');
   const _tanggal_lahir = moment
-    .unix(tanggal_lahir)
+    .unix(tanggalLahir)
     .locale('id')
     .format('D MMMM YYYY');
 
@@ -30,10 +45,10 @@ export function preparedData(data: ICertificatePayload) {
     program_studi: data.program_studi,
     sesi_tes: data.sesi_tes,
     tanggal_tes: _tanggal_tes,
-    nilai_listening: data.nilai_listening,
-    nilai_structure: data.nilai_structure,
-    nilai_reading: data.nilai_reading,
-    nilai_total: data.nilai_total,
+    nilai_listening: nilaiListening,
+    nilai_structure: nilaiStructure,
+    nilai_reading: nilaiReading,
+    nilai_total: nilaiTotal,
     tanggal_valid: tanggal_valid,
     nomor_serial: nomor_serial,
   } as ICertificateRender;
