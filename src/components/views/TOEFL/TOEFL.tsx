@@ -20,7 +20,7 @@ const TOEFL = () => {
         <section className="relative mx-auto my-32 flex flex-row lg:max-w-5xl">
           <div className="bg-secondary absolute -top-50 -left-20 h-[30rem] w-[30rem] rounded-full blur-[12rem]" />
           <div className="bg-primary absolute right-30 bottom-20 h-[10rem] w-[10rem] rounded-full blur-[9rem]" />
-          <div className="relative z-0 flex flex-col justify-center text-left">
+          <div className="animate-fade-left relative z-0 flex flex-col justify-center text-left">
             <h1 className="text-primary mb-4 text-6xl font-extrabold">
               Bahasa menghubungkan <br /> kita semua
             </h1>
@@ -35,7 +35,7 @@ const TOEFL = () => {
             width={1580}
             height={1580}
             priority
-            className="!shadow-main relative z-0 w-[30vw] rounded-lg border-black"
+            className="!shadow-main animate-fade-right relative z-0 w-[30vw] rounded-lg border-black"
           />
         </section>
         <section className="relative overflow-hidden">
@@ -50,7 +50,7 @@ const TOEFL = () => {
                 disesuaikan dengan kebutuhan Anda
               </p>
             </div>
-            <div className="mx-auto grid w-full grid-flow-col grid-rows-2 justify-between gap-8 py-14">
+            <div className="mx-auto grid w-full grid-flow-col justify-between gap-8 py-14">
               {SERVICE_CONTENT.map((item) => (
                 <ServiceCard
                   key={item.key}

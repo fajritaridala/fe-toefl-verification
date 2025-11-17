@@ -22,9 +22,77 @@
 
   /* custom shadow */
   --shadow-base: 0 2px 2px hsl(0 0% 50%);
-  --shadow-card: 0 40px 8px -10px hsl(0 0% 90%);
   --shadow-box: 15px 15px 30px #bebebe, -15px -15px 30px #ffffff;
 
   /* custom text size */
   --text-extrasmall: 0.75rem;
+
+  /* custom animate */
+  --animate-fade-top: fade-from-top 0.6s ease-in;
+  --animate-fade-bottom: fade-from-bottom 0.6s ease-in;
+  --animate-fade-left: fade-from-left 0.6s ease-in;
+  --animate-fade-right: fade-from-right 0.6s ease-in;
+  --animate-float: float 8s infinite ease-in-out;
+
+  @keyframes fade-from-top {
+    from {
+      opacity: 0;
+      transform: translateY(-32px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-from-bottom {
+    from {
+      opacity: 0;
+      transform: translateY(32px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-from-left {
+    from {
+      opacity: 0;
+      transform: translateX(-32px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fade-from-right {
+    from {
+      opacity: 0;
+      transform: translateX(32px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes float {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(4rem, -3rem);
+    } /* kanan-atas (segitiga) */
+    50% {
+      transform: translate(0, 2rem);
+    } /* bawah (segitiga) */
+    75% {
+      transform: translate(-3rem, 1.5rem);
+    } /* kiri-bawah (trapesium) */
+    100% {
+      transform: translate(0, 0);
+    }
+  }
 }

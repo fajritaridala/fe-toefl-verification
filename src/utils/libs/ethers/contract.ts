@@ -2,7 +2,6 @@ import { ethers } from 'ethers';
 import contractAbi from '@/abi/ToeflRecord.json';
 import { CONTRACT_ADDRESS, IP_PROVIDER, RPC_URL } from '@/utils/config/env';
 import metamask from '../metamask/metamask';
-import MMSDK from '../metamask/sdk';
 
 const abi = contractAbi.abi;
 

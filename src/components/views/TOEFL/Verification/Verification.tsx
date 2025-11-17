@@ -38,7 +38,7 @@ const Verification = () => {
               resmi dari SIMPEKA.
             </p>
           </div>
-          <div className="mx-auto mt-12 w-xl">
+          <div className="mx-auto animate-fade-bottom mt-12 w-xl">
             <UploaderCard
               handleSubmit={handleSubmit}
               fileInputRef={fileInputRef}

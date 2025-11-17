@@ -25,10 +25,10 @@ const Home = () => {
     >
       <section className="relative flex flex-col mask-b-from-100% mask-b-to-0%">
         <div className="absolute inset-0 -z-10 h-[100vh] w-full overflow-hidden">
-          <div className="bg-secondary absolute right-50 bottom-70 -z-10 h-72 w-72 rounded-full blur-[10rem]" />
-          <div className="bg-primary absolute top-0 left-40 -z-20 h-96 w-96 rounded-full border blur-[10rem]" />
+          <div className="bg-secondary animate-float absolute right-50 bottom-70 -z-10 h-72 w-72 rounded-full blur-[5rem]" />
+          <div className="bg-primary animate-float absolute top-0 left-40 -z-20 h-96 w-96 rounded-full border blur-[5rem] delay-100" />
         </div>
-        <div className="z-10 flex h-[80vh] flex-col">
+        <div className="animate-fade-bottom z-10 flex h-[80vh] flex-col">
           <div className="fixed left-0 mt-30 mb-6 px-[10%] text-center">
             <h1 className="text-text mx-auto text-6xl font-extrabold">
               Platform Tes TOEFL Terpercaya dengan Keamanan{' '}
