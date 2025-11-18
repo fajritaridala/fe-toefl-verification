@@ -4,11 +4,14 @@ import ServiceCard from '@/components/ui/Card/Service';
 import BaseFooter from '@/components/ui/Footer/Base';
 import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
 import useUserSession from '@/hooks/useUserSession';
-import SERVICE_CONTENT from './TOEFL.constants';
+import toRupiah from '@/utils/toRupiah';
+import useLayanan from './useLayanan';
 
 const TOEFL = () => {
   const pathname = usePathname();
   const { data, isAuthenticated } = useUserSession();
+  const { layanan, isErrorLayanan, isPendingLayanan, handleRedirect } =
+    useLayanan();
 
   return (
     <div className="bg-bg-light">
@@ -51,14 +54,15 @@ const TOEFL = () => {
               </p>
             </div>
             <div className="mx-auto grid w-full grid-flow-col justify-between gap-8 py-14">
-              {SERVICE_CONTENT.map((item) => (
+              {layanan?.map((item) => (
                 <ServiceCard
-                  key={item.key}
-                  title={item.title}
-                  schedule={item.schedule}
+                  key={item._id}
+                  title={item.name}
+                  schedule={String(item.duration)}
                   description={item.description}
-                  price={item.price}
-                  redirect={item.redirect}
+                  price={toRupiah(item.price)}
+                  notes={item.notes}
+                  redirect={() => handleRedirect(item._id)}
                 />
               ))}
             </div>

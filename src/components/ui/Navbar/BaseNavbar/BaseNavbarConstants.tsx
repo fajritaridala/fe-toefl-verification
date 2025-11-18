@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 const NAVBAR_ITEMS = [
   { label: 'Beranda', href: '/' },
-  { label: 'Layanan', href: '/toefl' },
+  { label: 'Layanan', href: '/layanan' },
   { label: 'Verifikasi Sertifikat', href: '/toefl/verification' },
 ];
 

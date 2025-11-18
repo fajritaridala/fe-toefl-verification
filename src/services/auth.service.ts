@@ -1,13 +1,13 @@
-import { ILogin, IRegister } from '@/utils/interfaces/Auth';
+import { IRegister } from '@/utils/interfaces/Auth';
 import instance from '@/utils/libs/axios/instance';
 import endpoint from './endpoint';
 
 const authServices = {
   login(address: string) {
-    return instance.post(`auth/login`, { address });
+    return instance.post(`${endpoint.AUTH}/login`, { address });
   },
   register(payload: IRegister) {
-    return instance.post(`auth/register`, payload);
+    return instance.post(`${endpoint.AUTH}/register`, payload);
   },
   getProfileWithToken(token: string) {
     return instance.get(`${endpoint.AUTH}/me`, {

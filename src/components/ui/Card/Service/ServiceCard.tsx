@@ -1,31 +1,26 @@
-import { LuArrowRight, LuCalendarRange, LuTag } from 'react-icons/lu';
+import { LuTimer } from 'react-icons/lu';
 import {
   Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
-  Chip,
   Divider,
-  Image,
 } from '@heroui/react';
 import { useRouter } from 'next/router';
 
 type Props = {
-  redirect: string;
   title: string;
   description: string;
   schedule: string;
   price: string;
+  notes?: string;
+  redirect?: () => void;
 };
 
 function ServiceCard(props: Props) {
   const router = useRouter();
-  const { redirect, title, description, schedule, price } = props;
-
-  const handleRegister = () => {
-    router.push(redirect);
-  };
+  const { redirect, title, description, schedule, price, notes } = props;
 
   return (
     <Card className="group hover:shadow-box rounded-xl border border-gray-300 p-2 shadow-none transition-all delay-75 duration-200 ease-in-out hover:-translate-y-2">
@@ -33,13 +28,22 @@ function ServiceCard(props: Props) {
         <div className="text-primary flex w-full flex-wrap">
           <h1 className="mb-2 text-xl font-extrabold">{title}</h1>
           <div className="text-secondary flex w-full gap-2 text-[12px]">
-            <LuCalendarRange strokeWidth={2} className="mt-1" />
-            <p className="">{schedule}</p>
+            <LuTimer strokeWidth={2} className="mt-1" />
+            <p className="">{schedule} menit</p>
           </div>
         </div>
       </CardHeader>
-      <CardBody className="-mt-4">
+      <CardBody className="-mt-4 flex justify-between">
         <p className="text-text-muted text-sm">{description}</p>
+        {notes && (
+          <div className="border-info bg-info/10 mt-2 flex gap-1 rounded-r-full border-l-3 py-1">
+            {/* <LuInfo
+              strokeWidth={2}
+              className="text-info ml-1 h-full text-[12px]"
+            /> */}
+            <p className="text-info ml-2 text-[12px] italic">{notes}</p>
+          </div>
+        )}
       </CardBody>
       <Divider className="bg-primary/20" />
       <CardFooter>
@@ -48,13 +52,13 @@ function ServiceCard(props: Props) {
             <h3 className="text-secondary text-[12px] leading-4 font-semibold">
               Harga
             </h3>
-            <p className="text-xl font-extrabold">Rp {price}</p>
+            <p className="text-xl font-extrabold">{price}</p>
           </div>
           <Button
             data-hover={false}
             radius="full"
             className="bg-primary w-full font-bold text-white delay-75 duration-0 active:translate-y-1 active:!scale-100"
-            onPress={handleRegister}
+            onPress={redirect}
           >
             Daftar Sekarang
           </Button>
