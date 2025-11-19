@@ -7,7 +7,7 @@ import useUserSession from '@/hooks/useUserSession';
 import toRupiah from '@/utils/toRupiah';
 import useLayanan from './useLayanan';
 
-const TOEFL = () => {
+const Layanan = () => {
   const pathname = usePathname();
   const { data, isAuthenticated } = useUserSession();
   const { layanan, isErrorLayanan, isPendingLayanan, handleRedirect } =
@@ -74,4 +74,4 @@ const TOEFL = () => {
   );
 };
 
-export default TOEFL;
+export default Layanan;

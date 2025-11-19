@@ -1,0 +1,16 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import schedulesService from '@/services/schedules.service';
+
+const useJadwal = (service_id: string) => {
+  const { data } = useQuery({
+    queryKey: ['jadwal', service_id],
+    queryFn: async () => await schedulesService.getSchedules({ service_id }),
+    enabled: !!service_id,
+  });
+  const dataJadwal = data?.data.data || [];
+
+  return { dataJadwal };
+};
+
+export default useJadwal;

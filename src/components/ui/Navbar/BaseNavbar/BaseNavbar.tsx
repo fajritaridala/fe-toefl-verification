@@ -19,8 +19,8 @@ import { NAVBAR_DROPDOWN_ITEMS, NAVBAR_ITEMS } from './BaseNavbarConstants';
 import useBaseNavbar from './useBaseNavbar';
 
 type Props = {
-  isAuthenticated: boolean;
-  user: SessionExt | null;
+  isAuthenticated?: boolean;
+  user?: SessionExt | null;
   children: ReactNode;
   pathname?: string;
 };

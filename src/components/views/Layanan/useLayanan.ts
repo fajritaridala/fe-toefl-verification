@@ -29,8 +29,8 @@ const useLayanan = () => {
 
   const layanan = dataLayanan?.data.data as LayananType;
 
-  const handleRedirect = (serviceId: string) => {
-    router.push(`/layanan/${serviceId}`);
+  const handleRedirect = (service_id: string) => {
+    router.push(`/layanan/jadwal/${service_id}`);
   };
 
   return { layanan, isPendingLayanan, isErrorLayanan, handleRedirect };

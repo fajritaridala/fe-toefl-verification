@@ -2,11 +2,13 @@ import instance from '@/utils/libs/axios/instance';
 import endpoint from './endpoint';
 
 type GetQueryPayload = {
-  page: number;
-  limit: number;
+  page?: number;
+  limit?: number;
   search?: string;
   service_id?: string;
 };
+
+type GetQueryParams = string | GetQueryPayload;
 
 type CreatePayload = {
   service_id: string;
@@ -36,9 +38,27 @@ type InputPayload = {
   writing: number;
 };
 
+const buildQueryString = (query?: GetQueryParams) => {
+  if (!query) return '';
+  if (typeof query === 'string') return query;
+
+  const params = new URLSearchParams();
+  Object.entries(query).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      params.append(key, String(value));
+    }
+  });
+
+  return params.toString();
+};
+
 const schedulesService = {
-  getSchedules: (query?: GetQueryPayload) => {
-    return instance.get(`${endpoint.SCHEDULES}?${query}`);
+  getSchedules: (query?: GetQueryParams) => {
+    const queryString = buildQueryString(query);
+    const url = queryString
+      ? `${endpoint.SCHEDULES}?${queryString}`
+      : endpoint.SCHEDULES;
+    return instance.get(url);
   },
   getSchedule: (scheduleId: string) => {
     return instance.get(`${endpoint.SCHEDULES}/${scheduleId}/participants`);

@@ -21,6 +21,9 @@ const servicesService = {
   getServices: () => {
     return instance.get(`${endpoint.SERVICES}`);
   },
+  getService: (id: string) => {
+    return instance.get(`${endpoint.SERVICES}/${id}`);
+  },
   createService: (payload: CreateServicePayload) => {
     return instance.post(`${endpoint.SERVICES}`, payload);
   },
