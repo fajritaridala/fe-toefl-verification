@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import servicesService from '@/services/services.service';
 
 type LayananType = [
@@ -28,6 +28,7 @@ const useLayanan = () => {
   });
 
   const layanan = dataLayanan?.data.data as LayananType;
+  console.log(dataLayanan?.data.data)
 
   const handleRedirect = (service_id: string) => {
     router.push(`/layanan/jadwal/${service_id}`);

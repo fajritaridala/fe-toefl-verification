@@ -1,5 +1,5 @@
 import BaseLayout from '@/components/layouts/Base';
-import Verification from '@/components/views/TOEFL/Verification';
+import Verification from '@/components/views/Verification';
 
 const VerificationPage = () => {
   return (

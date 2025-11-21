@@ -1,11 +1,12 @@
-import { useParams, usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import CalendarCard from '@/components/ui/Card/Calendar';
 import BaseFooter from '@/components/ui/Footer/Base';
 import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
 import useJadwal from './useJadwal';
 
 const Jadwal = () => {
-  const { service_id } = useParams();
+  const router = useRouter();
+  const { service_id } = router.query;
   const { dataJadwal } = useJadwal(service_id as string);
   return (
     <BaseNavbar>

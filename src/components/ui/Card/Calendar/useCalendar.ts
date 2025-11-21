@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 // Export tipe data agar bisa dipakai di komponen UI
 export type ScheduleData = {

@@ -14,6 +14,7 @@ import {
   cn,
 } from '@heroui/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { SessionExt } from '@/utils/interfaces/Auth';
 import { NAVBAR_DROPDOWN_ITEMS, NAVBAR_ITEMS } from './BaseNavbarConstants';
 import useBaseNavbar from './useBaseNavbar';
@@ -28,6 +29,7 @@ type Props = {
 const BaseNavbar = (props: Props) => {
   const { isAuthenticated = false, user, children, pathname } = props;
   const [username, setUsername] = useState('User');
+  const router = useRouter();
   const { isScrolled, handleLogin } = useBaseNavbar();
 
   useEffect(() => {
@@ -104,7 +106,7 @@ const BaseNavbar = (props: Props) => {
                 </DropdownTrigger>
               </NavbarItem>
               <DropdownMenu>
-                {NAVBAR_DROPDOWN_ITEMS.map((item) => (
+                {NAVBAR_DROPDOWN_ITEMS(router).map((item) => (
                   <DropdownItem
                     key={item.key}
                     onPress={item.onPress}

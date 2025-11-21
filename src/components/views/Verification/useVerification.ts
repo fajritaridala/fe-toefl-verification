@@ -1,5 +1,5 @@
 import { ChangeEvent, RefObject, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import readCertificatePdf from '@/utils/libs/pdfjs-dist/readCertificatePdf';
 

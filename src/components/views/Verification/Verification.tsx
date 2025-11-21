@@ -1,4 +1,4 @@
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import UploaderCard from '@/components/ui/Card/Uploader';
 import BaseFooter from '@/components/ui/Footer/Base';
 import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
@@ -6,7 +6,8 @@ import useUserSession from '@/hooks/useUserSession';
 import useVerification from './useVerification';
 
 const Verification = () => {
-  const pathname = usePathname();
+  const router = useRouter();
+  const pathname = router.pathname;
 
   const { data, isAuthenticated } = useUserSession();
   const {

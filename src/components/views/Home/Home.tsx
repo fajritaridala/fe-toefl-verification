@@ -1,6 +1,6 @@
 import { LuArrowRight } from 'react-icons/lu';
 import { Button } from '@heroui/react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import BaseCard from '@/components/ui/Card/Base';
 import TestimonyCard from '@/components/ui/Card/Testimony';
 import BaseFooter from '@/components/ui/Footer/Base';
@@ -9,8 +9,8 @@ import useUserSession from '@/hooks/useUserSession';
 import { CONTENT_HOW, CONTENT_TESTIMONY, CONTENT_WHY } from './Home.constants';
 
 const Home = () => {
-  const pathname = usePathname();
   const router = useRouter();
+  const pathname = router.pathname;
   const { data, isAuthenticated } = useUserSession();
 
   const handlePress = () => {
@@ -122,7 +122,7 @@ const Home = () => {
           onPress={() => router.push('/toefl')}
           radius="full"
           data-hover="false"
-          className="bg-primary mt-8 px-10 !py-6 font-bold text-white transition-all delay-75 duration-100 hover:-translate-y-1 active:translate-y-1"
+          className="bg-white mt-8 px-10 !py-6 font-bold text-primary transition-all delay-75 duration-100 hover:-translate-y-1 active:translate-y-1"
         >
           Lihat Pilihan Tes
         </Button>

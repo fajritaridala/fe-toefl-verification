@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import contractService from '@/services/contract.service';
 
 const useVerificationResult = () => {
@@ -10,8 +10,8 @@ const useVerificationResult = () => {
   const [isError, setIsError] = useState('');
 
   // get peserta dari blockchain
-  const pathname = usePathname();
-  const hash = pathname ? pathname.split('/').pop() : null;
+  const router = useRouter();
+  const hash = router.asPath ? router.asPath.split('/').pop() : null;
 
   useEffect(() => {
     const fetchData = async () => {

@@ -10,8 +10,8 @@ import {
   Spinner,
 } from '@heroui/react';
 import { useRouter } from 'next/router';
-import AuthCard from '@/components/ui/Card/AuthCard';
 import { useRegister } from '../Register/useRegister';
+import AuthCard from '@/components/ui/Card/Auth';
 
 const RegisterPage = () => {
   const router = useRouter();

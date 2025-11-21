@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import ServiceCard from '@/components/ui/Card/Service';
 import BaseFooter from '@/components/ui/Footer/Base';
 import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
@@ -8,10 +8,12 @@ import toRupiah from '@/utils/toRupiah';
 import useLayanan from './useLayanan';
 
 const Layanan = () => {
-  const pathname = usePathname();
+  const router = useRouter();
+  const pathname = router.pathname;
   const { data, isAuthenticated } = useUserSession();
   const { layanan, isErrorLayanan, isPendingLayanan, handleRedirect } =
     useLayanan();
+  console.log(layanan)
 
   return (
     <div className="bg-bg-light">
