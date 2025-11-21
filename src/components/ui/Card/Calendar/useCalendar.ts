@@ -18,8 +18,9 @@ export const useCalendar = (data: ScheduleData[]) => {
   const [currentDate, setCurrentDate] = useState(() => new Date());
 
   // Fungsi Navigasi ke Halaman Register
-  const navigateToRegister = (scheduleId: string) => {
-    router.push(`/service/schedule/${scheduleId}/register`);
+  const navigateToRegister = (schedule_id: string) => {
+    console.log(schedule_id);
+    router.push(`/schedule/${schedule_id}/register`);
   };
 
   // Fungsi Ganti Bulan

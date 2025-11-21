@@ -1,3 +1,4 @@
+import { ScheduleRegister } from '@/utils/interfaces/Schedule';
 import instance from '@/utils/libs/axios/instance';
 import endpoint from './endpoint';
 
@@ -13,18 +14,6 @@ type GetQueryParams = string | GetQueryPayload;
 type CreatePayload = {
   service_id: string;
   schedule_date: string;
-};
-
-type RegisterPayload = {
-  file: File;
-  fullName: string;
-  gender: string;
-  birth_date: string;
-  phone_number: string;
-  nim: string;
-  faculty: string;
-  major: string;
-  payment_date: string;
 };
 
 type InputParams = {
@@ -66,10 +55,27 @@ const schedulesService = {
   createSchedule: (payload: CreatePayload) => {
     return instance.post(`${endpoint.SCHEDULES}`, payload);
   },
-  scheduleRegistration: (scheduleId: string, payload: RegisterPayload) => {
+  registerParticipant: async (
+    scheduleId: string,
+    payload: ScheduleRegister
+  ) => {
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (key === 'payment_receipt' && value instanceof File) {
+        formData.append('file', value);
+      } else if (value) {
+        formData.append(key, value);
+      }
+    });
+
     return instance.patch(
-      `${endpoint.SCHEDULES}/${scheduleId}/register`,
-      payload
+      `${endpoint.SCHEDULES}/${scheduleId}/participants`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
   },
   inputScore: (params: InputParams, payload: InputPayload) => {
