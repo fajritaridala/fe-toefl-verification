@@ -19,7 +19,7 @@ export const useCalendar = (data: ScheduleData[]) => {
 
   // Fungsi Navigasi ke Halaman Register
   const navigateToRegister = (scheduleId: string) => {
-    router.push(`/layanan/jadwal/${scheduleId}/register`);
+    router.push(`/service/schedule/${scheduleId}/register`);
   };
 
   // Fungsi Ganti Bulan

@@ -192,6 +192,13 @@ export default function TOEFLRegisterCard(props: Props) {
                 </Select>
               )}
             />
+            <Controller
+              name="schedule_id"
+              control={control}
+              render={({ field }) => (
+                <input type="hidden" {...field} />
+              )}
+            />
           </div>
           <Divider className="my-2" />
           <div className="flex w-full gap-4">

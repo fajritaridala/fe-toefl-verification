@@ -14,6 +14,7 @@ interface ToeflRegister {
   fakultas: string;
   program_studi: string;
   sesi_tes: string;
+  schedule_id: string;
 }
 
 export type { InputPayload, ToeflRegister };

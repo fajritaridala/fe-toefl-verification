@@ -6,7 +6,7 @@ type CalendarCardProps = {
   className?: string;
 };
 
-const CELL_HEIGHT = "h-18";
+const CELL_HEIGHT = "h-20";
 
 const CalendarCard = ({ data = [], className = '' }: CalendarCardProps) => {
   const { currentDate, calendarGrid, changeMonth, navigateToRegister } =
@@ -55,7 +55,7 @@ const CalendarCard = ({ data = [], className = '' }: CalendarCardProps) => {
       </div>
 
       {/* --- GRID TANGGAL --- */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-2">
         {calendarGrid.map((item, index) => {
           if (!item.isCurrentMonth) {
             return (

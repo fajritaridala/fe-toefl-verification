@@ -1,15 +1,7 @@
-import { useRouter } from 'next/router';
 import UploaderCard from '@/components/ui/Card/Uploader';
-import BaseFooter from '@/components/ui/Footer/Base';
-import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
-import useUserSession from '@/hooks/useUserSession';
 import useVerification from './useVerification';
 
 const Verification = () => {
-  const router = useRouter();
-  const pathname = router.pathname;
-
-  const { data, isAuthenticated } = useUserSession();
   const {
     isPreview,
     handleClick,
@@ -23,12 +15,7 @@ const Verification = () => {
 
   return (
     <div className="bg-bg min-h-screen">
-      <BaseNavbar
-        isAuthenticated={isAuthenticated}
-        user={data}
-        pathname={pathname}
-      >
-        <section className="mb-20 flex flex-col">
+      <section className="mb-20 flex flex-col">
           <div className="mt-24 text-center">
             <h1 className="text-text mx-auto mb-4 text-4xl font-extrabold">
               Verifikasi Keaslian Sertifikat
@@ -52,8 +39,6 @@ const Verification = () => {
             />
           </div>
         </section>
-        <BaseFooter />
-      </BaseNavbar>
     </div>
   );
 };

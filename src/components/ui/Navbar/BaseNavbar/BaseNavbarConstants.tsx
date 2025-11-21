@@ -3,8 +3,8 @@ import { signOut } from 'next-auth/react';
 
 const NAVBAR_ITEMS = [
   { label: 'Beranda', href: '/' },
-  { label: 'Layanan', href: '/layanan' },
-  { label: 'Verifikasi Sertifikat', href: '/verification' },
+  { label: 'Layanan', href: '/service' },
+  { label: 'Verifikasi', href: '/verification' },
 ];
 
 const NAVBAR_DROPDOWN_ITEMS = (router: any) => [

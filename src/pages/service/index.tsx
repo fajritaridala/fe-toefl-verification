@@ -1,12 +1,12 @@
 import BaseLayout from '@/components/layouts/Base';
-import Layanan from '@/components/views/Layanan';
+import Service from '@/components/views/Service';
 
-const LayananPage = () => {
+const ServicePage = () => {
   return (
     <BaseLayout title="Layanan TOEFL">
-      <Layanan />
+      <Service />
     </BaseLayout>
   );
 };
 
-export default LayananPage;
+export default ServicePage;

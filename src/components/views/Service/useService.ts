@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import servicesService from '@/services/services.service';
 
-type LayananType = [
+type ServiceType = [
   {
     _id: string;
     name: string;
@@ -13,28 +13,28 @@ type LayananType = [
   },
 ];
 
-const useLayanan = () => {
+const useService = () => {
   const router = useRouter();
   const {
-    data: dataLayanan,
-    isPending: isPendingLayanan,
-    isError: isErrorLayanan,
+    data: serviceData,
+    isPending: isPendingServices,
+    isError: isErrorServices,
   } = useQuery({
-    queryKey: ['layanan'],
+    queryKey: ['services'],
     queryFn: async () => {
       const response = await servicesService.getServices();
       return response;
     },
   });
 
-  const layanan = dataLayanan?.data.data as LayananType;
-  console.log(dataLayanan?.data.data)
+  const services = serviceData?.data.data as ServiceType;
+  console.log(serviceData?.data.data)
 
   const handleRedirect = (service_id: string) => {
-    router.push(`/layanan/jadwal/${service_id}`);
+    router.push(`/service/${service_id}/schedule`);
   };
 
-  return { layanan, isPendingLayanan, isErrorLayanan, handleRedirect };
+  return { services, isPendingServices, isErrorServices, handleRedirect };
 };
 
-export default useLayanan;
+export default useService;

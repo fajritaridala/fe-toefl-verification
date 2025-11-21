@@ -3,26 +3,17 @@ import { Button } from '@heroui/react';
 import { useRouter } from 'next/router';
 import BaseCard from '@/components/ui/Card/Base';
 import TestimonyCard from '@/components/ui/Card/Testimony';
-import BaseFooter from '@/components/ui/Footer/Base';
-import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
-import useUserSession from '@/hooks/useUserSession';
 import { CONTENT_HOW, CONTENT_TESTIMONY, CONTENT_WHY } from './Home.constants';
 
 const Home = () => {
   const router = useRouter();
-  const pathname = router.pathname;
-  const { data, isAuthenticated } = useUserSession();
 
   const handlePress = () => {
     router.push('/toefl/verification');
   };
 
   return (
-    <BaseNavbar
-      isAuthenticated={isAuthenticated}
-      user={data}
-      pathname={pathname}
-    >
+    <>
       <section className="relative flex flex-col mask-b-from-100% mask-b-to-0%">
         <div className="absolute inset-0 -z-10 h-[100vh] w-full overflow-hidden">
           <div className="bg-secondary animate-float absolute right-50 bottom-70 -z-10 h-72 w-72 rounded-full blur-[5rem]" />
@@ -127,8 +118,7 @@ const Home = () => {
           Lihat Pilihan Tes
         </Button>
       </section>
-      <BaseFooter />
-    </BaseNavbar>
+    </>
   );
 };
 

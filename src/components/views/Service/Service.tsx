@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import ServiceCard from '@/components/ui/Card/Service';
 import toRupiah from '@/utils/toRupiah';
-import useLayanan from './useLayanan';
+import useService from './useService';
 
-const Layanan = () => {
-  const { layanan, isErrorLayanan, isPendingLayanan, handleRedirect } =
-    useLayanan();
-  console.log(layanan)
+const Service = () => {
+  const { services, isErrorServices, isPendingServices, handleRedirect } =
+    useService();
+  console.log(services)
 
   return (
     <div className="bg-bg-light">
@@ -44,7 +44,7 @@ const Layanan = () => {
               </p>
             </div>
             <div className="mx-auto grid w-full grid-flow-col justify-between gap-8 py-14">
-              {layanan?.map((item) => (
+              {services?.map((item) => (
                 <ServiceCard
                   key={item._id}
                   title={item.name}
@@ -62,4 +62,4 @@ const Layanan = () => {
   );
 };
 
-export default Layanan;
+export default Service;
