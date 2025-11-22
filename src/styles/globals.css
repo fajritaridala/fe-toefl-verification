@@ -20,12 +20,23 @@
   --color-info: hsl(217 42% 43%);
   --color-custom: hsl(239 33% 90%);
 
+  /* custom space */
+  --spacing-sidebar-panel: 15rem;
+  --spacing-sidebar-space: 1rem;
+
+  /* custom text size */
+  --text-2xsmall: 0.625rem;
+  --text-xsmall: 0.75rem;
+  --text-small: 0.875rem;
+  --text-base: 1rem;
+  --text-large: 1.125rem;
+  --text-xlarge: 1.25rem;
+  --text-2xlarge: 1.5rem;
+  --text-3xlarge: 1.75rem;
+
   /* custom shadow */
   --shadow-base: 0 2px 2px hsl(0 0% 50%);
   --shadow-box: 15px 15px 30px #bebebe, -15px -15px 30px #ffffff;
-
-  /* custom text size */
-  --text-extrasmall: 0.75rem;
 
   /* custom animate */
   --animate-fade-top: fade-from-top 0.6s ease-in;

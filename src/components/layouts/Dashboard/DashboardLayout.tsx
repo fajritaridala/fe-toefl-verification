@@ -1,4 +1,5 @@
 import { ReactNode, useState } from 'react';
+import { LuUser } from 'react-icons/lu';
 import { Navbar, NavbarMenuToggle } from '@heroui/react';
 import Header from '@/components/common/Header';
 import { SIDEBAR_ADMIN } from './Dashboard.constans';
@@ -16,14 +17,21 @@ function DashboardLayout(props: Props) {
   return (
     <>
       <Header title={title} />
-      <section className="max-w-screen-3xl 3xl:container bg-default-100 flex">
+      <section className="max-w-screen-3xl 3xl:container bg-bg flex">
         <DashboardLayoutSidebar sidebarItems={SIDEBAR_ADMIN} isOpen={open} />
-        <div className="h-screen w-full overflow-y-auto p-8">
+        <div className="h-screen w-full overflow-y-auto p-4">
           <Navbar
-            className="bg-default-50 flex justify-between px-0"
-            classNames={{ wrapper: 'p-0' }}
+            className="bg-bg-light shadow-small flex h-12 justify-between rounded-xl"
+            classNames={{ wrapper: 'p-5' }}
           >
-            <h1 className="text-3xl font-bold">{title}</h1>
+            <h1 className="text-large font-bold capitalize">{title}</h1>
+            <div className="text-small flex">
+              <LuUser
+                className="text-primary mx-2 mt-1 text-base"
+                strokeWidth={2}
+              />
+              <h1 className="capitalize">user</h1>
+            </div>
             <NavbarMenuToggle
               className="lg:hidden"
               aria-label={open ? 'close menu' : 'open menu'}

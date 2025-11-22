@@ -1,3 +1,3 @@
-import ParticipantsPage from "./ParticipantsPage";
+import Participants from './Participants';
 
-export default ParticipantsPage;
+export default Participants;

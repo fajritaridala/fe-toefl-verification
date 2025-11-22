@@ -22,18 +22,20 @@ function DashboardLayoutSidebar(props: Props) {
   return (
     <section
       className={cn(
-        'fixed z-50 flex h-screen w-full max-w-[20rem] -translate-x-full flex-col justify-between bg-white px-4 py-6 shadow-sm transition-all duration-200 lg:relative lg:translate-x-0',
+        'max-w-sidebar-panel bg-bg-light fixed z-50 flex h-screen w-full -translate-x-full flex-col justify-between px-4 shadow-sm transition-all duration-200 lg:relative lg:translate-x-0',
         { 'translate-x-0': isOpen }
       )}
     >
       <div>
-        <div className="mb-4 flex h-[9vh] items-center-safe border-b-1 border-neutral-300">
+        <div className="my-8 flex items-center-safe">
+          <div className="bg-primary mr-3 flex h-10 w-10 items-center rounded-lg">
+            <LuDatabase className="text-bg-light text-large w-full" />
+          </div>
           <h1
             aria-label="Dashboard Panel"
-            className="text-primary-800 flex pl-[5%] text-3xl font-extrabold capitalize"
+            className="text-primary text-xlarge flex font-extrabold capitalize"
           >
-            <LuDatabase className="mr-3 rounded-md" />
-            Admin panel
+            Simpeka
           </h1>
         </div>
         <Listbox
@@ -49,31 +51,38 @@ function DashboardLayoutSidebar(props: Props) {
             return (
               <ListboxItem
                 key={item.key}
-                className={cn('my-1 h-12 pl-[10%] text-2xl font-semibold', {
-                  'bg-primary-800 font-semibold text-white': isActive,
-                })}
+                className={cn(
+                  'text-large data-[hover=true]:bg-primary/10 text-text-muted data-[hover=true]:text-primary mb-1 h-10 rounded-lg transition-all delay-75 duration-200',
+                  {
+                    'text-bg-light bg-primary font-bold': isActive,
+                  }
+                )}
                 startContent={item.icon}
                 textValue={item.label}
                 aria-labelledby={item.label}
                 aria-describedby={item.label}
                 onPress={() => router.push(item.href)}
               >
-                <p>{item.label}</p>
+                <p
+                  className={cn('text-small', {
+                    'font-bold': isActive,
+                  })}
+                >
+                  {item.label}
+                </p>
               </ListboxItem>
             );
           }}
         </Listbox>
       </div>
-      <div className="flex items-center p-1">
+      <div className="hover:bg-danger/10 mb-8 rounded-lg transition-all delay-75 duration-250">
         <Button
-          fullWidth
-          variant="light"
-          size="lg"
-          className="text-primary-800 hover:!bg-primary-800 flex justify-start rounded-lg px-2 py-1.5 pl-[10%] font-semibold transition-all duration-300 hover:text-white"
+          data-hover="false"
+          startContent={<LuChevronLeft strokeWidth={3} />}
+          className="text-danger bg-transparent"
           onPress={() => signOut({ callbackUrl: '/auth/login' })}
         >
-          <LuChevronLeft size={24} />
-          Logout
+          <p className="text-small font-bold">Logout</p>
         </Button>
       </div>
     </section>

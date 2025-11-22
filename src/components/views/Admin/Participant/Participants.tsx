@@ -13,7 +13,7 @@ import AddInputModal from './AddInputModal';
 import ColumnListParticipants from './Participants.constants';
 import useParticipants from './useParticipants';
 
-function ParticipantsPage() {
+function Participants() {
   const router = useRouter();
   const [selectByAddress, setSelectByAddress] = useState('');
   const {
@@ -115,4 +115,4 @@ function ParticipantsPage() {
   );
 }
 
-export default ParticipantsPage;
+export default Participants;

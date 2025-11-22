@@ -1,12 +1,12 @@
 import DashboardLayout from '@/components/layouts/Dashboard';
-import ParticipantsPage from '@/components/views/Admin/Participant';
+import Participants from '@/components/views/Admin/Participant';
 
-function Participants() {
+function AdminParticipants() {
   return (
     <DashboardLayout title="Daftar peserta">
-      <ParticipantsPage />
+      <Participants />
     </DashboardLayout>
   );
 }
 
-export default Participants;
+export default AdminParticipants;
