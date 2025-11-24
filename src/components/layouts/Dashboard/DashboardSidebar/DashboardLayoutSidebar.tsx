@@ -22,8 +22,10 @@ function DashboardLayoutSidebar(props: Props) {
   return (
     <section
       className={cn(
-        'max-w-sidebar-panel bg-bg-light fixed z-50 flex h-screen w-full -translate-x-full flex-col justify-between px-4 shadow-sm transition-all duration-200 lg:relative lg:translate-x-0',
-        { 'translate-x-0': isOpen }
+        'max-w-sidebar-panel bg-bg-light z-40 h-screen w-full flex flex-col justify-between px-4 shadow-sm transition-all duration-200 lg:relative lg:flex',
+        {
+          'hidden lg:flex': !isOpen,
+        }
       )}
     >
       <div>

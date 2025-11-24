@@ -1,6 +1,7 @@
 import { ScheduleRegister } from '@/utils/interfaces/Schedule';
 import instance from '@/utils/libs/axios/instance';
 import endpoint from './endpoint';
+import buildQueryString from '@/utils/helpers/queryString';
 
 type GetQueryPayload = {
   page?: number;
@@ -25,20 +26,6 @@ type InputPayload = {
   listening: number;
   reading: number;
   writing: number;
-};
-
-const buildQueryString = (query?: GetQueryParams) => {
-  if (!query) return '';
-  if (typeof query === 'string') return query;
-
-  const params = new URLSearchParams();
-  Object.entries(query).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      params.append(key, String(value));
-    }
-  });
-
-  return params.toString();
 };
 
 const schedulesService = {

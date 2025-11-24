@@ -1,5 +1,14 @@
+import buildQueryString from '@/utils/helpers/queryString';
 import instance from '@/utils/libs/axios/instance';
 import endpoint from './endpoint';
+
+type GetServicesQuery = {
+  page?: number;
+  limit?: number;
+  search?: string;
+};
+
+type GetServicesParams = string | GetServicesQuery;
 
 type CreateServicePayload = {
   name: string;
@@ -18,8 +27,12 @@ type UpdateServicePayload = {
 };
 
 const servicesService = {
-  getServices: () => {
-    return instance.get(`${endpoint.SERVICES}`);
+  getServices: (query?: GetServicesParams) => {
+    const queryString = buildQueryString(query);
+    const url = queryString
+      ? `${endpoint.SERVICES}?${queryString}`
+      : endpoint.SERVICES;
+    return instance.get(url);
   },
   getService: (id: string) => {
     return instance.get(`${endpoint.SERVICES}/${id}`);
@@ -28,7 +41,7 @@ const servicesService = {
     return instance.post(`${endpoint.SERVICES}`, payload);
   },
   updateService: (id: string, payload: UpdateServicePayload) => {
-    return instance.put(`${endpoint.SERVICES}/${id}`, payload);
+    return instance.patch(`${endpoint.SERVICES}/${id}`, payload);
   },
   removeService: (id: string) => {
     return instance.delete(`${endpoint.SERVICES}/${id}`);
