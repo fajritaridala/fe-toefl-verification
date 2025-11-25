@@ -1,4 +1,7 @@
-import { ScheduleRegister } from '@/utils/interfaces/Schedule';
+import {
+  SchedulePayload,
+  ScheduleRegister,
+} from '@/utils/interfaces/Schedule';
 import instance from '@/utils/libs/axios/instance';
 import endpoint from './endpoint';
 import buildQueryString from '@/utils/helpers/queryString';
@@ -11,11 +14,6 @@ type GetQueryPayload = {
 };
 
 type GetQueryParams = string | GetQueryPayload;
-
-type CreatePayload = {
-  service_id: string;
-  schedule_date: string;
-};
 
 type InputParams = {
   scheduleId: string;
@@ -31,16 +29,33 @@ type InputPayload = {
 const schedulesService = {
   getSchedules: (query?: GetQueryParams) => {
     const queryString = buildQueryString(query);
+    console.log(queryString)
     const url = queryString
       ? `${endpoint.SCHEDULES}?${queryString}`
       : endpoint.SCHEDULES;
     return instance.get(url);
   },
-  getSchedule: (scheduleId: string) => {
-    return instance.get(`${endpoint.SCHEDULES}/${scheduleId}/participants`);
+  getScheduleParticipants: (
+    scheduleId: string,
+    query?: GetQueryParams
+  ) => {
+    const queryString = buildQueryString(query);
+    const url = queryString
+      ? `${endpoint.SCHEDULES}/${scheduleId}/participants?${queryString}`
+      : `${endpoint.SCHEDULES}/${scheduleId}/participants`;
+    return instance.get(url);
   },
-  createSchedule: (payload: CreatePayload) => {
+  createSchedule: (payload: SchedulePayload) => {
     return instance.post(`${endpoint.SCHEDULES}`, payload);
+  },
+  updateSchedule: (
+    scheduleId: string,
+    payload: Partial<SchedulePayload>
+  ) => {
+    return instance.patch(`${endpoint.SCHEDULES}/${scheduleId}`, payload);
+  },
+  removeSchedule: (scheduleId: string) => {
+    return instance.delete(`${endpoint.SCHEDULES}/${scheduleId}`);
   },
   registerParticipant: async (
     scheduleId: string,
@@ -67,7 +82,7 @@ const schedulesService = {
   },
   inputScore: (params: InputParams, payload: InputPayload) => {
     return instance.patch(
-      `${endpoint.SCHEDULES}/${params.scheduleId}/registrants/${params.participantId}`,
+      `${endpoint.SCHEDULES}/${params.scheduleId}/participants/${params.participantId}/scores`,
       payload
     );
   },

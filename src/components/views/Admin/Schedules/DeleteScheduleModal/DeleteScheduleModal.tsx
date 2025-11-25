@@ -1,0 +1,73 @@
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@heroui/react';
+import { ScheduleItem } from '@/utils/interfaces/Schedule';
+import useDeleteScheduleModal from './useDeleteScheduleModal';
+
+type Props = {
+  isOpen: boolean;
+  schedule?: ScheduleItem | null;
+  onClose: () => void;
+};
+
+const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
+  const { deleteSchedule, isDeleting } = useDeleteScheduleModal({
+    onSuccess: onClose,
+  });
+
+  const handleDelete = () => {
+    if (!schedule?._id) return;
+    deleteSchedule(schedule._id);
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      placement="center"
+      classNames={{ backdrop: 'backdrop-blur-md bg-black/40' }}
+    >
+      <ModalContent>
+        <ModalHeader>
+          <div>
+            <p className="text-small text-text-muted uppercase tracking-[0.25rem]">
+              Konfirmasi
+            </p>
+            <h1 className="text-2xl font-bold text-text">Hapus jadwal</h1>
+          </div>
+        </ModalHeader>
+        <ModalBody>
+          <p className="text-sm text-text">
+            Apakah Anda yakin ingin menghapus jadwal untuk layanan{' '}
+            <span className="font-semibold">
+              {schedule?.service?.name || schedule?.service_name || 'tanpa nama'}
+            </span>{' '}
+            pada tanggal{' '}
+            <span className="font-semibold">{schedule?.schedule_date}</span>? Tindakan
+            ini tidak dapat dibatalkan.
+          </p>
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="light" onPress={onClose} className="font-semibold">
+            Batal
+          </Button>
+          <Button
+            color="danger"
+            className="font-semibold"
+            isLoading={isDeleting}
+            onPress={handleDelete}
+          >
+            Hapus
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default DeleteScheduleModal;

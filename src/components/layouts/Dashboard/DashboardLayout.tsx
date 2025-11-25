@@ -28,7 +28,7 @@ function DashboardLayout(props: Props) {
             <div className="flex flex-col">
               <h1 className="text-large font-bold capitalize">{title}</h1>
               {description && (
-                <p className="text-small text-text-muted">{description}</p>
+                <p className="text-xsmall text-text-muted">{description}</p>
               )}
             </div>
             <div className="flex items-center gap-4">
