@@ -1,6 +1,12 @@
 import { ReactNode } from 'react';
 import { BiDotsVerticalRounded, BiPlus } from 'react-icons/bi';
-import { LuCalendar, LuPenLine, LuSearch, LuTrash2 } from 'react-icons/lu';
+import {
+  LuCalendar,
+  LuFilter,
+  LuPenLine,
+  LuTrash2,
+  LuUsers,
+} from 'react-icons/lu';
 import {
   Button,
   Chip,
@@ -8,7 +14,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input,
   Pagination,
   Progress,
   Select,
@@ -24,7 +29,9 @@ import {
 import type { Selection } from '@heroui/react';
 import moment from 'moment';
 import {
+  ALL_MONTH_OPTION_VALUE,
   ALL_SERVICE_OPTION_VALUE,
+  MonthOption,
   ScheduleTableColumn,
   ServiceOption,
 } from '@/components/views/Admin/Schedules/Schedules.constants';
@@ -35,7 +42,8 @@ type Props = {
   columns: ScheduleTableColumn[];
   schedules: ScheduleItem[];
   serviceOptions: ServiceOption[];
-  searchValue: string;
+  monthOptions: MonthOption[];
+  selectedMonth: string;
   selectedService: string;
   isLoading: boolean;
   isRefetching: boolean;
@@ -44,11 +52,12 @@ type Props = {
   totalPages: number;
   onChangePage: (page: number) => void;
   onChangeLimit: (value: number) => void;
-  onSearch: (value: string) => void;
+  onSelectMonth: (value: string) => void;
   onSelectService: (value: string) => void;
   onAdd: () => void;
   onEdit: (schedule: ScheduleItem) => void;
   onDelete: (schedule: ScheduleItem) => void;
+  onViewParticipants: (schedule: ScheduleItem) => void;
 };
 
 const ScheduleTable = (props: Props) => {
@@ -56,7 +65,8 @@ const ScheduleTable = (props: Props) => {
     columns,
     schedules,
     serviceOptions,
-    searchValue,
+    monthOptions,
+    selectedMonth,
     selectedService,
     isLoading,
     isRefetching,
@@ -65,16 +75,18 @@ const ScheduleTable = (props: Props) => {
     totalPages,
     onChangePage,
     onChangeLimit,
-    onSearch,
+    onSelectMonth,
     onSelectService,
     onAdd,
     onEdit,
     onDelete,
+    onViewParticipants,
   } = props;
   const combineOptions = [
-    { value: ALL_SERVICE_OPTION_VALUE, label: 'Semua' },
+    { value: ALL_SERVICE_OPTION_VALUE, label: 'Layanan' },
     ...serviceOptions,
   ];
+  const monthSelectionValue = selectedMonth || ALL_MONTH_OPTION_VALUE;
   const formatDate = (date: string) => {
     if (!date) return '-';
     return moment(date).format('DD MMM YYYY');
@@ -169,10 +181,17 @@ const ScheduleTable = (props: Props) => {
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly variant="light">
-                  <BiDotsVerticalRounded size={18} className='text-primary' />
+                  <BiDotsVerticalRounded size={18} className="text-primary" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Aksi jadwal">
+                <DropdownItem
+                  key="view-participants"
+                  startContent={<LuUsers size={16} />}
+                  onPress={() => onViewParticipants(schedule)}
+                >
+                  Daftar Peserta
+                </DropdownItem>
                 <DropdownItem
                   key="edit-schedule"
                   startContent={<LuPenLine size={16} />}
@@ -198,6 +217,17 @@ const ScheduleTable = (props: Props) => {
   };
 
   const serviceSelectionValue = selectedService || ALL_SERVICE_OPTION_VALUE;
+
+  const handleMonthSelection = (keys: Selection) => {
+    if (keys === 'all') {
+      onSelectMonth(ALL_MONTH_OPTION_VALUE);
+      return;
+    }
+    const firstKey =
+      keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
+    const nextValue = firstKey ?? ALL_MONTH_OPTION_VALUE;
+    onSelectMonth(nextValue === ALL_MONTH_OPTION_VALUE ? '' : nextValue);
+  };
 
   const handleServiceSelection = (keys: Selection) => {
     if (keys === 'all') {
@@ -225,14 +255,25 @@ const ScheduleTable = (props: Props) => {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3 lg:flex-1 lg:flex-row">
-          <Input
-            value={searchValue}
-            onValueChange={onSearch}
-            placeholder="Cari tanggal atau layanan"
-            startContent={<LuSearch className="text-text-muted" />}
+          <Select
+            selectedKeys={new Set([monthSelectionValue])}
+            onSelectionChange={handleMonthSelection}
             variant="bordered"
-            className="w-full"
-          />
+            labelPlacement="outside"
+            placeholder="Filter bulan"
+            disallowEmptySelection
+            items={monthOptions}
+            startContent={<LuFilter className="text-text-muted" />}
+            className="w-full lg:w-40"
+            classNames={{
+              trigger: 'bg-bg-light',
+              value: 'text-small font-semibold',
+            }}
+          >
+            {(option) => (
+              <SelectItem key={option.value}>{option.label}</SelectItem>
+            )}
+          </Select>
           <Select
             selectedKeys={new Set([serviceSelectionValue])}
             onSelectionChange={handleServiceSelection}
@@ -241,6 +282,12 @@ const ScheduleTable = (props: Props) => {
             placeholder="Filter layanan"
             disallowEmptySelection
             items={combineOptions}
+            startContent={<LuFilter className="text-text-muted" />}
+            className="w-full lg:w-44"
+            classNames={{
+              trigger: 'bg-bg-light',
+              value: 'text-small font-semibold',
+            }}
           >
             {(option) => (
               <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -277,9 +324,7 @@ const ScheduleTable = (props: Props) => {
           }}
         >
           {LIMIT_LISTS.map((option) => (
-            <SelectItem key={String(option.value)}>
-              {option.label}
-            </SelectItem>
+            <SelectItem key={String(option.value)}>{option.label}</SelectItem>
           ))}
         </Select>
         <span>baris</span>
@@ -310,7 +355,7 @@ const ScheduleTable = (props: Props) => {
     <section>
       <Table
         aria-label="Tabel jadwal"
-        className="min-w-full"
+        classNames={{ base: 'min-w-full', wrapper: 'rounded-lg shadow' }}
         topContent={topContent}
         topContentPlacement="outside"
         bottomContent={bottomContent}
@@ -331,7 +376,10 @@ const ScheduleTable = (props: Props) => {
           loadingContent={<Spinner color="secondary" />}
         >
           {(item) => (
-            <TableRow key={item._id}>
+            <TableRow
+              key={item._id}
+              className="border-border border-b last:border-0"
+            >
               {columns.map((column) => (
                 <TableCell className="text-xsmall" key={column.key}>
                   {renderCell(item, column.key)}

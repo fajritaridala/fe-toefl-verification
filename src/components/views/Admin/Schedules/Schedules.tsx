@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { ScheduleItem } from '@/utils/interfaces/Schedule';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';
-import { SCHEDULE_TABLE_COLUMNS } from './Schedules.constants';
+import {
+  MONTH_FILTER_OPTIONS,
+  SCHEDULE_TABLE_COLUMNS,
+} from './Schedules.constants';
 import useSchedules from './useSchedules';
 import AddScheduleModal from './AddScheduleModal';
 import DeleteScheduleModal from './DeleteScheduleModal';
+import ScheduleParticipantsModal from './ScheduleParticipantsModal';
 
 const AdminSchedulesPage = () => {
   const {
@@ -15,34 +19,37 @@ const AdminSchedulesPage = () => {
     isRefetchingSchedules,
     currentLimit,
     currentPage,
-    currentSearch,
+    currentMonth,
     currentService,
     handleChangePage,
     handleChangeLimit,
-    handleSearch,
+    handleFilterMonth,
     handleFilterService,
   } = useSchedules();
 
-  const [searchValue, setSearchValue] = useState(currentSearch);
   const [selectedService, setSelectedService] = useState(currentService);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleItem | null>(
     null
   );
   const [deleteTarget, setDeleteTarget] = useState<ScheduleItem | null>(null);
-
-  useEffect(() => {
-    setSearchValue(currentSearch);
-  }, [currentSearch]);
+  const [participantsSchedule, setParticipantsSchedule] =
+    useState<ScheduleItem | null>(null);
+  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
 
   useEffect(() => {
     setSelectedService(currentService);
   }, [currentService]);
 
-  const onSearch = (value: string) => {
-    setSearchValue(value);
-    handleSearch(value);
+  useEffect(() => {
+    setSelectedMonth(currentMonth);
+  }, [currentMonth]);
+
+  const onSelectMonth = (value: string) => {
+    setSelectedMonth(value);
+    handleFilterMonth(value);
   };
 
   const onSelectService = (value: string) => {
@@ -74,13 +81,24 @@ const AdminSchedulesPage = () => {
     setDeleteTarget(null);
   };
 
+  const openParticipantsModal = (schedule: ScheduleItem) => {
+    setParticipantsSchedule(schedule);
+    setIsParticipantsOpen(true);
+  };
+
+  const closeParticipantsModal = () => {
+    setParticipantsSchedule(null);
+    setIsParticipantsOpen(false);
+  };
+
   return (
     <section className="space-y-6 pt-4">
       <ScheduleTable
         columns={SCHEDULE_TABLE_COLUMNS}
         schedules={schedules}
         serviceOptions={serviceOptions}
-        searchValue={searchValue}
+        selectedMonth={selectedMonth}
+        monthOptions={MONTH_FILTER_OPTIONS}
         selectedService={selectedService}
         isLoading={isLoadingSchedules}
         isRefetching={isRefetchingSchedules}
@@ -89,11 +107,12 @@ const AdminSchedulesPage = () => {
         totalPages={pagination?.totalPages || 1}
         onChangePage={handleChangePage}
         onChangeLimit={(value) => handleChangeLimit(String(value))}
-        onSearch={onSearch}
+        onSelectMonth={onSelectMonth}
         onSelectService={onSelectService}
         onAdd={openCreateModal}
         onEdit={openEditModal}
         onDelete={openDeleteModal}
+        onViewParticipants={openParticipantsModal}
       />
 
       <AddScheduleModal
@@ -108,6 +127,12 @@ const AdminSchedulesPage = () => {
         isOpen={!!deleteTarget}
         schedule={deleteTarget}
         onClose={closeDeleteModal}
+      />
+
+      <ScheduleParticipantsModal
+        isOpen={isParticipantsOpen}
+        schedule={participantsSchedule}
+        onClose={closeParticipantsModal}
       />
     </section>
   );

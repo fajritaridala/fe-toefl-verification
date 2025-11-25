@@ -3,12 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { ParsedUrlQueryInput } from 'querystring';
 import { PAGINATION_OPTIONS } from '@/constants/list.constants';
-import useDebounce from '@/hooks/useDebounce';
 import schedulesService from '@/services/schedules.service';
 import servicesService from '@/services/services.service';
 import { ScheduleListResponse } from '@/utils/interfaces/Schedule';
 import { ServiceListResponse } from '@/utils/interfaces/Service';
-import { ALL_SERVICE_OPTION_VALUE, ServiceOption } from './Schedules.constants';
+import {
+  ALL_MONTH_OPTION_VALUE,
+  ALL_SERVICE_OPTION_VALUE,
+  ServiceOption,
+} from './Schedules.constants';
 
 const getQueryValue = (param: string | string[] | undefined, fallback = '') => {
   if (Array.isArray(param)) return param[0] ?? fallback;
@@ -18,7 +21,6 @@ const getQueryValue = (param: string | string[] | undefined, fallback = '') => {
 const useSchedules = () => {
   const router = useRouter();
   const { isReady, pathname, query, push, replace } = router;
-  const debounce = useDebounce();
   const currentLimit = getQueryValue(
     query.limit,
     String(PAGINATION_OPTIONS.limitDefault)
@@ -27,7 +29,7 @@ const useSchedules = () => {
     query.page,
     String(PAGINATION_OPTIONS.pageDefault)
   );
-  const currentSearch = getQueryValue(query.search, '');
+  const currentMonth = getQueryValue(query.month, '');
   const currentService = getQueryValue(query.service_id, '');
 
   const {
@@ -40,14 +42,17 @@ const useSchedules = () => {
       'admin',
       currentPage,
       currentLimit,
-      currentSearch,
+      currentMonth,
       currentService,
     ],
     queryFn: async () => {
       const response = await schedulesService.getSchedules({
         page: Number(currentPage),
         limit: Number(currentLimit),
-        search: currentSearch || undefined,
+        month:
+          currentMonth && currentMonth !== ALL_MONTH_OPTION_VALUE
+            ? currentMonth
+            : undefined,
         service_id: currentService || undefined,
       });
       return response.data as ScheduleListResponse;
@@ -90,8 +95,10 @@ const useSchedules = () => {
     const initialQuery: ParsedUrlQueryInput = {
       limit: currentLimit || PAGINATION_OPTIONS.limitDefault,
       page: currentPage || PAGINATION_OPTIONS.pageDefault,
-      search: currentSearch || '',
     };
+    if (currentMonth && currentMonth !== ALL_MONTH_OPTION_VALUE) {
+      initialQuery.month = currentMonth;
+    }
     if (currentService) {
       initialQuery.service_id = currentService;
     }
@@ -103,7 +110,7 @@ const useSchedules = () => {
     replace,
     currentLimit,
     currentPage,
-    currentSearch,
+    currentMonth,
     currentService,
   ]);
 
@@ -136,23 +143,6 @@ const useSchedules = () => {
     );
   }
 
-  function handleSearch(value: string) {
-    debounce(() => {
-      push(
-        {
-          pathname,
-          query: {
-            ...query,
-            search: value,
-            page: PAGINATION_OPTIONS.pageDefault,
-          },
-        },
-        undefined,
-        { shallow: true }
-      );
-    }, PAGINATION_OPTIONS.delay);
-  }
-
   function handleFilterService(serviceId: string) {
     const nextQuery: ParsedUrlQueryInput = { ...query };
     if (serviceId && serviceId !== ALL_SERVICE_OPTION_VALUE) {
@@ -172,13 +162,14 @@ const useSchedules = () => {
     );
   }
 
-  function handleClearFilters() {
-    const nextQuery: ParsedUrlQueryInput = {
-      ...query,
-      search: '',
-      page: PAGINATION_OPTIONS.pageDefault,
-    };
-    delete nextQuery.service_id;
+  function handleFilterMonth(monthValue: string) {
+    const nextQuery: ParsedUrlQueryInput = { ...query };
+    if (monthValue && monthValue !== ALL_MONTH_OPTION_VALUE) {
+      nextQuery.month = monthValue;
+    } else {
+      delete nextQuery.month;
+    }
+    nextQuery.page = PAGINATION_OPTIONS.pageDefault;
 
     push(
       {
@@ -192,7 +183,7 @@ const useSchedules = () => {
 
   useEffect(() => {
     if (!isReady) return;
-    if (query.limit && query.page && query.search !== undefined) {
+    if (query.limit && query.page) {
       return;
     }
     initializeQueryParams();
@@ -200,7 +191,7 @@ const useSchedules = () => {
     isReady,
     query.limit,
     query.page,
-    query.search,
+    query.month,
     query.service_id,
     initializeQueryParams,
   ]);
@@ -213,13 +204,12 @@ const useSchedules = () => {
     isRefetchingSchedules,
     currentLimit,
     currentPage,
-    currentSearch,
+    currentMonth,
     currentService,
     handleChangePage,
     handleChangeLimit,
-    handleSearch,
+    handleFilterMonth,
     handleFilterService,
-    handleClearFilters,
   };
 };
 

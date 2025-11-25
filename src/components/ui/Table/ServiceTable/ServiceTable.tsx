@@ -139,7 +139,7 @@ const ServiceTable = (props: Props) => {
       <div className="overflow-x-auto">
         <Table
           aria-label="Tabel layanan"
-          className="shadow-small min-w-full pt-1"
+          classNames={{ base: 'min-w-full', wrapper: 'rounded-lg shadow' }}
           topContent={topContent}
           topContentPlacement="outside"
           bottomContent={bottomContent}
@@ -157,7 +157,7 @@ const ServiceTable = (props: Props) => {
             loadingContent={<Spinner color="secondary" />}
           >
             {(item) => (
-              <TableRow key={item._id}>
+              <TableRow key={item._id} className="border-b border-border last:border-0">
                 {columns.map((column) => (
                   <TableCell
                     align="left"

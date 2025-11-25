@@ -1,0 +1,106 @@
+import {
+  Button,
+  Chip,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ScrollShadow,
+} from '@heroui/react';
+import moment from 'moment';
+import { ScheduleItem, ScheduleRegistrantSnapshot } from '@/utils/interfaces/Schedule';
+
+type Props = {
+  isOpen: boolean;
+  schedule: ScheduleItem | null;
+  onClose: () => void;
+};
+
+const ScheduleParticipantsModal = ({ isOpen, schedule, onClose }: Props) => {
+  const participants = schedule?.registrants || [];
+  const serviceName =
+    schedule?.service?.name || schedule?.service_name || 'Layanan tidak diketahui';
+  const scheduleDate = schedule?.schedule_date
+    ? moment(schedule.schedule_date).format('DD MMM YYYY')
+    : '-';
+
+  const renderStatusChip = (registrant: ScheduleRegistrantSnapshot) => {
+    const status = registrant.status?.toLowerCase() || 'pending';
+    const color =
+      status === 'selesai'
+        ? 'success'
+        : status === 'dibatalkan'
+          ? 'danger'
+          : 'warning';
+
+    return (
+      <Chip
+        key={`${registrant.participant_id || registrant.participant_name}-chip`}
+        size="sm"
+        variant="flat"
+        color={color}
+        className="capitalize"
+      >
+        {registrant.status || 'Menunggu'}
+      </Chip>
+    );
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      backdrop="blur"
+      size="lg"
+      placement="center"
+    >
+      <ModalContent>
+        <ModalHeader className="flex-col items-start gap-1">
+          <p className="text-2xsmall uppercase tracking-[0.4em] text-text-muted">
+            Jadwal
+          </p>
+          <h1 className="text-2xl font-bold text-text">Daftar Peserta</h1>
+          <p className="text-sm text-text-muted">
+            {serviceName} — {scheduleDate}
+          </p>
+        </ModalHeader>
+        <ModalBody>
+          {participants.length === 0 ? (
+            <p className="text-center text-sm text-text-muted">
+              Belum ada peserta terdaftar untuk jadwal ini.
+            </p>
+          ) : (
+            <ScrollShadow className="max-h-80 space-y-3">
+              {participants.map((registrant, index) => (
+                <div
+                  key={registrant.participant_id || `${registrant.participant_name}-${index}`}
+                  className="rounded-lg border border-border bg-bg-light p-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-text">
+                        {registrant.participant_name || 'Peserta tanpa nama'}
+                      </p>
+                      <p className="text-2xsmall uppercase tracking-[0.3em] text-text-muted">
+                        ID: {registrant.participant_id || '-'}
+                      </p>
+                    </div>
+                    {renderStatusChip(registrant)}
+                  </div>
+                </div>
+              ))}
+            </ScrollShadow>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="light" onPress={onClose} className="font-semibold">
+            Tutup
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default ScheduleParticipantsModal;

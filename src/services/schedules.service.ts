@@ -11,6 +11,7 @@ type GetQueryPayload = {
   limit?: number;
   search?: string;
   service_id?: string;
+  month?: string;
 };
 
 type GetQueryParams = string | GetQueryPayload;
@@ -29,7 +30,6 @@ type InputPayload = {
 const schedulesService = {
   getSchedules: (query?: GetQueryParams) => {
     const queryString = buildQueryString(query);
-    console.log(queryString)
     const url = queryString
       ? `${endpoint.SCHEDULES}?${queryString}`
       : endpoint.SCHEDULES;

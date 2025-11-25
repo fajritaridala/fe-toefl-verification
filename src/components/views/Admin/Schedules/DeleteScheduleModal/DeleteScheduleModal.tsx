@@ -30,7 +30,7 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
       isOpen={isOpen}
       onClose={onClose}
       placement="center"
-      classNames={{ backdrop: 'backdrop-blur-md bg-black/40' }}
+      backdrop="blur"
     >
       <ModalContent>
         <ModalHeader>
