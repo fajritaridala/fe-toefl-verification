@@ -6,7 +6,7 @@ interface ILogin {
 }
 
 interface IRegister extends ILogin {
-  fullName: string;
+  username: string;
   email: string;
   roleToken?: string;
 }
@@ -19,7 +19,7 @@ interface UserExt extends User {
 interface SessionExt extends Session {
   user?: {
     address: string;
-    fullName: string;
+    username: string;
     email: string;
     role: string;
     accessToken?: string;

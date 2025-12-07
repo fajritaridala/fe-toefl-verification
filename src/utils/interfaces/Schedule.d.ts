@@ -1,36 +1,25 @@
 export interface ScheduleRegister {
+  paymentDate: string;
   fullName: string;
   gender: 'laki-laki' | 'perempuan';
-  birth_date: string;
-  phone_number: string;
-  NIM: string;
+  email: string;
+  phoneNumber: string;
+  nim: string;
   faculty: string;
   major: string;
-  payment_date: string;
-  payment_receipt: File | null;
-}
-
-export interface ScheduleRegistrantSnapshot {
-  participant_id: string | null;
-  participant_name: string | null;
-  status: string;
+  file: File | null;
 }
 
 export interface ScheduleItem {
   _id: string;
-  service_id?: string;
-  service_name?: string;
-  service_price?: number;
-  service?: {
-    _id: string;
-    name: string;
-  } | null;
-  schedule_date: string;
-  quota?: number | null;
-  is_full?: boolean;
-  registrants?: ScheduleRegistrantSnapshot[];
-  register_count?: number;
-  status?: string;
+  serviceId: string;
+  serviceName: string;
+  scheduleDate: string;
+  startTime: string;
+  endTime: string;
+  status: 'aktif' | 'tidak aktif';
+  quota?: number;
+  registrants?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -43,13 +32,43 @@ export interface ScheduleListResponse {
   data: ScheduleItem[];
   pagination?: {
     current: number;
-    totalPages: number;
     total: number;
+    totalPages: number;
   };
 }
 
 export interface SchedulePayload {
-  service_id: string;
-  schedule_date: string;
-  quota?: number;
+  serviceId: string;
+  scheduleDate: string;
+  startTime: string;
+  endTime: string;
+  capacity?: number;
+}
+
+export interface EnrollmentItem {
+  _id: string;
+  scheduleId: string;
+  participantId?: string;
+  fullName: string;
+  nim: string;
+  status: 'menunggu' | 'disetujui' | 'ditolak';
+  paymentProof?: string;
+  email?: string;
+  phoneNumber?: string;
+  faculty?: string;
+  major?: string;
+  registerAt?: string;
+}
+
+export interface EnrollmentListResponse {
+  meta: {
+    status: number;
+    message: string;
+  };
+  data: EnrollmentItem[];
+  pagination?: {
+    current: number;
+    total: number;
+    totalPages: number;
+  };
 }

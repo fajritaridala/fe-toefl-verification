@@ -1,49 +1,92 @@
-import { useEffect, useState } from 'react';
-import moment from 'moment';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import contractService from '@/services/contract.service';
+import verificationService from '@/services/verification.service';
+import { VerificationResponse } from '@/utils/interfaces/Verification';
+
+type ParticipantInfo = {
+  nama_lengkap?: string;
+  jenis_kelamin?: string;
+  tanggal_lahir?: string;
+  nomor_induk_mahasiswa?: string;
+  fakultas?: string;
+  program_studi?: string;
+  sesi_tes?: string;
+  tanggal_tes?: string;
+};
+
+type ScoreInfo = {
+  nilai_listening?: number;
+  nilai_structure?: number;
+  nilai_reading?: number;
+  nilai_total?: number;
+};
+
+const initialParticipant: ParticipantInfo = {
+  nama_lengkap: '-',
+  jenis_kelamin: '-',
+  tanggal_lahir: '-',
+  nomor_induk_mahasiswa: '-',
+  fakultas: '-',
+  program_studi: '-',
+  sesi_tes: '-',
+  tanggal_tes: '-',
+};
+
+const initialScore: ScoreInfo = {
+  nilai_listening: 0,
+  nilai_structure: 0,
+  nilai_reading: 0,
+  nilai_total: 0,
+};
 
 const useVerificationResult = () => {
-  const [isPeserta, setIsPeserta] = useState<Record<string, any>>({});
-  const [isScorePeserta, setIsScorePeserta] = useState<Record<string, any>>({});
+  const [isPeserta, setIsPeserta] = useState<ParticipantInfo>(
+    initialParticipant
+  );
+  const [isScorePeserta, setIsScorePeserta] = useState<ScoreInfo>(initialScore);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState('');
 
-  // get peserta dari blockchain
   const router = useRouter();
-  const hash = router.asPath ? router.asPath.split('/').pop() : null;
+  const hash = useMemo(() => {
+    if (typeof router.query.hash === 'string') return router.query.hash;
+    if (router.asPath) {
+      const segments = router.asPath.split('/');
+      return segments.pop() || null;
+    }
+    return null;
+  }, [router.asPath, router.query.hash]);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (typeof hash !== 'string') return;
       try {
-        if (typeof hash == 'string') {
-          const peserta = await contractService.getRecord(hash);
+        setIsLoading(true);
+        const response = await verificationService.getVerification(hash);
+        const payload = (response.data as VerificationResponse).data;
 
-          const tanggalLahir = moment.unix(Number(peserta.tanggal_lahir));
-          const tanggalTes = moment.unix(Number(peserta.tanggal_tes));
+        const biodataPeserta = {
+          nama_lengkap: payload.fullName,
+          jenis_kelamin: payload.gender || '-',
+          tanggal_lahir: '-',
+          nomor_induk_mahasiswa: payload.nim || '-',
+          fakultas: payload.faculty || '-',
+          program_studi: payload.major || '-',
+          sesi_tes: '-',
+          tanggal_tes: payload.scheduleDate || '-',
+        };
 
-          const biodataPeserta = {
-            nama_lengkap: peserta.nama_lengkap,
-            jenis_kelamin: peserta.jenis_kelamin,
-            tanggal_lahir: tanggalLahir.locale('id').format('DD-MMMM-YYYY'),
-            nomor_induk_mahasiswa: peserta.nomor_induk_mahasiswa,
-            fakultas: peserta.fakultas,
-            program_studi: peserta.program_studi,
-            sesi_tes: peserta.sesi_tes,
-            tanggal_tes: tanggalTes.locale('id-ID').format('DD-MMMM-YYYY'),
-          };
-          const scorePeserta = {
-            nilai_listening: Number(peserta.nilai_listening),
-            nilai_structure: Number(peserta.nilai_structure),
-            nilai_reading: Number(peserta.nilai_reading),
-            nilai_total: Number(peserta.nilai_total),
-          };
+        const scorePeserta = {
+          nilai_listening: payload.listening,
+          nilai_structure: payload.structure,
+          nilai_reading: payload.reading,
+          nilai_total: payload.totalScore,
+        };
 
-          setIsPeserta(biodataPeserta);
-          setIsScorePeserta(scorePeserta);
-        }
+        setIsPeserta(biodataPeserta);
+        setIsScorePeserta(scorePeserta);
       } catch (error) {
-        const err = error as unknown as Error;
+        const err = error as Error;
         setIsError(err.message);
       } finally {
         setIsLoading(false);
@@ -52,8 +95,6 @@ const useVerificationResult = () => {
 
     fetchData();
   }, [hash]);
-
-  console.log(isPeserta, isScorePeserta);
 
   return { isPeserta, isScorePeserta, isLoading, isError };
 };

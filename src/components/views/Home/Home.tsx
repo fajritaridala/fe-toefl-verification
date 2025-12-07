@@ -55,6 +55,7 @@ const Home = () => {
         <div className="grid grid-flow-col grid-rows-1 gap-8">
           {CONTENT_WHY.map((item) => (
             <BaseCard
+              key={item.title}
               icon={item.icon}
               title={item.title}
               description={item.description}
@@ -75,6 +76,7 @@ const Home = () => {
         <div className="grid grid-flow-col grid-rows-1 gap-8">
           {CONTENT_HOW.map((item, idx) => (
             <BaseCard
+              key={item.title}
               index={idx + 1}
               title={item.title}
               description={item.description}
@@ -94,6 +96,7 @@ const Home = () => {
         <div className="grid grid-flow-col grid-rows-1 gap-8">
           {CONTENT_TESTIMONY.map((item) => (
             <TestimonyCard
+              key={item.name}
               name={item.name}
               job={item.job}
               testimony={item.testimony}

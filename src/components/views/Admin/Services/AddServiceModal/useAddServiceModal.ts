@@ -14,11 +14,6 @@ const serviceSchema: yup.ObjectSchema<ServicePayload> = yup.object({
     .typeError('Harga harus berupa angka')
     .positive('Harga harus lebih dari 0')
     .required('Harga wajib diisi'),
-  duration: yup
-    .number()
-    .typeError('Durasi harus berupa angka')
-    .positive('Durasi harus lebih dari 0')
-    .required('Durasi wajib diisi'),
   notes: yup.string().optional(),
 });
 
@@ -51,7 +46,6 @@ const useAddServiceModal = ({
       name: service?.name || '',
       description: service?.description || '',
       price: service?.price ?? undefined,
-      duration: service?.duration ?? undefined,
       notes: service?.notes || '',
     },
   });
@@ -62,7 +56,6 @@ const useAddServiceModal = ({
       name: service?.name || '',
       description: service?.description || '',
       price: service?.price ?? undefined,
-      duration: service?.duration ?? undefined,
       notes: service?.notes || '',
     });
   }, [service, reset, mode, isOpen]);

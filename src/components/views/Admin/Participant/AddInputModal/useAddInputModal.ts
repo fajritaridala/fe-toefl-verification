@@ -1,63 +1,32 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import QRCode from 'qrcode';
 import * as yup from 'yup';
-import contractService from '@/services/contract.service';
-import toeflService from '@/services/toefl.service';
-import { CERTIFICATE_LINK } from '@/utils/config/env';
-import { InputPayload } from '@/utils/interfaces/Toefl';
-import { generateCertificate } from '@/utils/libs/jspdf/generateCertificate';
+import enrollmentsService from '@/services/enrollments.service';
 
 const inputSchema = yup.object().shape({
-  nilai_listening: yup.number().required('Nilai listening wajib diisi'),
-  nilai_structure: yup.number().required('Nilai structure wajib diisi'),
-  nilai_reading: yup.number().required('Nilai reading wajib diisi'),
+  listening: yup.number().required('Nilai listening wajib diisi'),
+  structure: yup.number().required('Nilai structure wajib diisi'),
+  reading: yup.number().required('Nilai reading wajib diisi'),
 });
 
+type ScorePayload = {
+  listening: number;
+  structure: number;
+  reading: number;
+};
+
 type UseAddInputModalProps = {
-  address: string;
+  participantId: string;
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 };
 
 function useAddInputModal({
-  address,
+  participantId,
   onSuccess,
   onError,
 }: UseAddInputModalProps) {
-  async function inputService(payload: InputPayload, address: string) {
-    try {
-      // kirim data ke backend
-      const result = await toeflService.input(payload, address);
-      if (!result) throw new Error('Input gagal');
-      const { peserta, toefl_hash } = result.data.data;
-
-      // kirim data ke smart contract
-      await contractService.storedRecord(toefl_hash, peserta);
-      console.log('kena hit');
-      const data = await contractService.getRecord(toefl_hash);
-
-      // buat kode qr
-      const qrMsg = `${CERTIFICATE_LINK}/${toefl_hash}`;
-      const qrCode = await QRCode.toDataURL(qrMsg);
-
-      // membuat sertifikat dengan data peserta dan QR code
-      const certificate = await generateCertificate(data, qrCode); // true untuk langsung mengunduh sertifikat
-      certificate.save(
-        `${peserta.nomor_induk_mahasiswa}_${peserta.nama_lengkap}.pdf`
-      );
-      // const blob = certificate.output("blob")
-      // const file = new File([blob], `${peserta.nama_lengkap}-${peserta.nomor_induk_mahasiswa}.pdf`)
-
-      // kirim sertifikat ke backend
-      // await toeflService.uploadCertificate(file, address);
-      return result;
-    } catch (error) {
-      const err = error as unknown as Error;
-      throw err;
-    }
-  }
   const {
     control,
     handleSubmit,
@@ -66,17 +35,18 @@ function useAddInputModal({
     resolver: yupResolver(inputSchema),
   });
   const { mutate: AddInputMutate } = useMutation({
-    mutationFn: (payload: InputPayload) => inputService(payload, address),
+    mutationFn: (payload: ScorePayload) =>
+      enrollmentsService.submitScore(participantId, payload),
     onSuccess: () => {
-      onSuccess && onSuccess();
+      onSuccess?.();
     },
-    onError: (error) => {
-      onError && onError(error);
+    onError: (error: Error) => {
+      onError?.(error);
       console.error('Input error:', error);
     },
   });
 
-  function handleInput(payload: InputPayload) {
+  function handleInput(payload: ScorePayload) {
     AddInputMutate(payload);
   }
 

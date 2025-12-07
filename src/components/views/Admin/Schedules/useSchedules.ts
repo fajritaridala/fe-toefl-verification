@@ -30,7 +30,7 @@ const useSchedules = () => {
     String(PAGINATION_OPTIONS.pageDefault)
   );
   const currentMonth = getQueryValue(query.month, '');
-  const currentService = getQueryValue(query.service_id, '');
+  const currentService = getQueryValue(query.serviceId, '');
 
   const {
     data: schedulesResponse,
@@ -51,9 +51,9 @@ const useSchedules = () => {
         limit: Number(currentLimit),
         month:
           currentMonth && currentMonth !== ALL_MONTH_OPTION_VALUE
-            ? currentMonth
+            ? Number(currentMonth)
             : undefined,
-        service_id: currentService || undefined,
+        serviceId: currentService || undefined,
       });
       return response.data as ScheduleListResponse;
     },
@@ -100,7 +100,7 @@ const useSchedules = () => {
       initialQuery.month = currentMonth;
     }
     if (currentService) {
-      initialQuery.service_id = currentService;
+      initialQuery.serviceId = currentService;
     }
 
     replace({ pathname, query: initialQuery }, undefined, { shallow: true });
@@ -146,9 +146,9 @@ const useSchedules = () => {
   function handleFilterService(serviceId: string) {
     const nextQuery: ParsedUrlQueryInput = { ...query };
     if (serviceId && serviceId !== ALL_SERVICE_OPTION_VALUE) {
-      nextQuery.service_id = serviceId;
+      nextQuery.serviceId = serviceId;
     } else {
-      delete nextQuery.service_id;
+      delete nextQuery.serviceId;
     }
     nextQuery.page = PAGINATION_OPTIONS.pageDefault;
 
@@ -192,7 +192,7 @@ const useSchedules = () => {
     query.limit,
     query.page,
     query.month,
-    query.service_id,
+    query.serviceId,
     initializeQueryParams,
   ]);
 

@@ -4,11 +4,11 @@ import { useRouter } from 'next/router';
 // Export tipe data agar bisa dipakai di komponen UI
 export type ScheduleData = {
   _id: string;
-  schedule_date: string;
-  service_name: string;
+  scheduleDate: string;
+  serviceName: string;
   quota: number;
   registrants: number;
-  is_full: boolean;
+  status: 'aktif' | 'tidak aktif';
 };
 
 export const useCalendar = (data: ScheduleData[]) => {
@@ -19,7 +19,6 @@ export const useCalendar = (data: ScheduleData[]) => {
 
   // Fungsi Navigasi ke Halaman Register
   const navigateToRegister = (schedule_id: string) => {
-    console.log(schedule_id);
     router.push(`/schedule/${schedule_id}/register`);
   };
 
@@ -63,7 +62,7 @@ export const useCalendar = (data: ScheduleData[]) => {
 
       // Cari jadwal yang cocok tanggalnya
       const schedule = data.find((s) => {
-        const sDate = new Date(s.schedule_date);
+        const sDate = new Date(s.scheduleDate);
         return (
           sDate.getDate() === day &&
           sDate.getMonth() === month &&

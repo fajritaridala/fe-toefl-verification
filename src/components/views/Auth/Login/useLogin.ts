@@ -4,7 +4,6 @@ import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import randomize from '@/utils/config/randomize';
-import { ILogin } from '@/utils/interfaces/Auth';
 import metamask from '@/utils/libs/metamask/metamask';
 
 const loginSchema = Yup.object().shape({
@@ -67,7 +66,7 @@ export const useLogin = () => {
         return;
       }
       if (user?.role === 'peserta') {
-        await router.push('/toefl');
+        await router.push('/');
         return;
       }
     },

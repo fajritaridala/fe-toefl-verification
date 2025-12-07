@@ -13,29 +13,50 @@ import useAddInputModal from './useAddInputModal';
 
 type Props = {
   isOpen: boolean;
-  address: string;
+  participantId: string;
+  participantName: string;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
 function AddInputModal(props: Props) {
-  const { isOpen, address, onClose } = props;
+  const { isOpen, participantId, participantName, onClose, onSuccess } = props;
   const { control, handleInput, handleSubmit, errors } = useAddInputModal({
-    address,
-    onSuccess: () => onClose(), // Close modal on success
+    participantId,
+    onSuccess: () => {
+      onClose();
+      onSuccess?.();
+    },
     onError: () => {},
   });
 
   return (
-    <Modal isOpen={isOpen} size="md" onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      size="md"
+      onClose={onClose}
+      backdrop="blur"
+      classNames={{
+        base: 'border border-border/60',
+        header: 'border-b border-border/50',
+        footer: 'border-t border-border/50',
+      }}
+    >
       <ModalContent>
-        {(modalOnClose) => (
+        {() => (
           <Form onSubmit={handleSubmit(handleInput)}>
-            <ModalHeader className="h-12">
-              <h1 className="text-[1.3rem] font-bold">Input Nilai Peserta</h1>
+            <ModalHeader className="flex flex-col gap-1">
+              <p className="text-2xsmall uppercase tracking-[0.2em] text-primary">
+                Input Nilai
+              </p>
+              <h1 className="text-xl font-bold">{participantName}</h1>
+              <p className="text-xs text-text-muted">
+                Masukkan nilai Listening, Structure, dan Reading peserta yang telah disetujui.
+              </p>
             </ModalHeader>
             <ModalBody className="w-full">
               <Controller
-                name="nilai_listening"
+                name="listening"
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -48,13 +69,13 @@ function AddInputModal(props: Props) {
                     type="number"
                     min={0}
                     max={100}
-                    errorMessage={errors.nilai_listening?.message}
-                    isInvalid={!!errors.nilai_listening}
+                    errorMessage={errors.listening?.message}
+                    isInvalid={!!errors.listening}
                   />
                 )}
               />
               <Controller
-                name="nilai_structure"
+                name="structure"
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -67,13 +88,13 @@ function AddInputModal(props: Props) {
                     type="number"
                     min={0}
                     max={100}
-                    errorMessage={errors.nilai_structure?.message}
-                    isInvalid={!!errors.nilai_structure}
+                    errorMessage={errors.structure?.message}
+                    isInvalid={!!errors.structure}
                   />
                 )}
               />
               <Controller
-                name="nilai_reading"
+                name="reading"
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -86,8 +107,8 @@ function AddInputModal(props: Props) {
                     type="number"
                     min={0}
                     max={100}
-                    errorMessage={errors.nilai_reading?.message}
-                    isInvalid={!!errors.nilai_reading}
+                    errorMessage={errors.reading?.message}
+                    isInvalid={!!errors.reading}
                   />
                 )}
               />

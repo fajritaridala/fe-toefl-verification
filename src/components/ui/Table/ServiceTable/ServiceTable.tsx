@@ -56,12 +56,6 @@ const ServiceTable = (props: Props) => {
         return <p>{service.name}</p>;
       case 'price':
         return <p>{toRupiah(service.price)}</p>;
-      case 'duration':
-        return (
-          <div className="flex items-center gap-2">
-            <span>{service.duration} menit</span>
-          </div>
-        );
       case 'notes':
         return service.notes ? service.notes : <span>-</span>;
       case 'description':

@@ -102,23 +102,23 @@ export default function ScheduleRegisterCard(props: Props) {
               )}
             />
             <Controller
-              name="birth_date"
+              name="email"
               control={control}
               render={({ field }) => (
                 <Input
                   {...field}
                   isRequired
-                  label="Tanggal Lahir"
+                  label="Email"
                   labelPlacement="outside"
-                  type="date"
+                  type="email"
                   variant="bordered"
-                  isInvalid={!!errors.birth_date}
-                  errorMessage={errors.birth_date?.message}
+                  isInvalid={!!errors.email}
+                  errorMessage={errors.email?.message}
                 />
               )}
             />
             <Controller
-              name="phone_number"
+              name="phoneNumber"
               control={control}
               render={({ field }) => (
                 <Input
@@ -129,13 +129,13 @@ export default function ScheduleRegisterCard(props: Props) {
                   placeholder="Contoh: 081234567890"
                   type="tel"
                   variant="bordered"
-                  isInvalid={!!errors.phone_number}
-                  errorMessage={errors.phone_number?.message}
+                  isInvalid={!!errors.phoneNumber}
+                  errorMessage={errors.phoneNumber?.message}
                 />
               )}
             />
             <Controller
-              name="NIM"
+              name="nim"
               control={control}
               render={({ field }) => (
                 <Input
@@ -145,8 +145,8 @@ export default function ScheduleRegisterCard(props: Props) {
                   labelPlacement="outside"
                   placeholder="Masukkan NIM"
                   variant="bordered"
-                  isInvalid={!!errors.NIM}
-                  errorMessage={errors.NIM?.message}
+                  isInvalid={!!errors.nim}
+                  errorMessage={errors.nim?.message}
                 />
               )}
             />
@@ -183,7 +183,7 @@ export default function ScheduleRegisterCard(props: Props) {
               )}
             />
             <Controller
-              name="payment_date"
+              name="paymentDate"
               control={control}
               render={({ field }) => (
                 <Input
@@ -193,8 +193,8 @@ export default function ScheduleRegisterCard(props: Props) {
                   labelPlacement="outside"
                   type="date"
                   variant="bordered"
-                  isInvalid={!!errors.payment_date}
-                  errorMessage={errors.payment_date?.message}
+                  isInvalid={!!errors.paymentDate}
+                  errorMessage={errors.paymentDate?.message}
                 />
               )}
             />
@@ -207,7 +207,7 @@ export default function ScheduleRegisterCard(props: Props) {
                 onClick={handleFilePicker}
                 className={cn(
                   'border-default-200 hover:border-primary mt-2 flex cursor-pointer justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors',
-                  { 'border-danger-500': !!errors.payment_receipt }
+                  { 'border-danger-500': !!errors.file }
                 )}
               >
                 <div className="text-center">
@@ -234,18 +234,21 @@ export default function ScheduleRegisterCard(props: Props) {
                   </p>
                 </div>
               </div>
-              {errors.payment_receipt && (
+              {errors.file && (
                 <p className="text-danger-500 mt-1 text-xs">
-                  {errors.payment_receipt.message}
+                  {errors.file?.message}
                 </p>
               )}
               <Controller
-                name="payment_receipt"
+                name="file"
                 control={control}
-                render={({ field }) => (
+                render={({ field: { ref } }) => (
                   <input
                     type="file"
-                    ref={fileInputRef}
+                    ref={(node) => {
+                      fileInputRef.current = node;
+                      ref(node);
+                    }}
                     onChange={handleFileChange}
                     className="hidden"
                     accept="image/png, image/jpeg, application/pdf"

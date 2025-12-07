@@ -14,7 +14,6 @@ type CreateServicePayload = {
   name: string;
   description: string;
   price: number;
-  duration: number;
   notes?: string;
 };
 
@@ -22,7 +21,6 @@ type UpdateServicePayload = {
   name?: string;
   description?: string;
   price?: number;
-  duration?: number;
   notes?: string;
 };
 

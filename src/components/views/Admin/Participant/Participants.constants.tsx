@@ -1,8 +1,9 @@
 const ColumnListParticipants = [
-  { name: 'NAME', uid: 'nama_lengkap' },
-  { name: 'NIM', uid: 'nomor_induk_mahasiswa' },
-  { name: 'STATUS', uid: 'status' },
-  { name: 'ACTIONS', uid: 'actions' },
+  { name: 'Nama', uid: 'fullName' },
+  { name: 'NIM', uid: 'nim' },
+  { name: 'Jadwal', uid: 'scheduleId' },
+  { name: 'Status', uid: 'status' },
+  { name: 'Actions', uid: 'actions' },
 ];
 
 export default ColumnListParticipants;

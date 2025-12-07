@@ -1,36 +1,21 @@
-import { LuTimer } from 'react-icons/lu';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
-} from '@heroui/react';
-import { useRouter } from 'next/router';
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider } from '@heroui/react';
 
 type Props = {
   title: string;
   description: string;
-  schedule: string;
   price: string;
   notes?: string;
   redirect?: () => void;
 };
 
 function ServiceCard(props: Props) {
-  const router = useRouter();
-  const { redirect, title, description, schedule, price, notes } = props;
+  const { redirect, title, description, price, notes } = props;
 
   return (
     <Card className="group hover:shadow-box rounded-xl border border-gray-300 p-2 shadow-none transition-all delay-75 duration-200 ease-in-out hover:-translate-y-2">
       <CardHeader>
         <div className="text-primary flex w-full flex-wrap">
           <h1 className="mb-2 text-xl font-extrabold">{title}</h1>
-          <div className="text-secondary flex w-full gap-2 text-[12px]">
-            <LuTimer strokeWidth={2} className="mt-1" />
-            <p className="">{schedule} menit</p>
-          </div>
         </div>
       </CardHeader>
       <CardBody className="-mt-4 flex justify-between">

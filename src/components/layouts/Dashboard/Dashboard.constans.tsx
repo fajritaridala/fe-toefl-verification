@@ -8,20 +8,37 @@ const SIDEBAR_ADMIN = [
     icon: <LuLayoutGrid />,
   },
   {
-    key: 'daftar-peserta',
-    label: 'Daftar Peserta',
+    key: 'participants',
+    label: 'Manajemen Peserta',
     href: '/admin/participants',
     icon: <LuUsers />,
+    children: [
+      {
+        key: 'participants-list',
+        label: 'Daftar Peserta',
+        href: '/admin/participants',
+      },
+      {
+        key: 'participants-validation',
+        label: 'Validasi Pendaftaran',
+        href: '/admin/participants/validation',
+      },
+      {
+        key: 'participants-score',
+        label: 'Input Nilai',
+        href: '/admin/participants/input',
+      },
+    ],
   },
   {
     key: 'services',
-    label: 'Layanan',
+    label: 'Manajemen Layanan',
     href: '/admin/services',
     icon: <LuDock />,
   },
   {
     key: 'schedules',
-    label: 'Jadwal',
+    label: 'Manajemen Jadwal',
     href: '/admin/schedules',
     icon: <LuCalendar />,
   },

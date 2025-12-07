@@ -1,17 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import servicesService from '@/services/services.service';
-
-type ServiceType = [
-  {
-    _id: string;
-    name: string;
-    description: string;
-    price: number;
-    duration: number;
-    notes?: string;
-  },
-];
+import { ServiceItem } from '@/utils/interfaces/Service';
 
 const useService = () => {
   const router = useRouter();
@@ -26,9 +16,7 @@ const useService = () => {
       return response;
     },
   });
-
-  const services = serviceData?.data.data as ServiceType;
-  console.log(serviceData?.data.data)
+  const services = (serviceData?.data.data as ServiceItem[]) || [];
 
   const handleRedirect = (service_id: string) => {
     router.push(`/service/${service_id}/schedule`);

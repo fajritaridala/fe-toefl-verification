@@ -1,5 +1,6 @@
-import { LuBookmark, LuLogOut, LuUser, LuUserRound } from 'react-icons/lu';
+import { LuBookmark, LuLogOut, LuUser } from 'react-icons/lu';
 import { signOut } from 'next-auth/react';
+import { NextRouter } from 'next/router';
 
 const NAVBAR_ITEMS = [
   { label: 'Beranda', href: '/' },
@@ -7,7 +8,7 @@ const NAVBAR_ITEMS = [
   { label: 'Verifikasi', href: '/verification' },
 ];
 
-const NAVBAR_DROPDOWN_ITEMS = (router: any) => [
+const NAVBAR_DROPDOWN_ITEMS = (router: NextRouter) => [
   {
     key: 'user_profile',
     label: 'Profil saya',

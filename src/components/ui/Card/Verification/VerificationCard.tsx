@@ -1,9 +1,27 @@
 import { LuCircleCheckBig } from 'react-icons/lu';
 import { Card, CardBody, CardFooter, CardHeader, Divider } from '@heroui/react';
 
+type ParticipantInfo = {
+  nama_lengkap?: string;
+  jenis_kelamin?: string;
+  tanggal_lahir?: string;
+  nomor_induk_mahasiswa?: string;
+  fakultas?: string;
+  program_studi?: string;
+  sesi_tes?: string;
+  tanggal_tes?: string;
+};
+
+type ScoreInfo = {
+  nilai_listening?: number;
+  nilai_structure?: number;
+  nilai_reading?: number;
+  nilai_total?: number;
+};
+
 type Props = {
-  isPeserta: Record<string, any>;
-  isScorePeserta: Record<string, any>;
+  isPeserta: ParticipantInfo;
+  isScorePeserta: ScoreInfo;
 };
 
 export default function VerificationCard(props: Props) {
@@ -51,7 +69,10 @@ export default function VerificationCard(props: Props) {
             </h2>*/}
             <div className="mx-auto flex w-[80%] flex-wrap justify-around">
               {biodataPeserta.map((item) => (
-                <div className="mb-6 flex w-[40%] flex-col text-xl font-medium">
+                <div
+                  key={item.label}
+                  className="mb-6 flex w-[40%] flex-col text-xl font-medium"
+                >
                   <div className="text-medium font-light uppercase">
                     <p>{item.label}</p>
                   </div>
@@ -69,7 +90,10 @@ export default function VerificationCard(props: Props) {
             {/*<h2 className="mb-4 text-xl font-bold">Nilai Tes</h2>*/}
             <div className="mb-4 flex justify-between">
               {scorePeserta.map((item) => (
-                <div className="border-primary-800 h-[8rem] w-[32%] content-center rounded-lg border-3">
+                <div
+                  key={item.label}
+                  className="border-primary-800 h-[8rem] w-[32%] content-center rounded-lg border-3"
+                >
                   <div className="flex flex-col text-center">
                     <h3 className="mb-2 text-lg font-semibold">{item.label}</h3>
                     <p className="text-4xl font-extrabold">{item.value}</p>

@@ -4,9 +4,7 @@ import toRupiah from '@/utils/toRupiah';
 import useService from './useService';
 
 const Service = () => {
-  const { services, isErrorServices, isPendingServices, handleRedirect } =
-    useService();
-  console.log(services)
+  const { services, handleRedirect } = useService();
 
   return (
     <div className="bg-bg-light">
@@ -48,7 +46,6 @@ const Service = () => {
                 <ServiceCard
                   key={item._id}
                   title={item.name}
-                  schedule={String(item.duration)}
                   description={item.description}
                   price={toRupiah(item.price)}
                   notes={item.notes}

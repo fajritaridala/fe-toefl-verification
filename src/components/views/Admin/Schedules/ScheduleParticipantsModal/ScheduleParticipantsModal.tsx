@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   Button,
   Chip,
@@ -7,9 +9,15 @@ import {
   ModalFooter,
   ModalHeader,
   ScrollShadow,
+  Spinner,
 } from '@heroui/react';
 import moment from 'moment';
-import { ScheduleItem, ScheduleRegistrantSnapshot } from '@/utils/interfaces/Schedule';
+import enrollmentsService from '@/services/enrollments.service';
+import {
+  EnrollmentItem,
+  EnrollmentListResponse,
+  ScheduleItem,
+} from '@/utils/interfaces/Schedule';
 
 type Props = {
   isOpen: boolean;
@@ -18,31 +26,39 @@ type Props = {
 };
 
 const ScheduleParticipantsModal = ({ isOpen, schedule, onClose }: Props) => {
-  const participants = schedule?.registrants || [];
-  const serviceName =
-    schedule?.service?.name || schedule?.service_name || 'Layanan tidak diketahui';
-  const scheduleDate = schedule?.schedule_date
-    ? moment(schedule.schedule_date).format('DD MMM YYYY')
+  const scheduleId = schedule?._id;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['enrollments', 'schedule', scheduleId],
+    queryFn: async () => {
+      if (!scheduleId) return null;
+      const response = await enrollmentsService.getScheduleEnrollments(
+        scheduleId,
+        { limit: 100 }
+      );
+      return response.data as EnrollmentListResponse;
+    },
+    enabled: isOpen && !!scheduleId,
+  });
+
+  const participants = useMemo(() => data?.data ?? [], [data]);
+  const serviceName = schedule?.serviceName || 'Layanan tidak diketahui';
+  const scheduleDate = schedule?.scheduleDate
+    ? moment(schedule.scheduleDate).format('DD MMM YYYY')
     : '-';
 
-  const renderStatusChip = (registrant: ScheduleRegistrantSnapshot) => {
-    const status = registrant.status?.toLowerCase() || 'pending';
+  const renderStatusChip = (registrant: EnrollmentItem) => {
+    const status = registrant.status;
     const color =
-      status === 'selesai'
+      status === 'disetujui'
         ? 'success'
-        : status === 'dibatalkan'
+        : status === 'ditolak'
           ? 'danger'
           : 'warning';
 
     return (
-      <Chip
-        key={`${registrant.participant_id || registrant.participant_name}-chip`}
-        size="sm"
-        variant="flat"
-        color={color}
-        className="capitalize"
-      >
-        {registrant.status || 'Menunggu'}
+      <Chip size="sm" variant="flat" color={color} className="capitalize">
+        {status}
       </Chip>
     );
   };
@@ -66,24 +82,31 @@ const ScheduleParticipantsModal = ({ isOpen, schedule, onClose }: Props) => {
           </p>
         </ModalHeader>
         <ModalBody>
-          {participants.length === 0 ? (
+          {isLoading ? (
+            <div className="flex items-center justify-center py-10">
+              <Spinner label="Memuat peserta..." color="primary" />
+            </div>
+          ) : participants.length === 0 ? (
             <p className="text-center text-sm text-text-muted">
               Belum ada peserta terdaftar untuk jadwal ini.
             </p>
           ) : (
             <ScrollShadow className="max-h-80 space-y-3">
-              {participants.map((registrant, index) => (
+              {participants.map((registrant) => (
                 <div
-                  key={registrant.participant_id || `${registrant.participant_name}-${index}`}
+                  key={registrant._id}
                   className="rounded-lg border border-border bg-bg-light p-3"
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-semibold text-text">
-                        {registrant.participant_name || 'Peserta tanpa nama'}
+                        {registrant.fullName || 'Peserta tanpa nama'}
                       </p>
                       <p className="text-2xsmall uppercase tracking-[0.3em] text-text-muted">
-                        ID: {registrant.participant_id || '-'}
+                        NIM: {registrant.nim || '-'}
+                      </p>
+                      <p className="text-2xsmall text-text-muted">
+                        Status: {registrant.status}
                       </p>
                     </div>
                     {renderStatusChip(registrant)}

@@ -25,7 +25,9 @@ const BaseFooter = () => {
             <h1 className="mb-4 font-bold">Navigasi</h1>
             <div className="flex flex-col gap-2">
               {NAVBAR_ITEMS.map((item) => (
-                <Link href={item.href}>{item.label}</Link>
+                <Link key={item.href} href={item.href}>
+                  {item.label}
+                </Link>
               ))}
             </div>
           </div>

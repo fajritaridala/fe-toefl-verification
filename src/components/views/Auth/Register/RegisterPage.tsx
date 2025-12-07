@@ -87,20 +87,20 @@ const RegisterPage = () => {
               <Form onSubmit={handleSubmit(handleRegister, onError)}>
                 <div className="w-full space-y-8 md:space-y-10">
                   <Controller
-                    name="fullName"
+                    name="username"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
                         isRequired
-                        label="Fullname"
+                        label="Username"
                         labelPlacement="outside"
-                        placeholder="Enter your fullname"
+                        placeholder="Enter your username"
                         type="text"
                         variant="bordered"
                         autoComplete="off"
-                        isInvalid={!!errors.fullName}
-                        errorMessage={errors.fullName?.message}
+                        isInvalid={!!errors.username}
+                        errorMessage={errors.username?.message}
                       />
                     )}
                   />

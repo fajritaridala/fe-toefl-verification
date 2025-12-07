@@ -10,7 +10,7 @@ const authServices = {
     return instance.post(`${endpoint.AUTH}/register`, payload);
   },
   getProfileWithToken(token: string) {
-    return instance.get(`${endpoint.AUTH}/me`, {
+    return instance.get(`${endpoint.AUTH}/profile`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

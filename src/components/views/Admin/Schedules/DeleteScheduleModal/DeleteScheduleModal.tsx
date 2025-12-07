@@ -6,6 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from '@heroui/react';
+import moment from 'moment';
 import { ScheduleItem } from '@/utils/interfaces/Schedule';
 import useDeleteScheduleModal from './useDeleteScheduleModal';
 
@@ -24,6 +25,11 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
     if (!schedule?._id) return;
     deleteSchedule(schedule._id);
   };
+
+  const serviceName = schedule?.serviceName || 'tanpa nama';
+  const scheduleDate = schedule?.scheduleDate
+    ? moment(schedule.scheduleDate).format('DD MMM YYYY')
+    : '-';
 
   return (
     <Modal
@@ -44,11 +50,8 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
         <ModalBody>
           <p className="text-sm text-text">
             Apakah Anda yakin ingin menghapus jadwal untuk layanan{' '}
-            <span className="font-semibold">
-              {schedule?.service?.name || schedule?.service_name || 'tanpa nama'}
-            </span>{' '}
-            pada tanggal{' '}
-            <span className="font-semibold">{schedule?.schedule_date}</span>? Tindakan
+            <span className="font-semibold">{serviceName}</span> pada tanggal{' '}
+            <span className="font-semibold">{scheduleDate}</span>? Tindakan
             ini tidak dapat dibatalkan.
           </p>
         </ModalBody>

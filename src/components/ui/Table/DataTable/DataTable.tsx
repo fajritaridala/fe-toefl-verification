@@ -37,6 +37,7 @@ type Props = {
   onClickButtonTopContent?: () => void;
   renderCell: (item: Record<string, unknown>, columnKey: Key) => ReactNode;
   totalPages: number;
+  rowKeyField?: string;
 };
 
 function DataTable(props: Props) {
@@ -52,9 +53,10 @@ function DataTable(props: Props) {
     onChangeSearch,
     onClearSearch,
     renderCell,
+    totalPages,
+    rowKeyField = '_id',
   } = props;
   const [statusFilter, setStatusFilter] = useState<Selection>('all');
-  const totalPages = 12;
 
   const filteredData = useMemo(() => {
     if (statusFilter === 'all') {
@@ -64,7 +66,9 @@ function DataTable(props: Props) {
       statusFilter instanceof Set ? statusFilter : [statusFilter]
     );
     return data.filter((item) => {
-      const itemStatus = (item.status as String).toLowerCase();
+      const value = item.status as string | undefined;
+      if (!value) return false;
+      const itemStatus = value.toLowerCase();
       const normalized = selectedKeys.map((key) =>
         (key as string).toLowerCase()
       );
@@ -132,7 +136,7 @@ function DataTable(props: Props) {
         </Dropdown>
       </div>
     );
-  }, [statusFilter, onChangeSearch]);
+  }, [statusFilter, onChangeSearch, onClearSearch]);
 
   const BottomContent = useMemo(() => {
     return (
@@ -216,13 +220,18 @@ function DataTable(props: Props) {
           </div>
         }
       >
-        {(item) => (
-          <TableRow key={item.address_peserta as Key}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
+        {(item) => {
+          const keyValue =
+            (item[rowKeyField as keyof typeof item] as Key | undefined) ??
+            (item['_id' as keyof typeof item] as Key | undefined);
+          return (
+            <TableRow key={keyValue ?? JSON.stringify(item)}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          );
+        }}
       </TableBody>
     </Table>
   );

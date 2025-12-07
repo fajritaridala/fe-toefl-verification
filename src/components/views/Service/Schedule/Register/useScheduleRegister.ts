@@ -1,10 +1,10 @@
-import { ChangeEvent, RefObject, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { ChangeEvent, useRef, useState } from 'react';
+import { FieldErrors, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
-import schedulesService from '@/services/schedules.service';
+import enrollmentsService from '@/services/enrollments.service';
 import { ScheduleRegister } from '@/utils/interfaces/Schedule';
 
 const scheduleRegisterSchema = yup.object().shape({
@@ -13,13 +13,13 @@ const scheduleRegisterSchema = yup.object().shape({
     .string()
     .oneOf(['laki-laki', 'perempuan'], 'Jenis kelamin tidak valid')
     .required('Jenis kelamin wajib diisi'),
-  birth_date: yup.string().required('Tanggal lahir wajib diisi'),
-  phone_number: yup.string().required('Nomor telepon wajib diisi'),
-  NIM: yup.string().required('NIM wajib diisi'),
+  email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
+  phoneNumber: yup.string().required('Nomor telepon wajib diisi'),
+  nim: yup.string().required('NIM wajib diisi'),
   faculty: yup.string().required('Fakultas wajib diisi'),
   major: yup.string().required('Program studi wajib diisi'),
-  payment_date: yup.string().required('Tanggal pembayaran wajib diisi'),
-  payment_receipt: yup
+  paymentDate: yup.string().required('Tanggal pembayaran wajib diisi'),
+  file: yup
     .mixed<File>()
     .required('Bukti pembayaran wajib diunggah')
     .nullable(),
@@ -50,21 +50,21 @@ export function useScheduleRegister() {
     defaultValues: {
       fullName: '',
       gender: undefined,
-      birth_date: '',
-      phone_number: '',
-      NIM: '',
+      email: '',
+      phoneNumber: '',
+      nim: '',
       faculty: '',
       major: '',
-      payment_date: '',
-      payment_receipt: null,
+      paymentDate: '',
+      file: null,
     },
   });
 
-  const paymentReceipt = watch('payment_receipt');
+  const paymentReceipt = watch('file');
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setValue('payment_receipt', e.target.files[0], { shouldValidate: true });
+      setValue('file', e.target.files[0], { shouldValidate: true });
     }
   };
 
@@ -78,7 +78,7 @@ export function useScheduleRegister() {
 
   const { mutate: registerMutate } = useMutation({
     mutationFn: (payload: ScheduleRegister) =>
-      schedulesService.registerParticipant(schedule_id, payload),
+      enrollmentsService.register(schedule_id, payload),
     onSuccess: () => {
       setIsLoading(false);
       setAlert({
@@ -104,11 +104,10 @@ export function useScheduleRegister() {
   const handleRegister = (data: ScheduleRegister) => {
     setIsLoading(true);
     setAlert(null);
-    console.log(data);
     registerMutate(data);
   };
 
-  const onError = (errors: any) => {
+  const onError = (errors: FieldErrors<ScheduleRegister>) => {
     console.error('Form Errors:', errors);
     setAlert({
       isOpen: true,

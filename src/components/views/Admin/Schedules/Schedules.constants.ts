@@ -1,5 +1,5 @@
 export type ScheduleTableColumnKey =
-  | 'schedule_date'
+  | 'scheduleDate'
   | 'service'
   | 'quota'
   | 'status'
@@ -42,7 +42,7 @@ export const MONTH_FILTER_OPTIONS: MonthOption[] = [
 
 export const SCHEDULE_TABLE_COLUMNS: ScheduleTableColumn[] = [
   {
-    key: 'schedule_date',
+    key: 'scheduleDate',
     label: 'Tanggal',
     className: 'w-36',
   },

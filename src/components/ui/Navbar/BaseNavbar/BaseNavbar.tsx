@@ -33,7 +33,11 @@ const BaseNavbar = (props: Props) => {
   const { isScrolled, handleLogin } = useBaseNavbar();
 
   useEffect(() => {
-    setUsername(user?.user?.fullName || username);
+    if (user?.user?.username) {
+      setUsername(user.user.username);
+    } else {
+      setUsername('User');
+    }
   }, [user]);
 
   return (

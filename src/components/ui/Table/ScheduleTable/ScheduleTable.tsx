@@ -97,24 +97,30 @@ const ScheduleTable = (props: Props) => {
     columnKey: ScheduleTableColumn['key']
   ): ReactNode => {
     const registrants =
-      schedule.registrants?.length ?? schedule.register_count ?? 0;
+      typeof schedule.registrants === 'number' ? schedule.registrants : 0;
     const quota =
       typeof schedule.quota === 'number' ? Number(schedule.quota) : undefined;
-    const isFull =
-      schedule.is_full ?? (quota ? registrants >= Number(quota) : false);
-    const statusLabel = schedule.status || (isFull ? 'Penuh' : 'Tersedia');
-    const serviceName =
-      schedule.service_name || schedule.service?.name || 'Tidak diketahui';
+    const isFull = quota ? registrants >= quota : false;
+    const statusLabel =
+      schedule.status === 'aktif'
+        ? isFull
+          ? 'Penuh'
+          : 'Aktif'
+        : 'Tidak aktif';
+    const serviceName = schedule.serviceName || 'Tidak diketahui';
 
     switch (columnKey) {
-      case 'schedule_date':
+      case 'scheduleDate':
         return (
           <div className="flex flex-col">
             <p className="text-text font-semibold">
-              {formatDate(schedule.schedule_date)}
+              {formatDate(schedule.scheduleDate)}
             </p>
             <p className="text-2xsmall text-text-muted leading-3">
-              {moment(schedule.schedule_date).format('dddd')}
+              {moment(schedule.scheduleDate).format('dddd')}
+            </p>
+            <p className="text-2xsmall text-text-muted leading-3">
+              {`${moment(schedule.startTime).format('HH:mm')} - ${moment(schedule.endTime).format('HH:mm')}`}
             </p>
           </div>
         );
@@ -165,7 +171,13 @@ const ScheduleTable = (props: Props) => {
             <Chip
               size="sm"
               variant="flat"
-              color={isFull ? 'danger' : 'success'}
+              color={
+                schedule.status === 'tidak aktif'
+                  ? 'warning'
+                  : isFull
+                    ? 'danger'
+                    : 'success'
+              }
               classNames={{
                 content: '!text-2xsmall',
                 base: 'px-2 border',

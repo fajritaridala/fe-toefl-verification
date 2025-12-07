@@ -60,7 +60,7 @@ const AddScheduleModal = ({
             </ModalHeader>
             <ModalBody className="space-y-4">
               <Controller
-                name="service_id"
+                name="serviceId"
                 control={control}
                 render={({ field }) => {
                   const { ref, value, onChange, ...restField } = field;
@@ -82,8 +82,8 @@ const AddScheduleModal = ({
                         onChange(nextValue);
                       }}
                       isDisabled={!hasServiceOptions}
-                      isInvalid={!!errors.service_id}
-                      errorMessage={errors.service_id?.message}
+                      isInvalid={!!errors.serviceId}
+                      errorMessage={errors.serviceId?.message}
                     >
                       {serviceOptions.map((option) => (
                         <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -94,7 +94,7 @@ const AddScheduleModal = ({
               />
 
               <Controller
-                name="schedule_date"
+                name="scheduleDate"
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -104,14 +104,50 @@ const AddScheduleModal = ({
                     label="Tanggal jadwal"
                     labelPlacement="outside"
                     placeholder="Pilih tanggal pelaksanaan"
-                    isInvalid={!!errors.schedule_date}
-                    errorMessage={errors.schedule_date?.message}
+                    isInvalid={!!errors.scheduleDate}
+                    errorMessage={errors.scheduleDate?.message}
                   />
                 )}
               />
 
+              <div className="grid gap-4 lg:grid-cols-2">
+                <Controller
+                  name="startTime"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      type="time"
+                      isRequired
+                      label="Waktu Mulai"
+                      labelPlacement="outside"
+                      placeholder="00:00"
+                      isInvalid={!!errors.startTime}
+                      errorMessage={errors.startTime?.message}
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="endTime"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      type="time"
+                      isRequired
+                      label="Waktu Selesai"
+                      labelPlacement="outside"
+                      placeholder="00:00"
+                      isInvalid={!!errors.endTime}
+                      errorMessage={errors.endTime?.message}
+                    />
+                  )}
+                />
+              </div>
+
               <Controller
-                name="quota"
+                name="capacity"
                 control={control}
                 render={({ field }) => {
                   const { ref, value, onChange, ...restField } = field;
@@ -138,8 +174,8 @@ const AddScheduleModal = ({
                             : undefined
                         )
                       }
-                      isInvalid={!!errors.quota}
-                      errorMessage={errors.quota?.message}
+                      isInvalid={!!errors.capacity}
+                      errorMessage={errors.capacity?.message}
                     />
                   );
                 }}

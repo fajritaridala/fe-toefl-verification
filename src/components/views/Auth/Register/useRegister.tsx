@@ -11,7 +11,7 @@ import { IRegister } from '@/utils/interfaces/Auth';
 import metamask from '@/utils/libs/metamask/metamask';
 
 const registerSchema = Yup.object().shape({
-  fullName: Yup.string().required('Silahkan masukan nama lengkap kamu'),
+  username: Yup.string().required('Silahkan masukan username kamu'),
   email: Yup.string()
     .email('Format email tidak valid')
     .required('Silahkan masukan alamat email kamu'),
@@ -40,7 +40,7 @@ export function useRegister() {
   } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      fullName: '',
+      username: '',
       email: '',
       roleToken: '',
     },
@@ -113,7 +113,7 @@ export function useRegister() {
     setIsLoading(true);
     const payload = {
       address: isAddress,
-      fullName: data.fullName,
+      username: data.username,
       email: data.email,
       roleToken: data.roleToken || '',
     };

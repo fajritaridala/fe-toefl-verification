@@ -1,14 +1,19 @@
-import { JSX } from 'react';
-import { LuChevronLeft, LuDatabase } from 'react-icons/lu';
-import { Button, Listbox, ListboxItem, cn } from '@heroui/react';
+import { JSX, useCallback, useEffect, useState } from 'react';
+import { LuChevronDown, LuChevronLeft, LuDatabase } from 'react-icons/lu';
+import { Button, cn } from '@heroui/react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 export interface SidebarItem {
   key: string;
   label: string;
-  href: string;
+  href?: string;
   icon: JSX.Element;
+  children?: Array<{
+    key: string;
+    label: string;
+    href: string;
+  }>;
 }
 
 type Props = {
@@ -19,6 +24,53 @@ type Props = {
 function DashboardLayoutSidebar(props: Props) {
   const { sidebarItems, isOpen } = props;
   const router = useRouter();
+  const currentPath = router.pathname;
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+
+  const toggleGroup = useCallback((key: string) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  }, []);
+
+  useEffect(() => {
+    sidebarItems.forEach((item) => {
+      if (!item.children?.length) return;
+      const shouldExpand = item.children.some((child) =>
+        currentPath.startsWith(child.href)
+      );
+      if (shouldExpand) {
+        setExpandedGroups((prev) => ({ ...prev, [item.key]: true }));
+      }
+    });
+  }, [currentPath, sidebarItems]);
+
+  const renderChildButton = useCallback((child: {
+    key: string;
+    label: string;
+    href: string;
+  }) => {
+    const isActive = currentPath.startsWith(child.href);
+    return (
+      <button
+        key={child.key}
+        type="button"
+        className={cn(
+          'text-small text-text-muted data-[active=true]:text-primary data-[active=true]:font-semibold flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition-colors duration-200',
+          {
+            'pl-4': true,
+          }
+        )}
+        data-active={isActive}
+        onClick={() => router.push(child.href)}
+      >
+        <span className="w-1.5 rounded-full bg-border" />
+        {child.label}
+      </button>
+    );
+  }, [currentPath, router]);
+
   return (
     <section
       className={cn(
@@ -40,42 +92,57 @@ function DashboardLayoutSidebar(props: Props) {
             Simpeka
           </h1>
         </div>
-        <Listbox
-          items={sidebarItems}
-          aria-label="Dashboard Sidebar"
-          variant="flat"
-        >
-          {(item) => {
-            const isActive =
-              item.href === '/admin/participants'
-                ? router.pathname === item.href
-                : router.pathname.startsWith(item.href);
+        <nav className="mt-4 flex flex-col">
+          {sidebarItems.map((item) => {
+            const hasChildren = Boolean(item.children?.length);
+            const isActive = hasChildren
+              ? item.children!.some((child) => currentPath.startsWith(child.href))
+              : item.href
+                ? currentPath.startsWith(item.href)
+                : false;
+            const isExpanded = expandedGroups[item.key];
+            const handlePress = () => {
+              if (hasChildren) {
+                toggleGroup(item.key);
+                return;
+              }
+              if (item.href) {
+                router.push(item.href);
+              }
+            };
+
             return (
-              <ListboxItem
-                key={item.key}
-                className={cn(
-                  'text-large data-[hover=true]:bg-primary/10 text-text-muted data-[hover=true]:text-primary mb-1 h-10 rounded-lg transition-all delay-75 duration-200',
-                  {
-                    'text-bg-light bg-primary font-bold': isActive,
-                  }
-                )}
-                startContent={item.icon}
-                textValue={item.label}
-                aria-labelledby={item.label}
-                aria-describedby={item.label}
-                onPress={() => router.push(item.href)}
-              >
-                <p
-                  className={cn('text-small', {
-                    'font-bold': isActive,
-                  })}
+              <div key={item.key} className="mb-1">
+                <button
+                  type="button"
+                  onClick={handlePress}
+                  className={cn(
+                    'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-small text-text-muted transition-colors duration-200',
+                    'hover:bg-primary/10 hover:text-primary',
+                    {
+                      'bg-primary text-bg-light font-semibold shadow-sm': isActive,
+                    }
+                  )}
                 >
-                  {item.label}
-                </p>
-              </ListboxItem>
+                  <span className="text-base">{item.icon}</span>
+                  <span className="flex-1">{item.label}</span>
+                  {hasChildren && (
+                    <LuChevronDown
+                      className={cn('transition-transform duration-200', {
+                        'rotate-180': isExpanded,
+                      })}
+                    />
+                  )}
+                </button>
+                {hasChildren && isExpanded && (
+                  <div className="ml-2 mt-2 flex flex-col gap-1 border-l border-border pl-2">
+                    {item.children!.map((child) => renderChildButton(child))}
+                  </div>
+                )}
+              </div>
             );
-          }}
-        </Listbox>
+          })}
+        </nav>
       </div>
       <div className="hover:bg-danger/10 mb-8 rounded-lg transition-all delay-75 duration-250">
         <Button

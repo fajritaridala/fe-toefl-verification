@@ -7,9 +7,11 @@ import schedulesService from '@/services/schedules.service';
 import { ScheduleItem, SchedulePayload } from '@/utils/interfaces/Schedule';
 
 const scheduleSchema: yup.ObjectSchema<SchedulePayload> = yup.object({
-  service_id: yup.string().required('Layanan wajib dipilih'),
-  schedule_date: yup.string().required('Tanggal jadwal wajib diisi'),
-  quota: yup
+  serviceId: yup.string().required('Layanan wajib dipilih'),
+  scheduleDate: yup.string().required('Tanggal jadwal wajib diisi'),
+  startTime: yup.string().required('Waktu mulai wajib diisi'),
+  endTime: yup.string().required('Waktu selesai wajib diisi'),
+  capacity: yup
     .number()
     .typeError('Kuota harus berupa angka')
     .positive('Kuota harus lebih dari 0')
@@ -35,6 +37,18 @@ const formatDateValue = (date?: string) => {
   return date;
 };
 
+const formatTimeValue = (date?: string) => {
+  if (!date) return '';
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) {
+    if (date.includes('T')) {
+      return date.split('T')[1]?.slice(0, 5) ?? '';
+    }
+    return date;
+  }
+  return parsed.toISOString().slice(11, 16);
+};
+
 const useAddScheduleModal = ({
   mode,
   schedule,
@@ -51,29 +65,32 @@ const useAddScheduleModal = ({
   } = useForm<ScheduleFormValues>({
     resolver: yupResolver(scheduleSchema),
     defaultValues: {
-      service_id: schedule?.service_id || '',
-      schedule_date: formatDateValue(schedule?.schedule_date),
-      quota: schedule?.quota ?? undefined,
+      serviceId: schedule?.serviceId || '',
+      scheduleDate: formatDateValue(schedule?.scheduleDate),
+      startTime: formatTimeValue(schedule?.startTime),
+      endTime: formatTimeValue(schedule?.endTime),
+      capacity: schedule?.quota ?? undefined,
     },
   });
 
   useEffect(() => {
     if (!isOpen) return;
     reset({
-      service_id: schedule?.service_id || '',
-      schedule_date: formatDateValue(schedule?.schedule_date),
-      quota: schedule?.quota ?? undefined,
+      serviceId: schedule?.serviceId || '',
+      scheduleDate: formatDateValue(schedule?.scheduleDate),
+      startTime: formatTimeValue(schedule?.startTime),
+      endTime: formatTimeValue(schedule?.endTime),
+      capacity: schedule?.quota ?? undefined,
     });
   }, [schedule, reset, isOpen, mode]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: ScheduleFormValues) => {
       const payload: SchedulePayload = {
-        service_id: values.service_id,
-        schedule_date: values.schedule_date,
-        quota:
-          typeof values.quota === 'number' && !Number.isNaN(values.quota)
-            ? values.quota
+        ...values,
+        capacity:
+          typeof values.capacity === 'number' && !Number.isNaN(values.capacity)
+            ? values.capacity
             : undefined,
       };
 

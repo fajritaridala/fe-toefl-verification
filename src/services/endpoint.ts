@@ -2,8 +2,8 @@ const endpoint = {
   AUTH: '/auth',
   SERVICES: '/services',
   SCHEDULES: '/schedules',
-  REGISTRANTS: '/registrants',
-  PARTICIPANTS: '/participants',
+  ENROLLMENTS: '/enrollments',
+  VERIFICATIONS: '/verifications',
 };
 
 export default endpoint;

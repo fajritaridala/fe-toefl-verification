@@ -1,6 +1,7 @@
 const FILTER_OPTIONS = [
-  { name: 'Selesai', uid: 'selesai' },
-  { name: 'Belum Selesai', uid: 'belum selesai' },
+  { name: 'Menunggu', uid: 'menunggu' },
+  { name: 'Disetujui', uid: 'disetujui' },
+  { name: 'Ditolak', uid: 'ditolak' },
 ];
 
 const LIMIT_LISTS = [

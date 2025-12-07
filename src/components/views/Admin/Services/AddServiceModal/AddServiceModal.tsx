@@ -82,81 +82,42 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
                 )}
               />
 
-              <div className="grid gap-4 lg:grid-cols-2">
-                <Controller
-                  name="price"
-                  control={control}
-                  render={({ field }) => {
-                    const { ref, value, onChange, ...restField } = field;
-                    return (
-                      <NumberInput
-                        {...restField}
-                        ref={ref}
-                        isRequired
-                        hideStepper
-                        min={0}
-                        label="Harga (Rp)"
-                        labelPlacement="outside"
-                        placeholder="Masukkan harga"
-                        value={
-                          typeof value === 'number'
-                            ? value
-                            : value
-                              ? Number(value)
-                              : undefined
-                        }
-                        onValueChange={(nextValue) =>
-                          onChange(
-                            typeof nextValue === 'number' &&
-                              !Number.isNaN(nextValue)
-                              ? nextValue
-                              : undefined
-                          )
-                        }
-                        errorMessage={errors.price?.message}
-                        isInvalid={!!errors.price}
-                      />
-                    );
-                  }}
-                />
-
-                <Controller
-                  name="duration"
-                  control={control}
-                  render={({ field }) => {
-                    const { ref, value, onChange, ...restField } = field;
-                    return (
-                      <NumberInput
-                        {...restField}
-                        isRequired
-                        ref={ref}
-                        hideStepper
-                        min={0}
-                        label="Durasi (menit)"
-                        labelPlacement="outside"
-                        placeholder="Contoh: 120"
-                        value={
-                          typeof value === 'number'
-                            ? value
-                            : value
-                              ? Number(value)
-                              : undefined
-                        }
-                        onValueChange={(nextValue) =>
-                          onChange(
-                            typeof nextValue === 'number' &&
-                              !Number.isNaN(nextValue)
-                              ? nextValue
-                              : undefined
-                          )
-                        }
-                        errorMessage={errors.duration?.message}
-                        isInvalid={!!errors.duration}
-                      />
-                    );
-                  }}
-                />
-              </div>
+              <Controller
+                name="price"
+                control={control}
+                render={({ field }) => {
+                  const { ref, value, onChange, ...restField } = field;
+                  return (
+                    <NumberInput
+                      {...restField}
+                      ref={ref}
+                      isRequired
+                      hideStepper
+                      min={0}
+                      label="Harga (Rp)"
+                      labelPlacement="outside"
+                      placeholder="Masukkan harga"
+                      value={
+                        typeof value === 'number'
+                          ? value
+                          : value
+                            ? Number(value)
+                            : undefined
+                      }
+                      onValueChange={(nextValue) =>
+                        onChange(
+                          typeof nextValue === 'number' &&
+                            !Number.isNaN(nextValue)
+                            ? nextValue
+                            : undefined
+                        )
+                      }
+                      errorMessage={errors.price?.message}
+                      isInvalid={!!errors.price}
+                    />
+                  );
+                }}
+              />
 
               <Controller
                 name="notes"

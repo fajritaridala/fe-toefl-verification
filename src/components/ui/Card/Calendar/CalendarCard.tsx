@@ -67,8 +67,12 @@ const CalendarCard = ({ data = [], className = '' }: CalendarCardProps) => {
           }
 
           const hasSchedule = !!item.schedule;
-          const isFull = item.schedule?.is_full;
-          const isInteractive = hasSchedule && !isFull;
+          const quota = item.schedule?.quota ?? 0;
+          const registrants = item.schedule?.registrants ?? 0;
+          const isActive = item.schedule?.status === 'aktif';
+          const isFull =
+            hasSchedule && quota > 0 ? registrants >= quota : false;
+          const isInteractive = hasSchedule && isActive && !isFull;
 
           const baseStyles = `relative ${CELL_HEIGHT} rounded-lg flex flex-col items-center justify-start pt-1.5 px-1 text-sm border transition-all duration-200`;
 
@@ -86,12 +90,10 @@ const CalendarCard = ({ data = [], className = '' }: CalendarCardProps) => {
               hover:shadow-md 
               hover:-translate-y-0.5
             `;
-          } else if (hasSchedule && isFull) {
-            // 2. PENUH
+          } else if (hasSchedule && (!isActive || isFull)) {
             stateStyles = `
               cursor-not-allowed 
-              bg-danger/10 
-              border-danger/30
+              ${isActive ? 'bg-danger/10 border-danger/30' : 'bg-bg border-border/40'}
             `;
           } else {
             // 3. EMPTY
@@ -129,15 +131,19 @@ const CalendarCard = ({ data = [], className = '' }: CalendarCardProps) => {
 
               {item.schedule && (
                 <div className="flex w-full flex-col items-center">
-                  {isFull ? (
+                  {!isActive ? (
+                    <span className="rounded-md bg-warning/20 px-1.5 py-0.5 text-[9px] font-bold text-warning">
+                      TIDAK AKTIF
+                    </span>
+                  ) : isFull ? (
                     <span className="rounded-md bg-danger px-1.5 py-0.5 text-[9px] font-bold text-highlight">
                       PENUH
                     </span>
                   ) : (
                     <>
-                      {/* Teks Kuota menggunakan Secondary (Orange) agar kontras dengan Primary (Biru) saat hover */}
                       <span className="text-xs font-bold text-secondary">
-                        {item.schedule.registrants}/{item.schedule.quota}
+                        {registrants}
+                        {quota ? `/${quota}` : ''}
                       </span>
                       <span className="text-[9px] leading-none text-text-muted">
                         Terisi
