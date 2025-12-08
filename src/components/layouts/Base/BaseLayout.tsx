@@ -1,10 +1,12 @@
+"use client";
+
 import { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 import Header from '@/components/common/Header';
 import BaseFooter from '@/components/ui/Footer/Base';
 import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
 import useUserSession from '@/hooks/useUserSession';
-import { useRouter } from 'next/router';
-import { SessionExt } from '@/utils/interfaces/Auth';
+import { SessionExt } from '@features/auth/auth.types';
 
 type Props = {
   children: ReactNode;
@@ -16,13 +18,13 @@ type Props = {
 
 const BaseLayout = (props: Props) => {
   const { children, title, isAuthenticated, user, pathname } = props;
-  const router = useRouter();
-  
+  const currentPathname = usePathname();
+
   // Use provided values or get from hooks
   const { data: sessionData, isAuthenticated: sessionAuth } = useUserSession();
   const finalUser = user ?? sessionData;
   const finalAuth = isAuthenticated ?? sessionAuth;
-  const finalPathname = pathname ?? router.pathname;
+  const finalPathname = pathname ?? currentPathname ?? '/';
 
   return (
     <>

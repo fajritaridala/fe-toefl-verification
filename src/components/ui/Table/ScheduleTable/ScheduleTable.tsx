@@ -34,9 +34,9 @@ import {
   MonthOption,
   ScheduleTableColumn,
   ServiceOption,
-} from '@/components/views/Admin/Schedules/Schedules.constants';
+} from '@features/admin/Schedules/Schedules.constants';
 import { LIMIT_LISTS } from '@/constants/list.constants';
-import { ScheduleItem } from '@/utils/interfaces/Schedule';
+import { ScheduleItem } from '@features/admin/admin.types';
 
 type Props = {
   columns: ScheduleTableColumn[];
@@ -87,11 +87,12 @@ const ScheduleTable = (props: Props) => {
     ...serviceOptions,
   ];
   const monthSelectionValue = selectedMonth || ALL_MONTH_OPTION_VALUE;
-  const formatDate = (date: string) => {
-    if (!date) return '-';
-    return moment(date).format('DD MMM YYYY');
-  };
 
+  const formatDateTimeRange = (date?: string | Date, start?: string, end?: string) => {
+    const dayLabel = date ? moment(date).format('dddd, DD MMMM YYYY') : '-';
+    const timeLabel = start && end ? `${moment(start).format('HH:mm')} - ${moment(end).format('HH:mm')}` : '';
+    return { dayLabel, timeLabel };
+  };
   const renderCell = (
     schedule: ScheduleItem,
     columnKey: ScheduleTableColumn['key']
@@ -110,20 +111,21 @@ const ScheduleTable = (props: Props) => {
     const serviceName = schedule.serviceName || 'Tidak diketahui';
 
     switch (columnKey) {
-      case 'scheduleDate':
+      case 'scheduleDate': {
+        const { dayLabel, timeLabel } = formatDateTimeRange(
+          schedule.scheduleDate,
+          schedule.startTime,
+          schedule.endTime
+        );
         return (
           <div className="flex flex-col">
-            <p className="text-text font-semibold">
-              {formatDate(schedule.scheduleDate)}
-            </p>
-            <p className="text-2xsmall text-text-muted leading-3">
-              {moment(schedule.scheduleDate).format('dddd')}
-            </p>
-            <p className="text-2xsmall text-text-muted leading-3">
-              {`${moment(schedule.startTime).format('HH:mm')} - ${moment(schedule.endTime).format('HH:mm')}`}
-            </p>
+            <p className="text-text font-semibold">{dayLabel}</p>
+            {timeLabel && (
+              <p className="text-2xsmall text-text-muted leading-3">{timeLabel}</p>
+            )}
           </div>
         );
+      }
       case 'service':
         return (
           <div className="flex justify-center-safe">

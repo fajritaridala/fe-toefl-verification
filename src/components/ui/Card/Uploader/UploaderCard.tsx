@@ -1,10 +1,7 @@
+"use client";
+
 import { ChangeEvent, DragEvent, RefObject } from 'react';
-import {
-  LuBadgeCheck,
-  LuCircleCheck,
-  LuCloudUpload,
-  LuFilePlus,
-} from 'react-icons/lu';
+import { LuCircleCheck, LuCloudUpload, LuFilePlus } from 'react-icons/lu';
 import {
   Button,
   Card,

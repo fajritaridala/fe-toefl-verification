@@ -1,3 +1,5 @@
+"use client";
+
 import { ChangeEvent, RefObject } from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import { LuCloudUpload, LuFileCheck } from 'react-icons/lu';
@@ -13,38 +15,38 @@ import {
   SelectItem,
   cn,
 } from '@heroui/react';
-import { ScheduleRegister } from '@/utils/interfaces/Schedule';
+import { ScheduleRegister } from '@features/admin/admin.types';
 
 type Props = {
-  handleSubmit: (
+  handleSubmitAction: (
     onSubmit: (data: ScheduleRegister) => void,
     onError?: (errors: FieldErrors) => void
   ) => (e?: React.BaseSyntheticEvent) => Promise<void>;
-  handleRegister: (data: ScheduleRegister) => void;
-  onError: (errors: FieldErrors) => void;
+  handleRegisterAction: (data: ScheduleRegister) => void;
+  onErrorAction: (errors: FieldErrors) => void;
   control: Control<ScheduleRegister>;
   errors: FieldErrors<ScheduleRegister>;
   isLoading: boolean;
-  handleGoBack: () => void;
+  handleGoBackAction: () => void;
   fileInputRef: RefObject<HTMLInputElement | null>;
   paymentReceipt: File | null;
-  handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleFilePicker: () => void;
+  handleFileChangeAction: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleFilePickerAction: () => void;
 };
 
 export default function ScheduleRegisterCard(props: Props) {
   const {
-    handleSubmit,
-    handleRegister,
-    onError,
+    handleSubmitAction,
+    handleRegisterAction,
+    onErrorAction,
     control,
     errors,
     isLoading,
-    handleGoBack,
+    handleGoBackAction,
     fileInputRef,
     paymentReceipt,
-    handleFileChange,
-    handleFilePicker,
+    handleFileChangeAction,
+    handleFilePickerAction,
   } = props;
 
   return (
@@ -62,7 +64,7 @@ export default function ScheduleRegisterCard(props: Props) {
       <Divider />
       <CardBody>
         <Form
-          onSubmit={handleSubmit(handleRegister, onError)}
+          onSubmit={handleSubmitAction(handleRegisterAction, onErrorAction)}
           className="space-y-6"
         >
           <div className="grid w-full grid-cols-1 gap-y-4">
@@ -109,7 +111,7 @@ export default function ScheduleRegisterCard(props: Props) {
                   {...field}
                   isRequired
                   label="Email"
-                  labelPlacement="outside"
+                  labelPlacement="outside-top"
                   type="email"
                   variant="bordered"
                   isInvalid={!!errors.email}
@@ -204,7 +206,7 @@ export default function ScheduleRegisterCard(props: Props) {
                 <span className="text-danger-500">*</span>
               </label>
               <div
-                onClick={handleFilePicker}
+                onClick={handleFilePickerAction}
                 className={cn(
                   'border-default-200 hover:border-primary mt-2 flex cursor-pointer justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors',
                   { 'border-danger-500': !!errors.file }
@@ -249,7 +251,7 @@ export default function ScheduleRegisterCard(props: Props) {
                       fileInputRef.current = node;
                       ref(node);
                     }}
-                    onChange={handleFileChange}
+                    onChange={handleFileChangeAction}
                     className="hidden"
                     accept="image/png, image/jpeg, application/pdf"
                   />
@@ -261,7 +263,7 @@ export default function ScheduleRegisterCard(props: Props) {
           <div className="flex justify-end gap-4">
             <Button
               data-hover="false"
-              onPress={handleGoBack}
+              onPress={handleGoBackAction}
               className="border-warning text-warning hover:bg-warning border-2 bg-transparent font-bold transition-all delay-75 duration-100 hover:-translate-y-1 hover:text-white active:translate-y-0.5"
             >
               Kembali

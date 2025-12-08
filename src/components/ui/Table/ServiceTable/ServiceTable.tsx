@@ -16,8 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import { ServiceTableColumn } from '@/components/views/Admin/Services/Services.constants';
-import { ServiceItem } from '@/utils/interfaces/Service';
+import { ServiceTableColumn } from '@features/admin/Services/Services.constants';
+import { ServiceItem } from '@features/admin/admin.types';
 import toRupiah from '@/utils/toRupiah';
 
 type Props = {

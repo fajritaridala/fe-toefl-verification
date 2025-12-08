@@ -1,3 +1,5 @@
+"use client";
+
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import {
   Button,
@@ -11,8 +13,8 @@ import {
   SelectItem,
   Spinner,
 } from '@heroui/react';
-import { useRouter } from 'next/router';
-import { ToeflRegister } from '@/utils/interfaces/Toefl';
+import { useRouter } from 'next/navigation';
+import { ToeflRegister } from '@features/verification/toefl.types';
 
 type Props = {
   handleSubmit: (

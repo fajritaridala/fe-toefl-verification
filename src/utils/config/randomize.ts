@@ -1,7 +1,7 @@
 import CryptoJs from 'crypto-js';
 import { RANDOMIZE_SECRET } from './env';
 
-export default {
+const randomize = {
   async encrypt(text: string) {
     return CryptoJs.AES.encrypt(text, RANDOMIZE_SECRET).toString();
   },
@@ -21,3 +21,5 @@ export default {
     }
   },
 };
+
+export default randomize;

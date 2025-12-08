@@ -1,3 +1,5 @@
+"use client";
+
 import { LuCircleCheckBig } from 'react-icons/lu';
 import { Card, CardBody, CardFooter, CardHeader, Divider } from '@heroui/react';
 

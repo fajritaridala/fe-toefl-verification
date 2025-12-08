@@ -1,8 +1,10 @@
+"use client";
+
 import { JSX, useCallback, useEffect, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuDatabase } from 'react-icons/lu';
 import { Button, cn } from '@heroui/react';
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 
 export interface SidebarItem {
   key: string;
@@ -24,7 +26,7 @@ type Props = {
 function DashboardLayoutSidebar(props: Props) {
   const { sidebarItems, isOpen } = props;
   const router = useRouter();
-  const currentPath = router.pathname;
+  const currentPath = usePathname() ?? '/';
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
   const toggleGroup = useCallback((key: string) => {

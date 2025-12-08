@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode, useEffect, useState } from 'react';
 import { LuChevronDown, LuUser } from 'react-icons/lu';
 import {
@@ -14,8 +16,8 @@ import {
   cn,
 } from '@heroui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { SessionExt } from '@/utils/interfaces/Auth';
+import { usePathname, useRouter } from 'next/navigation';
+import { SessionExt } from '@features/auth/auth.types';
 import { NAVBAR_DROPDOWN_ITEMS, NAVBAR_ITEMS } from './BaseNavbarConstants';
 import useBaseNavbar from './useBaseNavbar';
 
@@ -30,6 +32,7 @@ const BaseNavbar = (props: Props) => {
   const { isAuthenticated = false, user, children, pathname } = props;
   const [username, setUsername] = useState('User');
   const router = useRouter();
+  const currentPathname = usePathname();
   const { isScrolled, handleLogin } = useBaseNavbar();
 
   useEffect(() => {
@@ -73,7 +76,7 @@ const BaseNavbar = (props: Props) => {
                     'text-text-muted hover:text-secondary border-b-1.5 relative border-transparent px-2 py-2 delay-75 active:translate-y-0.5',
                     {
                       'text-primary hover:text-primary border-primary':
-                        pathname === item.href,
+                        (pathname ?? currentPathname) === item.href,
                     }
                   )}
                 >

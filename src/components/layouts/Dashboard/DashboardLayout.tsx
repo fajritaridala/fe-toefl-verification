@@ -1,6 +1,8 @@
+"use client";
+
 import { ReactNode, useState } from 'react';
 import { LuUser } from 'react-icons/lu';
-import { Button, Navbar, NavbarMenuToggle } from '@heroui/react';
+import { Navbar, NavbarMenuToggle } from '@heroui/react';
 import Header from '@/components/common/Header';
 import { SIDEBAR_ADMIN } from './Dashboard.constans';
 import DashboardLayoutSidebar from './DashboardSidebar';

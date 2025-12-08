@@ -1,3 +1,5 @@
+"use client";
+
 import { LuLockKeyhole } from 'react-icons/lu';
 import { Button, Card, CardBody, CardHeader, Spinner } from '@heroui/react';
 

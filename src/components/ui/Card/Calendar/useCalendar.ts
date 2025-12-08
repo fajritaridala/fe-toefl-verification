@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useMemo } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 // Export tipe data agar bisa dipakai di komponen UI
 export type ScheduleData = {

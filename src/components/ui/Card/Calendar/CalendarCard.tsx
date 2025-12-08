@@ -1,3 +1,5 @@
+"use client";
+
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { ScheduleData, useCalendar } from './useCalendar';
 

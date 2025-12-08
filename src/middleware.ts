@@ -1,11 +1,12 @@
 import { getToken } from 'next-auth/jwt';
 import { type NextRequest, NextResponse } from 'next/server';
 import { AUTH_SECRET } from './utils/config/env';
-import { JwtExt } from './utils/interfaces/Auth';
+import { JwtExt } from '@features/auth/auth.types';
 
 const AUTH_PAGES = ['/auth/login', '/auth/register'];
 const ADMIN = '/admin';
 const PESERTA = '/peserta';
+const SCHEDULE = '/schedule';
 
 export async function middleware(request: NextRequest) {
   const token: JwtExt | null = await getToken({
@@ -48,6 +49,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // middleware pendaftaran jadwal: wajib login saat akses register
+  if (pathname.startsWith(SCHEDULE) && pathname.includes('/register') && !token) {
+    const url = new URL(AUTH_PAGES[0], request.url);
+    url.searchParams.set('callbackUrl', encodeURI(request.url));
+    return NextResponse.redirect(url);
+  }
+
   // mengarahkan ke dashboard jika path adalah /peserta
   if (pathname === PESERTA) NextResponse.redirect(new URL('/', request.url));
 
@@ -55,5 +63,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/auth/:path*', '/admin/:path*'],
+  matcher: ['/auth/:path*', '/admin/:path*', '/schedule/:path*'],
 };

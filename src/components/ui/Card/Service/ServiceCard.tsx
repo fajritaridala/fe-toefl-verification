@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider } from '@heroui/react';
 
 type Props = {
