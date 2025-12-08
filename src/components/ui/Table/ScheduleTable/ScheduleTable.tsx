@@ -34,9 +34,9 @@ import {
   MonthOption,
   ScheduleTableColumn,
   ServiceOption,
-} from '@features/admin/Schedules/Schedules.constants';
+} from '@features/admin/schedules/Schedules.constants';
 import { LIMIT_LISTS } from '@/constants/list.constants';
-import { ScheduleItem } from '@features/admin/admin.types';
+import { ScheduleItem } from '@features/admin';
 
 type Props = {
   columns: ScheduleTableColumn[];
@@ -89,7 +89,7 @@ const ScheduleTable = (props: Props) => {
   const monthSelectionValue = selectedMonth || ALL_MONTH_OPTION_VALUE;
 
   const formatDateTimeRange = (date?: string | Date, start?: string, end?: string) => {
-    const dayLabel = date ? moment(date).format('dddd, DD MMMM YYYY') : '-';
+    const dayLabel = date ? moment(date).format('DD MMM YYYY') : '-';
     const timeLabel = start && end ? `${moment(start).format('HH:mm')} - ${moment(end).format('HH:mm')}` : '';
     return { dayLabel, timeLabel };
   };

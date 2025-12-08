@@ -23,7 +23,7 @@
         "./src/*"
       ],
       "@features/*": [
-        "./src/components/features/*"
+        "./src/features/*"
       ],
       "@components/*": [
         "./src/components/*"
@@ -39,6 +39,12 @@
       ],
       "@constants/*": [
         "./src/constants/*"
+      ],
+      "@services/*": [
+        "./src/services/*"
+      ],
+      "@types/*": [
+        "./src/types/*"
       ]
     },
     "plugins": [

@@ -1,7 +1,7 @@
 import { getToken } from 'next-auth/jwt';
 import { type NextRequest, NextResponse } from 'next/server';
 import { AUTH_SECRET } from './utils/config/env';
-import { JwtExt } from '@features/auth/auth.types';
+import { JwtExt } from '@features/auth';
 
 const AUTH_PAGES = ['/auth/login', '/auth/register'];
 const ADMIN = '/admin';
@@ -14,9 +14,6 @@ export async function middleware(request: NextRequest) {
     secret: AUTH_SECRET,
   });
   const { pathname } = request.nextUrl;
-  console.log(pathname);
-  console.log('Middleware');
-  console.log(token);
 
   // Menolak akses jika token tidak ada dan halaman yang diakses adalah halaman auth
   if (AUTH_PAGES.includes(pathname) && token)

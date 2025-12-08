@@ -1,0 +1,21 @@
+import { IRegister } from "@features/auth/types/auth.types";
+import instance from "@/lib/axios/instance";
+import endpoints from "@/constants/endpoints";
+
+const authServices = {
+  login(address: string) {
+    return instance.post(`${endpoints.AUTH}/login`, { address });
+  },
+  register(payload: IRegister) {
+    return instance.post(`${endpoints.AUTH}/register`, payload);
+  },
+  getProfileWithToken(token: string) {
+    return instance.get(`${endpoints.AUTH}/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+};
+
+export default authServices;

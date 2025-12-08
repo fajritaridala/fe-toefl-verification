@@ -2,7 +2,7 @@ import moment from 'moment';
 import {
   ICertificatePayload,
   ICertificateRender,
-} from '@features/verification/certificate.types';
+} from '@features/verification';
 
 export function preparedData(data: ICertificatePayload) {
   const {

@@ -32,7 +32,6 @@ const metamask = {
       return { address };
     } catch (error) {
       const err = error as Error;
-      console.log('error di metamask connect', err.message);
       throw new Error(err.message);
     }
   },
@@ -52,7 +51,6 @@ const metamask = {
       return { signer, provider };
     } catch (error) {
       const err = error as Error;
-      console.log(`error di metamask connectAndSign : ${err.message}`);
       throw new Error(err.message);
     }
   },

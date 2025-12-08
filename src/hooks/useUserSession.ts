@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { SessionExt } from '@features/auth/auth.types';
+import { SessionExt } from '@features/auth';
 
 const useUserSession = () => {
   const session = useSession();

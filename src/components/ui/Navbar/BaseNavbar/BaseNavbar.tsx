@@ -17,7 +17,7 @@ import {
 } from '@heroui/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { SessionExt } from '@features/auth/auth.types';
+import { SessionExt } from '@features/auth';
 import { NAVBAR_DROPDOWN_ITEMS, NAVBAR_ITEMS } from './BaseNavbarConstants';
 import useBaseNavbar from './useBaseNavbar';
 

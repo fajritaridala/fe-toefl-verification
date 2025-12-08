@@ -38,8 +38,7 @@ export const useDragAndDrop = ({ onFileDrop, acceptedTypes = ['application/pdf']
       if (acceptedTypes.length === 0 || acceptedTypes.includes(file.type)) {
         onFileDrop(file);
       } else {
-        console.error('File type not accepted');
-        alert(`Tipe file tidak didukung. Harap unggah file dengan tipe: ${acceptedTypes.join(', ')}`);
+        alert(`Tipe file tidak didukung. Harap unggah file dengan tipe: ${acceptedTypes.join(", ")}`);
       }
     }
   };

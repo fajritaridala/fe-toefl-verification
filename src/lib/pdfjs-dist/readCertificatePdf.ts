@@ -55,7 +55,6 @@ export default async function readCertificatePdf(file: File) {
     return { qrMessage, previewUrl };
   } catch (error) {
     const err = error as unknown as Error;
-    console.error(err.message);
     throw err;
   }
 }

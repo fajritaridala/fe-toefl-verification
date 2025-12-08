@@ -15,8 +15,7 @@ const randomize = {
         throw new Error('decrypted failed - invalid chipertext or key');
       }
       return decrypted;
-    } catch (error) {
-      console.error('decryption error: ', error);
+    } catch {
       throw new Error('failed to decrypt address');
     }
   },
