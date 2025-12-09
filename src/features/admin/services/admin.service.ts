@@ -86,7 +86,7 @@ type EnrollmentQuery = {
   page?: number;
   limit?: number;
   search?: string;
-  status?: "menunggu" | "disetujui" | "ditolak";
+  status?: "menunggu" | "disetujui" | "ditolak" | "selesai";
 };
 
 type ScorePayload = {

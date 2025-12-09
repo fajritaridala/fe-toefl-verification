@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Controller } from "react-hook-form";
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 import {
   Alert,
   Button,
@@ -8,14 +8,14 @@ import {
   Form,
   Input,
   Spinner,
-} from "@heroui/react";
-import { useSearchParams } from "next/navigation";
-import { useRegister } from "./useRegister";
-import AuthCard from "@/components/ui/Card/Auth";
+} from '@heroui/react';
+import { useSearchParams } from 'next/navigation';
+import AuthCard from '@/components/ui/Card/Auth';
+import { useRegister } from './useRegister';
 
 const Register = () => {
   const searchParams = useSearchParams();
-  const addressQuery = searchParams?.get("address") ?? "";
+  const addressQuery = searchParams?.get('address') ?? '';
   const {
     connectMetamask,
     handleRegister,
@@ -46,7 +46,13 @@ const Register = () => {
     };
 
     handleDecrypt();
-  }, [addressQuery, handleAddressQuery, setIsAddress, setIsConnected, setAlertOpen]);
+  }, [
+    addressQuery,
+    handleAddressQuery,
+    setIsAddress,
+    setIsConnected,
+    setAlertOpen,
+  ]);
 
   return (
     <>
@@ -149,7 +155,7 @@ const Register = () => {
                       className="text-white"
                     />
                   ) : (
-                    "Submit"
+                    'Submit'
                   )}
                 </Button>
               </Form>

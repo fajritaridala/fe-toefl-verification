@@ -1,6 +1,6 @@
-import { Alert } from "@heroui/react";
-import AuthCard from "@/components/ui/Card/Auth";
-import { useLogin } from "./useLogin";
+import { Alert } from '@heroui/react';
+import AuthCard from '@/components/ui/Card/Auth';
+import { useLogin } from './useLogin';
 
 const Login = () => {
   const { isLoading, alertOpen, setAlertOpen, alertMessage, handleLogin } =

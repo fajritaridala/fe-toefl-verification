@@ -77,13 +77,24 @@ export interface EnrollmentItem {
   participantId?: string;
   fullName: string;
   nim: string;
-  status: "menunggu" | "disetujui" | "ditolak";
+  status: "menunggu" | "disetujui" | "ditolak" | "selesai";
   paymentProof?: string;
   email?: string;
   phoneNumber?: string;
   faculty?: string;
   major?: string;
   registerAt?: string;
+  // Optional fields that might be populated by backend
+  serviceName?: string;
+  scheduleName?: string;
+  scheduleDate?: string;
+  paymentDate?: string;
+  gender?: "laki-laki" | "perempuan";
+  // Score fields (when status is "selesai")
+  listening?: number;
+  structure?: number;
+  reading?: number;
+  totalScore?: number;
 }
 
 export interface EnrollmentListResponse {

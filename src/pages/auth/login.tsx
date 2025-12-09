@@ -1,14 +1,10 @@
-import Head from "next/head";
-import AuthLayout from "@/components/layouts/Auth";
-import { Login } from "@features/auth";
+import Login from '@features/auth/login';
+import AuthLayout from '@/components/layouts/Auth';
 
 export default function LoginPage() {
   return (
     <>
-      <Head>
-        <title>Login - Simpeka</title>
-      </Head>
-      <AuthLayout>
+      <AuthLayout title="Login - Simpeka">
         <Login />
       </AuthLayout>
     </>

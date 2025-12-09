@@ -1,13 +1,14 @@
 "use client";
 
-import { CiSearch } from 'react-icons/ci';
-import { LuFilter } from 'react-icons/lu';
+import { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
 import {
   Input,
   Select,
   SelectItem,
 } from '@heroui/react';
 import { LIMIT_LISTS } from '@/constants/list.constants';
+import { useDebounce } from '@/hooks/useDebounce';
 import type { StatusOption } from './EnrollmentsTable.types';
 
 type EnrollmentsTableFiltersProps = {
@@ -33,56 +34,87 @@ export default function EnrollmentsTableFilters({
   onChangeStatus,
   onChangeLimit,
 }: EnrollmentsTableFiltersProps) {
+  const [searchInput, setSearchInput] = useState(currentSearch);
+  const debouncedSearch = useDebounce(searchInput, 500);
+
+  useEffect(() => {
+    onSearch(debouncedSearch);
+  }, [debouncedSearch, onSearch]);
+
+  useEffect(() => {
+    setSearchInput(currentSearch);
+  }, [currentSearch]);
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    onClearSearch();
+  };
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-end justify-between gap-3">
-        <Input
-          isClearable
-          className="w-full sm:max-w-[44%]"
-          placeholder="Cari berdasarkan nama..."
-          startContent={<CiSearch />}
-          value={currentSearch}
-          onClear={onClearSearch}
-          onValueChange={onSearch}
-        />
-        <div className="flex gap-3">
-          {showStatusFilter && (
-            <Select
-              disallowEmptySelection
-              label="Status"
-              placeholder="Pilih status"
-              startContent={<LuFilter />}
-              className="w-[200px]"
-              selectedKeys={new Set([statusFilter])}
-              onSelectionChange={(keys) => {
-                const value = Array.from(keys)[0] as string;
-                onChangeStatus(value);
-              }}
-            >
-              {statusOptions.map((opt) => (
-                <SelectItem key={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </Select>
-          )}
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      {/* Search Input - Clean & Simple */}
+      <Input
+        isClearable
+        type="search"
+        placeholder="Cari peserta..."
+        startContent={<Search className="w-4 h-4 text-gray-400" />}
+        value={searchInput}
+        onClear={handleClearSearch}
+        onValueChange={setSearchInput}
+        classNames={{
+          base: 'w-full sm:max-w-md',
+          inputWrapper: 'h-10 bg-white border border-gray-200 hover:border-gray-300',
+          input: 'text-sm',
+        }}
+      />
+
+      {/* Filter Controls - Clean & Compact */}
+      <div className="flex items-center gap-2">
+        {/* Status Filter */}
+        {showStatusFilter && (
           <Select
             disallowEmptySelection
-            label="Per halaman"
-            className="w-[120px]"
-            selectedKeys={new Set([currentLimitValue])}
+            aria-label="Filter status"
+            placeholder="Status"
+            selectedKeys={new Set([statusFilter])}
             onSelectionChange={(keys) => {
               const value = Array.from(keys)[0] as string;
-              onChangeLimit(value);
+              onChangeStatus(value);
+            }}
+            classNames={{
+              base: 'w-36',
+              trigger: 'h-10 bg-white border border-gray-200 hover:border-gray-300',
+              value: 'text-sm',
             }}
           >
-            {LIMIT_LISTS.map((limit) => (
-              <SelectItem key={limit.value}>
-                {limit.label}
+            {statusOptions.map((opt) => (
+              <SelectItem key={opt.value}>
+                {opt.label}
               </SelectItem>
             ))}
           </Select>
-        </div>
+        )}
+
+        {/* Limit Per Page */}
+        <Select
+          disallowEmptySelection
+          aria-label="Items per page"
+          selectedKeys={new Set([currentLimitValue])}
+          onSelectionChange={(keys) => {
+            const value = Array.from(keys)[0] as string;
+            onChangeLimit(value);
+          }}
+          classNames={{
+            base: 'w-24',
+            trigger: 'h-10 bg-white border border-gray-200 hover:border-gray-300',
+            value: 'text-sm',
+          }}
+        >
+          {LIMIT_LISTS.map((limit) => (
+            <SelectItem key={limit.value}>
+              {limit.label}
+            </SelectItem>
+          ))}
+        </Select>
       </div>
     </div>
   );

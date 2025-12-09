@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Key, ReactNode } from 'react';
+import { Key, ReactNode, useState } from 'react';
 import {
-  Chip,
+  Button,
   Pagination,
   Spinner,
   Table,
@@ -12,9 +12,14 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import type { AdminEnrollmentsTableProps, EnrollmentRow } from './EnrollmentsTable.types';
+import { Eye } from 'lucide-react';
+import { ParticipantDetailModal } from '@/components/ui/Modal';
+import { formatDate } from '@/lib/utils';
+import type {
+  AdminEnrollmentsTableProps,
+  EnrollmentRow,
+} from './EnrollmentsTable.types';
 import EnrollmentsTableFilters from './EnrollmentsTableFilters';
-import EnrollmentRowActions from './EnrollmentRowActions';
 
 const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
   const {
@@ -35,53 +40,117 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
     onChangeStatus,
     onChangeLimit,
     onChangePage,
-    onApprove,
-    onReject,
-    onScore,
   } = props;
 
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedParticipant, setSelectedParticipant] =
+    useState<EnrollmentRow | null>(null);
+
+  const handleOpenDetail = (participant: EnrollmentRow) => {
+    setSelectedParticipant(participant);
+    setDetailModalOpen(true);
+  };
+
+  const handleCloseDetail = () => {
+    setDetailModalOpen(false);
+    setSelectedParticipant(null);
+  };
+
   const renderStatusChip = (status: EnrollmentRow['status']) => {
-    const color =
-      status === 'disetujui'
-        ? 'success'
-        : status === 'ditolak'
-          ? 'danger'
-          : 'warning';
+    const config: Record<
+      'menunggu' | 'disetujui' | 'ditolak' | 'selesai',
+      {
+        bgColor: string;
+        borderColor: string;
+        textColor: string;
+        dotColor: string;
+        label: string;
+      }
+    > = {
+      disetujui: {
+        bgColor: 'bg-transparent',
+        borderColor: 'border-green-600',
+        textColor: 'text-green-700',
+        dotColor: 'bg-green-600',
+        label: 'Disetujui',
+      },
+      ditolak: {
+        bgColor: 'bg-transparent',
+        borderColor: 'border-red-600',
+        textColor: 'text-red-700',
+        dotColor: 'bg-red-600',
+        label: 'Ditolak',
+      },
+      menunggu: {
+        bgColor: 'bg-transparent',
+        borderColor: 'border-yellow-600',
+        textColor: 'text-yellow-700',
+        dotColor: 'bg-yellow-600',
+        label: 'Menunggu',
+      },
+      selesai: {
+        bgColor: 'bg-transparent',
+        borderColor: 'border-green-600',
+        textColor: 'text-green-700',
+        dotColor: 'bg-green-600',
+        label: 'Selesai',
+      },
+    };
+
+    const { bgColor, borderColor, textColor, dotColor, label } = config[status];
+
     return (
-      <Chip size="sm" variant="flat" color={color} className="font-semibold capitalize">
-        {status}
-      </Chip>
+      <span
+        className={`inline-flex items-center gap-2 rounded-full border-[1.5px] px-3 py-1.5 ${bgColor} ${borderColor} ${textColor} text-sm font-medium`}
+      >
+        <span className={`h-1.5 w-1.5 rounded-full ${dotColor}`}></span>
+        {label}
+      </span>
     );
   };
 
-  const renderCell = (participant: EnrollmentRow, columnKey: Key): ReactNode => {
+  const renderCell = (
+    participant: EnrollmentRow,
+    columnKey: Key
+  ): ReactNode => {
     switch (columnKey) {
       case 'fullName':
         return (
-          <div className="flex flex-col">
-            <p className="font-semibold">{participant.fullName}</p>
-            <p className="text-default-500 text-xs">{participant.email}</p>
+          <div className="flex flex-col gap-1">
+            <p className="font-semibold text-gray-900">
+              {participant.fullName}
+            </p>
+            <p className="text-xs text-gray-500">{participant.email}</p>
           </div>
         );
       case 'nim':
-        return <p className="text-sm">{participant.nim}</p>;
-      case 'scheduleId':
+        return <p className="font-medium text-gray-700">{participant.nim}</p>;
+      case 'serviceName':
         return (
-          <div className="flex flex-col">
-            <p className="text-sm font-semibold">{participant.scheduleName || '-'}</p>
-            <p className="text-default-500 text-xs">{participant.scheduleDate || '-'}</p>
-          </div>
+          <p className="font-medium text-gray-700">
+            {participant.serviceName || '-'}
+          </p>
+        );
+      case 'scheduleDate':
+        return (
+          <p className="text-sm text-gray-700">
+            {formatDate(participant.scheduleDate)}
+          </p>
         );
       case 'status':
         return renderStatusChip(participant.status);
       case 'actions':
         return (
-          <EnrollmentRowActions
-            row={participant}
-            onApprove={onApprove}
-            onReject={onReject}
-            onScore={onScore}
-          />
+          <Button
+            isIconOnly
+            size="sm"
+            variant="light"
+            aria-label="Lihat detail"
+            className="hover:text-primary text-gray-600"
+            onPress={() => handleOpenDetail(participant)}
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
         );
       default:
         return null;
@@ -90,11 +159,18 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
 
   return (
     <section className="space-y-4">
-      <Table
-        aria-label="Daftar peserta"
-        selectionMode="none"
-        topContentPlacement="outside"
-        topContent={
+      {/* Page Header - Outside Card */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Manajemen Peserta</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Kelola data pendaftaran dan validasi peserta
+        </p>
+      </div>
+
+      {/* Table Card */}
+      <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+        {/* Filters Section */}
+        <div className="bg-transparent px-6 py-4">
           <EnrollmentsTableFilters
             currentSearch={currentSearch}
             statusFilter={statusFilter}
@@ -106,53 +182,128 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
             onChangeStatus={onChangeStatus}
             onChangeLimit={onChangeLimit}
           />
-        }
-        bottomContentPlacement="outside"
-        bottomContent={
-          <div className="flex flex-col gap-2">
-            {isRefetching && <p className="text-default-500 text-xs">Menyegarkan data...</p>}
-            <div className="flex w-full items-center justify-between">
-              <span className="text-default-500 text-xs">
-                Menampilkan {items.length} dari {totalItems} peserta
-              </span>
-              <Pagination
-                isCompact
-                showControls
-                color="primary"
-                page={currentPageNumber}
-                total={totalPages}
-                onChange={onChangePage}
-              />
+        </div>
+
+        {/* Table Section */}
+        <div className="overflow-x-auto rounded-b-xl">
+          <Table
+            aria-label="Tabel peserta"
+            selectionMode="none"
+            removeWrapper
+            classNames={{
+              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b border-gray-200',
+              td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
+              tr: 'hover:bg-gray-50/50 transition-colors',
+              base: 'min-w-full',
+            }}
+          >
+            <TableHeader columns={columns}>
+              {(column) => (
+                <TableColumn key={column.key}>{column.name}</TableColumn>
+              )}
+            </TableHeader>
+            <TableBody
+              items={items}
+              isLoading={isLoading}
+              loadingContent={
+                <div className="flex flex-col items-center justify-center py-12">
+                  <Spinner size="lg" color="primary" />
+                  <p className="mt-3 text-sm text-gray-500">
+                    Memuat data peserta...
+                  </p>
+                </div>
+              }
+              emptyContent={
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                    <svg
+                      className="h-8 w-8 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-base font-medium text-gray-900">
+                    Tidak ada data peserta
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Coba ubah filter atau lakukan pencarian lain
+                  </p>
+                </div>
+              }
+            >
+              {(item) => (
+                <TableRow key={item.__rowKey}>
+                  {(columnKey) => (
+                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Footer */}
+        <div className="rounded-b-xl border-t border-gray-200 bg-gray-50 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {isRefetching && (
+                <div className="flex items-center gap-2">
+                  <Spinner size="sm" color="primary" />
+                  <span className="text-xs text-gray-500">
+                    Menyegarkan data...
+                  </span>
+                </div>
+              )}
+              <div className="rounded-lg border border-gray-200 bg-white px-4 py-2 shadow-sm">
+                <span className="text-sm text-gray-600">
+                  Menampilkan{' '}
+                  <span className="font-semibold text-gray-900">
+                    {items.length}
+                  </span>{' '}
+                  dari{' '}
+                  <span className="font-semibold text-gray-900">
+                    {totalItems}
+                  </span>{' '}
+                  peserta
+                </span>
+              </div>
+            </div>
+
+            <div>
+              {totalPages > 1 && (
+                <Pagination
+                  isCompact
+                  showControls
+                  page={currentPageNumber}
+                  total={totalPages}
+                  onChange={onChangePage}
+                  classNames={{
+                    item: 'bg-white border border-gray-200 hover:bg-gray-50',
+                    cursor: 'bg-primary text-white font-semibold',
+                  }}
+                />
+              )}
             </div>
           </div>
-        }
-        classNames={{
-          wrapper: 'border border-border/60',
-          th: 'bg-bg-dark text-default-700 uppercase text-xs',
-        }}
-        isStriped
-      >
-        <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.name}</TableColumn>}
-        </TableHeader>
-        <TableBody
-          items={items}
-          isLoading={isLoading}
-          loadingContent={<Spinner label="Memuat peserta" />}
-          emptyContent={
-            <div className="text-default-500 text-center">
-              <p className="font-semibold">Tidak ada data peserta</p>
-              <p className="text-xs">Coba ubah filter atau lakukan pencarian.</p>
-            </div>
-          }
-        >
-          {(item) => (
-            <TableRow key={item.__rowKey}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+        </div>
+      </div>
+
+      {/* Detail Modal */}
+      {selectedParticipant && (
+        <ParticipantDetailModal
+          isOpen={detailModalOpen}
+          onClose={handleCloseDetail}
+          participant={selectedParticipant}
+        />
+      )}
     </section>
   );
 };

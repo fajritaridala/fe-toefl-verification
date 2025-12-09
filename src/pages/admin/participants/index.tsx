@@ -1,14 +1,10 @@
-import Head from "next/head";
-import DashboardLayout from "@/components/layouts/Dashboard";
-import { Participants } from "@features/admin/enrollments";
+import { Participants } from '@features/admin/enrollments';
+import DashboardLayout from '@/components/layouts/Dashboard';
 
 export default function AdminParticipants() {
   return (
     <>
-      <Head>
-        <title>Data Peserta - Simpeka</title>
-      </Head>
-      <DashboardLayout>
+      <DashboardLayout title="Data Peserta - Simpeka">
         <Participants />
       </DashboardLayout>
     </>

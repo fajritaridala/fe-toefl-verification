@@ -1,14 +1,10 @@
-import Head from "next/head";
-import AuthLayout from "@/components/layouts/Auth";
-import { Register } from "@features/auth";
+import Register from '@features/auth/register';
+import AuthLayout from '@/components/layouts/Auth';
 
 export default function RegisterPage() {
   return (
     <>
-      <Head>
-        <title>Register - Simpeka</title>
-      </Head>
-      <AuthLayout>
+      <AuthLayout title="Register - Simpeka">
         <Register />
       </AuthLayout>
     </>

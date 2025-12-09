@@ -1,6 +1,5 @@
-export { default as authService } from "./services/auth.service";
-export * from "./types/auth.types";
-export { default as Login } from "./Login";
-export { default as Register } from "./Register";
-export { useLogin } from "./useLogin";
-export { useRegister } from "./useRegister";
+export { default as Login } from './login/Login';
+export { default as Register } from './register/Register';
+export { useLogin } from './login/useLogin';
+export { useRegister } from './register/useRegister';
+export type { SessionExt, JwtExt } from './types/auth.types';

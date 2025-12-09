@@ -3,14 +3,28 @@ export type StatusOption = { label: string; value: string };
 export type EnrollmentRow = {
   __rowKey: string;
   _id: string;
+  scheduleId: string;
   participantId?: string;
   fullName: string;
+  nim: string;
+  status: 'menunggu' | 'disetujui' | 'ditolak' | 'selesai';
+  paymentProof?: string;
   email?: string;
-  nim?: string;
-  scheduleId?: string;
+  phoneNumber?: string;
+  faculty?: string;
+  major?: string;
+  registerAt?: string;
+  // Optional fields that might be populated by backend
+  serviceName?: string;
   scheduleName?: string;
   scheduleDate?: string;
-  status: 'menunggu' | 'disetujui' | 'ditolak';
+  paymentDate?: string;
+  gender?: 'laki-laki' | 'perempuan';
+  // Score fields (when status is "selesai")
+  listening?: number;
+  structure?: number;
+  reading?: number;
+  totalScore?: number;
 };
 
 export type AdminEnrollmentsTableProps = {
@@ -31,7 +45,4 @@ export type AdminEnrollmentsTableProps = {
   onChangeStatus: (value: string) => void;
   onChangeLimit: (value: string) => void;
   onChangePage: (page: number) => void;
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
-  onScore: (row: EnrollmentRow) => void;
 };

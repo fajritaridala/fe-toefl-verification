@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { PAGINATION_OPTIONS } from '@/constants/list.constants';
-import useDebounce from '@/hooks/useDebounce';
+import useDebounceCallback from '@/hooks/useDebounce';
 import { enrollmentsService } from '@features/admin';
 import { EnrollmentItem, EnrollmentListResponse } from '@features/admin';
 
@@ -16,7 +16,7 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const debounce = useDebounce();
+  const debounce = useDebounceCallback();
   const fixedStatus = options?.fixedStatus;
 
   const currentLimit = searchParams?.get('limit') ?? String(PAGINATION_OPTIONS.limitDefault);
