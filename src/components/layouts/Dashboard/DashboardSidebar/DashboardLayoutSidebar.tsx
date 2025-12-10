@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { JSX, useCallback, useEffect, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuDatabase } from 'react-icons/lu';
@@ -27,7 +27,9 @@ function DashboardLayoutSidebar(props: Props) {
   const { sidebarItems, isOpen } = props;
   const router = useRouter();
   const currentPath = usePathname() ?? '/';
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const toggleGroup = useCallback((key: string) => {
     setExpandedGroups((prev) => ({
@@ -48,35 +50,34 @@ function DashboardLayoutSidebar(props: Props) {
     });
   }, [currentPath, sidebarItems]);
 
-  const renderChildButton = useCallback((child: {
-    key: string;
-    label: string;
-    href: string;
-  }) => {
-    const isActive = currentPath.startsWith(child.href);
-    return (
-      <button
-        key={child.key}
-        type="button"
-        className={cn(
-          'text-small text-text-muted data-[active=true]:text-primary data-[active=true]:font-semibold flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition-colors duration-200',
-          {
-            'pl-4': true,
-          }
-        )}
-        data-active={isActive}
-        onClick={() => router.push(child.href)}
-      >
-        <span className="w-1.5 rounded-full bg-border" />
-        {child.label}
-      </button>
-    );
-  }, [currentPath, router]);
+  const renderChildButton = useCallback(
+    (child: { key: string; label: string; href: string }) => {
+      const isActive = currentPath.startsWith(child.href);
+      return (
+        <button
+          key={child.key}
+          type="button"
+          className={cn(
+            'text-small text-text-muted data-[active=true]:text-primary flex w-full items-center gap-2 rounded-lg px-3 py-1.5 transition-colors duration-200 data-[active=true]:font-semibold',
+            {
+              'pl-4': true,
+            }
+          )}
+          data-active={isActive}
+          onClick={() => router.push(child.href)}
+        >
+          <span className="bg-border w-1.5 rounded-full" />
+          {child.label}
+        </button>
+      );
+    },
+    [currentPath, router]
+  );
 
   return (
     <section
       className={cn(
-        'max-w-sidebar-panel bg-bg-light z-40 h-screen w-full flex flex-col justify-between px-4 shadow-sm transition-all duration-200 lg:relative lg:flex',
+        'max-w-sidebar-panel bg-bg z-40 flex h-screen w-full flex-col justify-between px-4 transition-all duration-200 lg:relative lg:flex',
         {
           'hidden lg:flex': !isOpen,
         }
@@ -98,7 +99,9 @@ function DashboardLayoutSidebar(props: Props) {
           {sidebarItems.map((item) => {
             const hasChildren = Boolean(item.children?.length);
             const isActive = hasChildren
-              ? item.children!.some((child) => currentPath.startsWith(child.href))
+              ? item.children!.some((child) =>
+                  currentPath.startsWith(child.href)
+                )
               : item.href
                 ? currentPath.startsWith(item.href)
                 : false;
@@ -119,10 +122,11 @@ function DashboardLayoutSidebar(props: Props) {
                   type="button"
                   onClick={handlePress}
                   className={cn(
-                    'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-small text-text-muted transition-colors duration-200',
+                    'text-small text-text-muted flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors duration-200',
                     'hover:bg-primary/10 hover:text-primary',
                     {
-                      'bg-primary text-bg-light font-semibold shadow-sm': isActive,
+                      'bg-primary text-bg-light font-semibold shadow-sm':
+                        isActive,
                     }
                   )}
                 >
@@ -137,7 +141,7 @@ function DashboardLayoutSidebar(props: Props) {
                   )}
                 </button>
                 {hasChildren && isExpanded && (
-                  <div className="ml-2 mt-2 flex flex-col gap-1 border-l border-border pl-2">
+                  <div className="border-border mt-2 ml-2 flex flex-col gap-1 border-l pl-2">
                     {item.children!.map((child) => renderChildButton(child))}
                   </div>
                 )}

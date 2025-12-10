@@ -15,6 +15,7 @@ import useAddInputModal from './useAddInputModal';
 
 type Props = {
   isOpen: boolean;
+  enrollId: string;
   participantId: string;
   participantName: string;
   onClose: () => void;
@@ -22,8 +23,9 @@ type Props = {
 };
 
 function AddInputModal(props: Props) {
-  const { isOpen, participantId, participantName, onClose, onSuccess } = props;
+  const { isOpen, enrollId, participantId, participantName, onClose, onSuccess } = props;
   const { control, handleInput, handleSubmit, errors } = useAddInputModal({
+    enrollId,
     participantId,
     onSuccess: () => {
       onClose();

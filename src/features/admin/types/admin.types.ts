@@ -74,7 +74,7 @@ export interface SchedulePayload {
 export interface EnrollmentItem {
   _id: string;
   scheduleId: string;
-  participantId?: string;
+  participantId: string;
   fullName: string;
   nim: string;
   status: "menunggu" | "disetujui" | "ditolak" | "selesai";

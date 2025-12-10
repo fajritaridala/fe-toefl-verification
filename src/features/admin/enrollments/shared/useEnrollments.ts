@@ -61,7 +61,7 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     enabled: !!currentPage && !!currentLimit,
   });
 
-  const ensureDefaults = useCallback(() => {
+  useEffect(() => {
     const hasLimit = searchParams?.has('limit');
     const hasPage = searchParams?.has('page');
     if (hasLimit && hasPage) return;
@@ -73,37 +73,34 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     const queryString = params.toString();
     const href = queryString ? `${pathname}?${queryString}` : pathname;
     router.replace(href);
-  }, [fixedStatus, pathname, router, searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);  // Only run once on mount
 
-  useEffect(() => {
-    ensureDefaults();
-  }, [ensureDefaults]);
-
-  function handleChangePage(page: number) {
+  const handleChangePage = useCallback((page: number) => {
     buildUrl({ page: String(page) });
-  }
+  }, [buildUrl]);
 
-  function handleChangeLimit(selectedLimit: string) {
+  const handleChangeLimit = useCallback((selectedLimit: string) => {
     buildUrl({ limit: selectedLimit, page: String(PAGINATION_OPTIONS.pageDefault) });
-  }
+  }, [buildUrl]);
 
-  function handleSearch(value: string) {
+  const handleSearch = useCallback((value: string) => {
     debounce(() => {
       buildUrl({ search: value, page: String(PAGINATION_OPTIONS.pageDefault) });
     }, PAGINATION_OPTIONS.delay);
-  }
+  }, [buildUrl, debounce]);
 
-  function handleChangeStatus(status: string) {
+  const handleChangeStatus = useCallback((status: string) => {
     if (fixedStatus) return;
     buildUrl({
       status: !status || status === 'all' ? null : status,
       page: String(PAGINATION_OPTIONS.pageDefault),
     });
-  }
+  }, [buildUrl, fixedStatus]);
 
-  function handleClearSearch() {
+  const handleClearSearch = useCallback(() => {
     buildUrl({ search: null, page: String(PAGINATION_OPTIONS.pageDefault) });
-  }
+  }, [buildUrl]);
 
   return {
     dataEnrollments,

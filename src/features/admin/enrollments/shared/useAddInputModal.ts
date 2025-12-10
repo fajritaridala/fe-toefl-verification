@@ -19,12 +19,13 @@ type ScorePayload = {
 };
 
 type UseAddInputModalProps = {
+  enrollId: string;
   participantId: string;
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 };
 
-function useAddInputModal({ participantId, onSuccess, onError }: UseAddInputModalProps) {
+function useAddInputModal({ enrollId, participantId, onSuccess, onError }: UseAddInputModalProps) {
   const {
     control,
     handleSubmit,
@@ -35,7 +36,7 @@ function useAddInputModal({ participantId, onSuccess, onError }: UseAddInputModa
 
   const { mutate: AddInputMutate } = useMutation({
     mutationFn: (payload: ScorePayload) =>
-      enrollmentsService.submitScore(participantId, payload),
+      enrollmentsService.submitScore(enrollId, participantId, payload),
     onSuccess: () => {
       onSuccess?.();
     },

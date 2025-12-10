@@ -1,6 +1,6 @@
 'use client';
 
-import { Key, ReactNode, useState } from 'react';
+import { Key, ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -16,52 +16,39 @@ import {
 import { Eye } from 'lucide-react';
 import { ParticipantDetailModal } from '@/components/ui/Modal';
 import { formatDate } from '@/lib/utils';
-import type {
-  AdminEnrollmentsTableProps,
-  EnrollmentRow,
-} from './EnrollmentsTable.types';
-import EnrollmentsTableFilters from './EnrollmentsTableFilters';
+import EnrollmentsTableFilters from '@/components/ui/Table/Enrollments/EnrollmentsTableFilters';
+import { useParticipants } from './useParticipants';
+import ColumnListEnrollments from '../shared/columns';
 
-const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
+export default function Participants() {
   const {
-    columns,
-    items,
-    isLoading,
-    isRefetching,
-    currentSearch,
+    tableItems,
     statusFilter,
     statusOptions,
-    showStatusFilter,
+    currentSearch,
     currentLimitValue,
     currentPageNumber,
     totalPages,
-    onSearch,
-    onClearSearch,
-    onChangeStatus,
-    onChangeLimit,
-    onChangePage,
-  } = props;
+    isLoadingEnrollments,
+    isRefetchingEnrollments,
+    detailModalOpen,
+    selectedParticipant,
+    handleSearch,
+    handleClearSearch,
+    handleStatusChange,
+    handleChangeLimit,
+    handleChangePage,
+    handleOpenDetail,
+    handleCloseDetail,
+  } = useParticipants();
 
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [selectedParticipant, setSelectedParticipant] =
-    useState<EnrollmentRow | null>(null);
   const queryClient = useQueryClient();
-
-  const handleOpenDetail = (participant: EnrollmentRow) => {
-    setSelectedParticipant(participant);
-    setDetailModalOpen(true);
-  };
 
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ['enrollments'] });
   };
 
-  const handleCloseDetail = () => {
-    setDetailModalOpen(false);
-    setSelectedParticipant(null);
-  };
-
-  const renderStatusChip = (status: EnrollmentRow['status']) => {
+  const renderStatusChip = (status: 'menunggu' | 'disetujui' | 'ditolak' | 'selesai') => {
     const config: Record<
       'menunggu' | 'disetujui' | 'ditolak' | 'selesai',
       {
@@ -115,7 +102,7 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
   };
 
   const renderCell = (
-    participant: EnrollmentRow,
+    participant: typeof tableItems[0],
     columnKey: Key
   ): ReactNode => {
     switch (columnKey) {
@@ -162,6 +149,11 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
     }
   };
 
+  const columns = ColumnListEnrollments.map((c) => ({
+    key: c.key || c.uid,
+    name: c.name,
+  }));
+
   return (
     <section className="space-y-4">
       {/* Table Card */}
@@ -172,13 +164,13 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
             currentSearch={currentSearch}
             statusFilter={statusFilter}
             statusOptions={statusOptions}
-            showStatusFilter={showStatusFilter}
+            showStatusFilter={true}
             currentLimitValue={currentLimitValue}
-            isRefetching={isRefetching}
-            onSearch={onSearch}
-            onClearSearch={onClearSearch}
-            onChangeStatus={onChangeStatus}
-            onChangeLimit={onChangeLimit}
+            isRefetching={isRefetchingEnrollments}
+            onSearch={handleSearch}
+            onClearSearch={handleClearSearch}
+            onChangeStatus={handleStatusChange}
+            onChangeLimit={handleChangeLimit}
             onRefresh={handleRefresh}
           />
         </div>
@@ -202,8 +194,8 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
               )}
             </TableHeader>
             <TableBody
-              items={items}
-              isLoading={isLoading}
+              items={tableItems}
+              isLoading={isLoadingEnrollments}
               loadingContent={
                 <div className="flex flex-col items-center justify-center py-12">
                   <Spinner size="lg" color="primary" />
@@ -250,7 +242,7 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
         </div>
 
         {/* Pagination Footer - Only show if more than 1 page */}
-        {!isLoading && totalPages > 1 && (
+        {!isLoadingEnrollments && totalPages > 1 && (
           <div className="rounded-b-xl bg-gray-50 px-6 py-3">
             <div className="flex items-center justify-end-safe">
               <Pagination
@@ -258,7 +250,7 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
                 showControls
                 page={currentPageNumber}
                 total={totalPages}
-                onChange={onChangePage}
+                onChange={handleChangePage}
                 variant="light"
                 classNames={{
                   wrapper: 'gap-1',
@@ -283,6 +275,4 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
       )}
     </section>
   );
-};
-
-export default AdminEnrollmentsTable;
+}

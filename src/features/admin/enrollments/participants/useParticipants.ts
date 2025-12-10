@@ -1,19 +1,9 @@
-'use client';
-
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { EnrollmentItem } from '@features/admin';
 import { FILTER_OPTIONS } from '@/constants/list.constants';
-import AdminEnrollmentsTable, {
-  type EnrollmentRow,
-} from '@/components/ui/Table/Enrollments';
-import ColumnListEnrollments from './columns';
-import useEnrollments from './useEnrollments';
+import useEnrollments from '../shared/useEnrollments';
 
-type EnrollmentsTableProps = {
-  fixedStatus?: EnrollmentItem['status'];
-};
-
-  function EnrollmentsTable({ fixedStatus }: EnrollmentsTableProps) {
+export const useParticipants = () => {
   const {
     dataEnrollments,
     isLoadingEnrollments,
@@ -27,12 +17,14 @@ type EnrollmentsTableProps = {
     handleSearch,
     handleClearSearch,
     handleChangeStatus,
-    fixedStatus: enforcedStatus,
-  } = useEnrollments({ fixedStatus });
+  } = useEnrollments({});
 
   const [statusFilter, setStatusFilter] = useState<string>(
     currentStatus ?? 'all'
   );
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedParticipant, setSelectedParticipant] =
+    useState<EnrollmentItem | null>(null);
 
   useEffect(() => {
     setStatusFilter(currentStatus ?? 'all');
@@ -42,19 +34,19 @@ type EnrollmentsTableProps = {
     () => (dataEnrollments?.data as EnrollmentItem[]) || [],
     [dataEnrollments]
   );
+
   const totalPages = dataEnrollments?.pagination?.totalPages || 1;
   const currentPageNumber = Number(currentPage) || 1;
   const currentLimitValue = String(currentLimit);
 
   const filteredParticipants = useMemo(() => {
-    if (enforcedStatus) return tableData;
     if (statusFilter === 'all') return tableData;
     return tableData.filter(
       (participant) => participant.status === statusFilter
     );
-  }, [enforcedStatus, statusFilter, tableData]);
+  }, [statusFilter, tableData]);
 
-  const tableItems: EnrollmentRow[] = useMemo(() => {
+  const tableItems = useMemo(() => {
     return filteredParticipants.map((participant, idx) => {
       const baseKey =
         participant._id ||
@@ -80,34 +72,45 @@ type EnrollmentsTableProps = {
     []
   );
 
-  const showStatusFilter = !enforcedStatus;
-
-  return (
-    <>
-      <AdminEnrollmentsTable
-        columns={ColumnListEnrollments.map((c) => ({ key: c.key || c.uid, name: c.name }))}
-        items={tableItems}
-        isLoading={isLoadingEnrollments}
-        isRefetching={isRefetchingEnrollments}
-        currentSearch={currentSearch}
-        statusFilter={statusFilter}
-        statusOptions={statusOptions}
-        showStatusFilter={showStatusFilter}
-        currentLimitValue={currentLimitValue}
-        currentPageNumber={currentPageNumber}
-        totalPages={totalPages}
-        totalItems={dataEnrollments?.pagination?.total || 0}
-        onSearch={handleSearch}
-        onClearSearch={handleClearSearch}
-        onChangeStatus={(value) => {
-          setStatusFilter(value);
-          handleChangeStatus(value);
-        }}
-        onChangeLimit={handleChangeLimit}
-        onChangePage={handleChangePage}
-      />
-    </>
+  const handleStatusChange = useCallback(
+    (value: string) => {
+      setStatusFilter(value);
+      handleChangeStatus(value);
+    },
+    [handleChangeStatus]
   );
-}
 
-export default EnrollmentsTable;
+  const handleOpenDetail = useCallback((participant: EnrollmentItem) => {
+    setSelectedParticipant(participant);
+    setDetailModalOpen(true);
+  }, []);
+
+  const handleCloseDetail = useCallback(() => {
+    setDetailModalOpen(false);
+    setSelectedParticipant(null);
+  }, []);
+
+  return {
+    // State
+    tableItems,
+    statusFilter,
+    statusOptions,
+    currentSearch,
+    currentLimitValue,
+    currentPageNumber,
+    totalPages,
+    isLoadingEnrollments,
+    isRefetchingEnrollments,
+    detailModalOpen,
+    selectedParticipant,
+
+    // Handlers
+    handleSearch,
+    handleClearSearch,
+    handleStatusChange,
+    handleChangeLimit,
+    handleChangePage,
+    handleOpenDetail,
+    handleCloseDetail,
+  };
+};

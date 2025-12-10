@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { 
-  Button, 
   Table, 
   TableBody, 
   TableCell, 
@@ -18,81 +16,38 @@ import {
 } from '@heroui/react';
 import { 
   Search, 
-  PenSquare
+  PenSquare,
+  RefreshCw
 } from 'lucide-react';
-import { enrollmentsService, type EnrollmentItem } from '@features/admin';
+import { type EnrollmentItem } from '@features/admin';
 import { ScoreInputModal } from '@/components/ui/Modal';
 import { LIMIT_LISTS } from '@/constants/list.constants';
-import useEnrollments from './shared/useEnrollments';
 import { formatDate } from '@/lib/utils';
+import { useScores } from './useScores';
 
-export default function ScoresPageEnhanced() {
-  const [selectedParticipant, setSelectedParticipant] = useState<{
-    _id: string;
-    fullName: string;
-    nim: string;
-    scheduleId?: string;
-  } | null>(null);
-  const [scoreModalOpen, setScoreModalOpen] = useState(false);
-
-  const queryClient = useQueryClient();
-
-  // Use existing enrollments hook
+export default function Scores() {
   const {
-    dataEnrollments,
-    isLoadingEnrollments,
-    isRefetchingEnrollments,
+    selectedParticipant,
+    scoreModalOpen,
+    searchInput,
+    participants,
+    totalPages,
     currentLimit,
     currentPage,
-    currentSearch,
+    isLoadingEnrollments,
+    isRefetchingEnrollments,
+    isSubmittingScore,
+    blockchainStatus,
+    statusMessage,
+    setSearchInput,
+    handleOpenScoreModal,
+    handleSubmitScore,
+    handleRefresh,
+    handleCloseModal,
     handleChangeLimit,
     handleChangePage,
-    handleSearch,
     handleClearSearch,
-  } = useEnrollments({ fixedStatus: 'disetujui' });
-
-  const participants = useMemo(() => {
-    const items = (dataEnrollments?.data as EnrollmentItem[]) || [];
-    return items.map((item, idx) => ({
-      ...item,
-      __rowKey: item._id || item.participantId || `score-${idx}`,
-    }));
-  }, [dataEnrollments]);
-
-  const totalPages = dataEnrollments?.pagination?.totalPages || 1;
-  const totalItems = participants.length;
-
-  // Score submission mutation
-  const { mutate: submitScore, isPending: isSubmittingScore } = useMutation({
-    mutationFn: ({ participantId, scores }: { 
-      participantId: string; 
-      scores: { listening: number; structure: number; reading: number } 
-    }) => enrollmentsService.submitScore(participantId, scores),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['enrollments'] });
-      setScoreModalOpen(false);
-      setSelectedParticipant(null);
-    },
-  });
-
-  // Handlers
-  const handleOpenScoreModal = useCallback((participant: EnrollmentItem) => {
-    setSelectedParticipant({
-      _id: participant._id,
-      fullName: participant.fullName,
-      nim: participant.nim,
-      scheduleId: participant.scheduleId,
-    });
-    setScoreModalOpen(true);
-  }, []);
-
-  const handleSubmitScore = useCallback((participantId: string, scores: { 
-    listening: number; 
-    structure: number; 
-    reading: number 
-  }) => {
-    submitScore({ participantId, scores });
-  }, [submitScore]);
+  } = useScores();
 
   const columns = [
     { key: 'fullName', name: 'Nama Lengkap', uid: 'fullName' },
@@ -127,6 +82,7 @@ export default function ScoresPageEnhanced() {
         );
       
       case 'status':
+      console.log(participant.status)
         // Check if participant has score based on status or score fields
         const hasScore = participant.status === 'selesai' || 
                         (participant.listening !== undefined && 
@@ -134,29 +90,26 @@ export default function ScoresPageEnhanced() {
                          participant.reading !== undefined);
         
         return hasScore ? (
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-[1.5px] bg-transparent border-green-600 text-green-700 font-medium text-sm">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-green-50 text-green-700 border-green-200">
             <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-            Selesai
+            {participant.status}
           </span>
         ) : (
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-[1.5px] bg-transparent border-gray-400 text-gray-700 font-medium text-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-            Belum Dinilai
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-gray-50 text-gray-700 border-gray-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-gray-600"></span>
+            {participant.status}
           </span>
         );
       
       case 'actions':
         return (
-          <Button
-            size="sm"
-            color="primary"
-            variant="flat"
-            onPress={() => handleOpenScoreModal(participant)}
-            startContent={<PenSquare className="w-4 h-4" />}
-            className="font-medium"
+          <button
+            onClick={() => handleOpenScoreModal(participant)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all hover:shadow-sm bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
           >
+            <PenSquare className="w-3.5 h-3.5" />
             Input Nilai
-          </Button>
+          </button>
         );
       
       default:
@@ -166,52 +119,68 @@ export default function ScoresPageEnhanced() {
 
   return (
     <section className="space-y-4">
-      {/* Page Header - Outside Card */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Input Nilai Peserta</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Input nilai untuk peserta yang sudah disetujui
-        </p>
-      </div>
-
       {/* Table Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="bg-bg-light rounded-xl drop-shadow">
         {/* Filters */}
-        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
+        <div className="bg-transparent px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <Input
               isClearable
               type="search"
-              placeholder="🔍 Cari berdasarkan nama atau NIM..."
+              placeholder="Cari nama atau NIM peserta..."
               startContent={<Search className="w-4 h-4 text-gray-400" />}
-              value={currentSearch}
-              onClear={handleClearSearch}
-              onValueChange={handleSearch}
+              value={searchInput}
+              onClear={() => {
+                setSearchInput('');
+                handleClearSearch();
+              }}
+              onValueChange={setSearchInput}
               classNames={{
                 base: 'w-full max-w-md',
-                inputWrapper: 'h-10 bg-white border border-gray-200 hover:border-gray-300',
+                inputWrapper: 'h-8 bg-bg drop-shadow',
                 input: 'text-sm',
               }}
             />
 
-            <Select
-              disallowEmptySelection
-              aria-label="Items per page"
-              selectedKeys={new Set([String(currentLimit)])}
-              onSelectionChange={(keys) => {
-                const value = Array.from(keys)[0];
-                handleChangeLimit(value as string);
-              }}
-              classNames={{
-                base: 'w-24',
-                trigger: 'h-10 bg-white border border-gray-200 hover:border-gray-300',
-                value: 'text-sm',
-              }}
-            >
-              {LIMIT_LISTS.map((limit) => (
-                <SelectItem key={limit.value}>{limit.label}</SelectItem>
-              ))}
-            </Select>
+            <div className="flex w-full justify-end-safe gap-3">
+              <div className="flex items-center gap-2">
+                <Select
+                  startContent={
+                    <p className="text-small text-text-muted">Tampilkan</p>
+                  }
+                  disallowEmptySelection
+                  aria-label="Items per page"
+                  selectedKeys={new Set([String(currentLimit)])}
+                  onSelectionChange={(keys) => {
+                    const value = Array.from(keys)[0];
+                    handleChangeLimit(value as string);
+                  }}
+                  classNames={{
+                    base: 'w-36',
+                    trigger: 'h-8 bg-white drop-shadow',
+                    value: 'text-small text-center',
+                    listbox: 'w-34',
+                    popoverContent: 'w-36',
+                  }}
+                >
+                  {LIMIT_LISTS.map((limit) => (
+                    <SelectItem key={limit.value}>{limit.label}</SelectItem>
+                  ))}
+                </Select>
+              </div>
+
+              <button
+                onClick={handleRefresh}
+                disabled={isRefetchingEnrollments}
+                className="bg-primary hover:bg-primary/10 group text-small inline-flex h-10 w-26 items-center justify-center gap-2 rounded-xl px-2 font-semibold text-white drop-shadow transition-all delay-75 duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+                title="Refresh data"
+              >
+                <RefreshCw
+                  className={`group-hover:text-primary h-4 w-4 text-white ${isRefetchingEnrollments ? 'animate-spin' : ''}`}
+                />
+                <p className="group-hover:text-primary">Refresh</p>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -221,7 +190,7 @@ export default function ScoresPageEnhanced() {
             aria-label="Scores table"
             removeWrapper
             classNames={{
-              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b border-gray-200',
+              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b text-center border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
               tr: 'hover:bg-gray-50/50 transition-colors',
               base: 'min-w-full',
@@ -266,51 +235,39 @@ export default function ScoresPageEnhanced() {
           </Table>
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {isRefetchingEnrollments && (
-                <div className="flex items-center gap-2">
-                  <Spinner size="sm" color="primary" />
-                  <span className="text-xs text-gray-500">Menyegarkan...</span>
-                </div>
-              )}
-              <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <span className="text-sm text-gray-600">
-                  Menampilkan <span className="font-semibold text-gray-900">{participants.length}</span> dari{' '}
-                  <span className="font-semibold text-gray-900">{totalItems}</span> peserta
-                </span>
-              </div>
-            </div>
-
-            {totalPages > 1 && (
+        {/* Pagination Footer - Only show if more than 1 page */}
+        {!isLoadingEnrollments && totalPages > 1 && (
+          <div className="rounded-b-xl bg-gray-50 px-6 py-3">
+            <div className="flex items-center justify-end-safe">
               <Pagination
-                isCompact
+                showShadow
                 showControls
                 page={Number(currentPage)}
                 total={totalPages}
                 onChange={handleChangePage}
+                variant="light"
                 classNames={{
-                  item: 'bg-white border border-gray-200 hover:bg-gray-50',
+                  wrapper: 'gap-1',
+                  item: 'w-8 h-8 min-w-8 bg-white',
                   cursor: 'bg-primary text-white font-semibold',
+                  prev: 'bg-transparent',
+                  next: 'bg-transparent',
                 }}
               />
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Score Input Modal */}
       <ScoreInputModal
         isOpen={scoreModalOpen}
-        onClose={() => {
-          setScoreModalOpen(false);
-          setSelectedParticipant(null);
-        }}
+        onClose={handleCloseModal}
         participant={selectedParticipant}
         onSubmit={handleSubmitScore}
         isSubmitting={isSubmittingScore}
+        blockchainStatus={blockchainStatus}
+        statusMessage={statusMessage}
       />
     </section>
   );

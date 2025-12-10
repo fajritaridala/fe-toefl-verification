@@ -127,14 +127,39 @@ export const enrollmentsService = {
     });
   },
   approve: (enrollId: string, status: "disetujui" | "ditolak") => {
+    console.log('API Service - approve called:', { enrollId, status });
+    console.log('Full URL:', `${endpoints.ENROLLMENTS}/${enrollId}/approval`);
     return instance.patch(`${endpoints.ENROLLMENTS}/${enrollId}/approval`, {
       status,
     });
   },
-  submitScore: (participantId: string, payload: ScorePayload) => {
+  submitScore: (
+    enrollId: string,
+    participantId: string,
+    scores: { listening: number; structure: number; reading: number }
+  ) => {
+    console.log('🔧 API Service - submitScore called');
+    console.log('  - Enroll ID:', enrollId);
+    console.log('  - Participant ID:', participantId);
+    console.log('  - Scores:', scores);
+    console.log('  - Full URL:', `${endpoints.ENROLLMENTS}/${enrollId}/${participantId}/submit-score`);
+    
     return instance.patch(
-      `${endpoints.ENROLLMENTS}/${participantId}/submit-score`,
-      payload
+      `${endpoints.ENROLLMENTS}/${enrollId}/${participantId}/submit-score`,
+      scores
+    );
+  },
+  blockchainSuccess: (enrollId: string, participantId: string, hash: string) => {
+    console.log('🔧 API Service - blockchainSuccess called');
+    console.log('  - Enroll ID:', enrollId);
+    console.log('  - Participant ID:', participantId);
+    console.log('  - Hash:', hash);
+    console.log('  - Full URL:', `${endpoints.ENROLLMENTS}/${enrollId}/${participantId}/blockchain-success`);
+    console.log('  - Request body:', { hash });
+    
+    return instance.patch(
+      `${endpoints.ENROLLMENTS}/${enrollId}/${participantId}/blockchain-success`,
+      { hash }
     );
   },
 };

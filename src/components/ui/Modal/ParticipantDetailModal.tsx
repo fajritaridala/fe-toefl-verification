@@ -39,6 +39,7 @@ export default function ParticipantDetailModal({
       isOpen={isOpen} 
       onClose={onClose}
       size="3xl"
+      backdrop="blur"
       scrollBehavior="inside"
       classNames={{
         base: 'bg-white',
