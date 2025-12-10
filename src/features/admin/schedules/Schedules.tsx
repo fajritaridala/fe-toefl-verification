@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { ScheduleItem } from '@features/admin';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';
 import {
@@ -13,6 +14,8 @@ import DeleteScheduleModal from './DeleteScheduleModal';
 import ScheduleParticipantsModal from './ScheduleParticipantsModal';
 
 const AdminSchedulesPage = () => {
+  const queryClient = useQueryClient();
+
   const {
     schedules,
     pagination,
@@ -28,6 +31,10 @@ const AdminSchedulesPage = () => {
     handleFilterMonth,
     handleFilterService,
   } = useSchedules();
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ['schedules'] });
+  };
 
   const [selectedService, setSelectedService] = useState(currentService);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
@@ -111,6 +118,7 @@ const AdminSchedulesPage = () => {
         onChangeLimit={(value) => handleChangeLimit(String(value))}
         onSelectMonth={onSelectMonth}
         onSelectService={onSelectService}
+        onRefresh={handleRefresh}
         onAdd={openCreateModal}
         onEdit={openEditModal}
         onDelete={openDeleteModal}

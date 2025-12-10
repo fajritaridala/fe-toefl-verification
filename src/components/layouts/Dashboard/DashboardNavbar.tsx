@@ -11,7 +11,7 @@ type Props = {
 
 function DashboardNavbar({ onMenuToggle, description, heading }: Props) {
   return (
-    <nav className="sticky top-0 z-50 mb-6 bg-white">
+    <nav className="sticky top-0 z-50 mb-6 rounded-xl py-2">
       <div className="flex items-center justify-between">
         {/* Left Section - Menu Toggle + Welcome Text */}
         <div className="flex items-center gap-4">
@@ -28,18 +28,18 @@ function DashboardNavbar({ onMenuToggle, description, heading }: Props) {
 
           {/* Welcome Text */}
           <div className="flex flex-col">
-            <h1 className="text-2xlarge text-text font-bold">{heading}</h1>
-            <p className="text-small text-text-muted">{description}</p>
+            <h1 className="text-3xl font-extrabold text-primary">{heading}</h1>
+            <p className="text-sm text-gray-400">{description}</p>
           </div>
         </div>
 
         {/* Right Section - User Icon */}
         <div className="flex items-center">
-          <div className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:bg-gray-50">
-            <span className="hidden text-sm font-medium text-gray-700 sm:block">
+          <div className="flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 drop-shadow-sm transition-colors hover:bg-gray-50">
+            <span className="hidden text-sm font-semibold text-primary sm:block">
               Admin
             </span>
-            <CircleUserRound className="text-primary h-6 w-6" />
+            <CircleUserRound  className="text-primary h-6 w-6" />
           </div>
         </div>
       </div>

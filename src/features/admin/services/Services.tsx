@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { ServiceItem } from '@features/admin';
 import ServiceTable from '@/components/ui/Table/ServiceTable';
 import { SERVICE_TABLE_COLUMNS } from './Services.constants';
@@ -9,14 +10,23 @@ import DeleteServiceModal from './DeleteServiceModal';
 import useServices from './useServices';
 
 const AdminServicesPage = () => {
+  const queryClient = useQueryClient();
+
   const {
     services,
     pagination,
     isLoadingServices,
     isRefetchingServices,
     currentPage,
+    currentSearch,
     handleChangePage,
+    handleSearch,
+    handleClearSearch,
   } = useServices();
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ['services'] });
+  };
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
@@ -58,7 +68,11 @@ const AdminServicesPage = () => {
         isRefetching={isRefetchingServices}
         currentPage={Number(currentPage)}
         totalPages={pagination?.totalPages || 1}
+        currentSearch={currentSearch}
         onChangePage={handleChangePage}
+        onSearch={handleSearch}
+        onClearSearch={handleClearSearch}
+        onRefresh={handleRefresh}
         onAdd={openCreateModal}
         onEdit={openEditModal}
         onDelete={handleDeleteModal}

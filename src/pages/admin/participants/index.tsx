@@ -4,7 +4,7 @@ import DashboardLayout from '@/components/layouts/Dashboard';
 export default function AdminParticipants() {
   return (
     <>
-      <DashboardLayout title="Data Peserta - Simpeka">
+      <DashboardLayout title="Daftar Peserta">
         <Participants />
       </DashboardLayout>
     </>

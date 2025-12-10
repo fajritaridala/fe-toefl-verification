@@ -1,12 +1,13 @@
-import { ReactNode } from 'react';
-import { BiDotsVerticalRounded, BiPlus } from 'react-icons/bi';
+import { Key, ReactNode } from 'react';
 import {
-  LuCalendar,
-  LuFilter,
-  LuPenLine,
-  LuTrash2,
-  LuUsers,
-} from 'react-icons/lu';
+  RefreshCw,
+  Plus,
+  Calendar,
+  Filter,
+  PenLine,
+  Trash2,
+  Users,
+} from 'lucide-react';
 import {
   Button,
   Chip,
@@ -54,6 +55,7 @@ type Props = {
   onChangeLimit: (value: number) => void;
   onSelectMonth: (value: string) => void;
   onSelectService: (value: string) => void;
+  onRefresh: () => void;
   onAdd: () => void;
   onEdit: (schedule: ScheduleItem) => void;
   onDelete: (schedule: ScheduleItem) => void;
@@ -77,13 +79,15 @@ const ScheduleTable = (props: Props) => {
     onChangeLimit,
     onSelectMonth,
     onSelectService,
+    onRefresh,
     onAdd,
     onEdit,
     onDelete,
     onViewParticipants,
   } = props;
+
   const combineOptions = [
-    { value: ALL_SERVICE_OPTION_VALUE, label: 'Layanan' },
+    { value: ALL_SERVICE_OPTION_VALUE, label: 'Semua Layanan' },
     ...serviceOptions,
   ];
   const monthSelectionValue = selectedMonth || ALL_MONTH_OPTION_VALUE;
@@ -93,9 +97,10 @@ const ScheduleTable = (props: Props) => {
     const timeLabel = start && end ? `${moment(start).format('HH:mm')} - ${moment(end).format('HH:mm')}` : '';
     return { dayLabel, timeLabel };
   };
+
   const renderCell = (
     schedule: ScheduleItem,
-    columnKey: ScheduleTableColumn['key']
+    columnKey: Key
   ): ReactNode => {
     const registrants =
       typeof schedule.registrants === 'number' ? schedule.registrants : 0;
@@ -118,23 +123,23 @@ const ScheduleTable = (props: Props) => {
           schedule.endTime
         );
         return (
-          <div className="flex flex-col">
-            <p className="text-text font-semibold">{dayLabel}</p>
+          <div className="flex flex-col gap-1">
+            <p className="font-semibold text-gray-900">{dayLabel}</p>
             {timeLabel && (
-              <p className="text-2xsmall text-text-muted leading-3">{timeLabel}</p>
+              <p className="text-xs text-gray-500">{timeLabel}</p>
             )}
           </div>
         );
       }
       case 'service':
         return (
-          <div className="flex justify-center-safe">
+          <div className="flex justify-center">
             <Chip
               size="sm"
-              startContent={<LuCalendar />}
+              startContent={<Calendar className="h-3 w-3" />}
               className="bg-primary/10 text-primary border-primary/30 border px-2"
               classNames={{
-                content: '!text-2xsmall',
+                content: 'text-xs font-medium',
               }}
             >
               {serviceName}
@@ -161,7 +166,7 @@ const ScheduleTable = (props: Props) => {
                 indicator: `rounded-full ${isFull ? 'bg-danger' : 'bg-primary'}`,
               }}
             />
-            <span className="text-2xsmall text-text-muted font-semibold">
+            <span className="text-xs text-gray-600 font-semibold">
               {ratioLabel}
             </span>
           </div>
@@ -169,7 +174,7 @@ const ScheduleTable = (props: Props) => {
       }
       case 'status':
         return (
-          <div className="flex justify-center-safe">
+          <div className="flex justify-center">
             <Chip
               size="sm"
               variant="flat"
@@ -181,7 +186,7 @@ const ScheduleTable = (props: Props) => {
                     : 'success'
               }
               classNames={{
-                content: '!text-2xsmall',
+                content: 'text-xs font-medium',
                 base: 'px-2 border',
               }}
             >
@@ -191,24 +196,29 @@ const ScheduleTable = (props: Props) => {
         );
       case 'actions':
         return (
-          <div className="flex justify-center-safe">
+          <div className="flex justify-center">
             <Dropdown>
               <DropdownTrigger>
-                <Button isIconOnly variant="light">
-                  <BiDotsVerticalRounded size={18} className="text-primary" />
+                <Button 
+                  isIconOnly 
+                  size="sm"
+                  variant="light"
+                  className="hover:text-primary text-gray-600"
+                >
+                  <PenLine size={16} />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Aksi jadwal">
                 <DropdownItem
                   key="view-participants"
-                  startContent={<LuUsers size={16} />}
+                  startContent={<Users size={16} />}
                   onPress={() => onViewParticipants(schedule)}
                 >
                   Daftar Peserta
                 </DropdownItem>
                 <DropdownItem
                   key="edit-schedule"
-                  startContent={<LuPenLine size={16} />}
+                  startContent={<PenLine size={16} />}
                   onPress={() => onEdit(schedule)}
                 >
                   Ubah
@@ -216,7 +226,7 @@ const ScheduleTable = (props: Props) => {
                 <DropdownItem
                   key="delete-schedule"
                   className="text-danger"
-                  startContent={<LuTrash2 size={16} />}
+                  startContent={<Trash2 size={16} />}
                   onPress={() => onDelete(schedule)}
                 >
                   Hapus
@@ -265,144 +275,196 @@ const ScheduleTable = (props: Props) => {
     }
   };
 
-  const topContent = (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-col gap-3 lg:flex-1 lg:flex-row">
-          <Select
-            selectedKeys={new Set([monthSelectionValue])}
-            onSelectionChange={handleMonthSelection}
-            variant="bordered"
-            labelPlacement="outside"
-            placeholder="Filter bulan"
-            disallowEmptySelection
-            items={monthOptions}
-            startContent={<LuFilter className="text-text-muted" />}
-            className="w-full lg:w-40"
-            classNames={{
-              trigger: 'bg-bg-light',
-              value: 'text-small font-semibold',
-            }}
-          >
-            {(option) => (
-              <SelectItem key={option.value}>{option.label}</SelectItem>
-            )}
-          </Select>
-          <Select
-            selectedKeys={new Set([serviceSelectionValue])}
-            onSelectionChange={handleServiceSelection}
-            variant="bordered"
-            labelPlacement="outside"
-            placeholder="Filter layanan"
-            disallowEmptySelection
-            items={combineOptions}
-            startContent={<LuFilter className="text-text-muted" />}
-            className="w-full lg:w-44"
-            classNames={{
-              trigger: 'bg-bg-light',
-              value: 'text-small font-semibold',
-            }}
-          >
-            {(option) => (
-              <SelectItem key={option.value}>{option.label}</SelectItem>
-            )}
-          </Select>
+  return (
+    <section className="space-y-4">
+      {/* Refetch Indicator */}
+      {isRefetching && (
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Spinner size="sm" color="primary" />
+          <p>Mengambil data terbaru...</p>
         </div>
-        <div className="flex items-center gap-3">
-          {isRefetching && <Spinner size="sm" color="secondary" />}
-          <Button
-            className="bg-primary text-bg-light font-semibold shadow-sm"
-            startContent={<BiPlus size={18} />}
-            onPress={onAdd}
-          >
-            Tambah Jadwal
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+      )}
 
-  const bottomContent = (
-    <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-      <div className="text-xsmall text-text-muted bg-bg-light flex items-center gap-2 rounded-lg px-4 py-2 font-semibold shadow">
-        <span>Tampilkan</span>
-        <Select
-          selectedKeys={new Set([String(currentLimit)])}
-          onSelectionChange={handleLimitSelection}
-          className="w-14"
-          disallowEmptySelection
-          classNames={{
-            trigger: 'h-5 min-h-5 rounded-md border border-border',
-            value: 'text-xsmall',
-            popoverContent: 'min-w-22',
-          }}
-        >
-          {LIMIT_LISTS.map((option) => (
-            <SelectItem key={String(option.value)}>{option.label}</SelectItem>
-          ))}
-        </Select>
-        <span>baris</span>
-      </div>
-      <div className="bg-bg-light flex w-full justify-end rounded-lg px-4 py-1 shadow lg:w-auto">
-        {totalPages > 1 && (
-          <Pagination
-            isCompact
-            showControls
-            variant="light"
-            page={currentPage}
-            total={totalPages}
-            onChange={onChangePage}
+      {/* Table Card */}
+      <div className="bg-white rounded-xl drop-shadow">
+        {/* Filters Section */}
+        <div className="bg-transparent px-6 py-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            {/* Filter Controls */}
+            <div className="flex flex-col gap-3 sm:flex-row flex-1">
+              <Select
+                selectedKeys={new Set([monthSelectionValue])}
+                onSelectionChange={handleMonthSelection}
+                variant="bordered"
+                labelPlacement="outside"
+                placeholder="Filter bulan"
+                disallowEmptySelection
+                items={monthOptions}
+                startContent={<Filter className="h-4 w-4 text-gray-400" />}
+                className="w-full sm:w-44"
+                classNames={{
+                  trigger: 'bg-white border-gray-200 hover:border-gray-300',
+                  value: 'text-sm font-semibold text-gray-700',
+                }}
+              >
+                {(option) => (
+                  <SelectItem key={option.value}>{option.label}</SelectItem>
+                )}
+              </Select>
+              <Select
+                selectedKeys={new Set([serviceSelectionValue])}
+                onSelectionChange={handleServiceSelection}
+                variant="bordered"
+                labelPlacement="outside"
+                placeholder="Filter layanan"
+                disallowEmptySelection
+                items={combineOptions}
+                startContent={<Filter className="h-4 w-4 text-gray-400" />}
+                className="w-full sm:w-52"
+                classNames={{
+                  trigger: 'bg-white border-gray-200 hover:border-gray-300',
+                  value: 'text-sm font-semibold text-gray-700',
+                }}
+              >
+                {(option) => (
+                  <SelectItem key={option.value}>{option.label}</SelectItem>
+                )}
+              </Select>
+              <Button
+                isIconOnly
+                variant="flat"
+                className="bg-white border border-gray-200 hover:border-gray-300 w-full sm:w-auto"
+                onPress={onRefresh}
+                aria-label="Refresh data"
+              >
+                <RefreshCw className="h-4 w-4 text-gray-600" />
+              </Button>
+            </div>
+
+            {/* Add Button */}
+            <Button
+              className="bg-primary text-white shadow-small font-semibold transition-all duration-200 hover:-translate-y-0.5"
+              startContent={<Plus size={18} />}
+              onPress={onAdd}
+            >
+              Tambah Jadwal
+            </Button>
+          </div>
+        </div>
+
+        {/* Table Section */}
+        <div className="overflow-x-auto rounded-b-xl">
+          <Table
+            aria-label="Tabel jadwal"
+            selectionMode="none"
+            removeWrapper
             classNames={{
-              wrapper: 'min-h-8 h-8',
-              prev: 'h-7',
-              next: 'h-7',
-              cursor:
-                'h-7 min-w-7 w-7 bg-bg border border-border text-text rounded-lg',
+              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b text-center border-gray-200',
+              td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
+              tr: 'hover:bg-gray-50/50 transition-colors',
+              base: 'min-w-full',
             }}
-          />
+          >
+            <TableHeader columns={columns}>
+              {(column) => (
+                <TableColumn key={column.key} className={column.className}>
+                  {column.label}
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody
+              items={schedules}
+              isLoading={isLoading}
+              loadingContent={
+                <div className="flex flex-col items-center justify-center py-12">
+                  <Spinner size="lg" color="primary" />
+                  <p className="mt-3 text-sm text-gray-500">
+                    Memuat data jadwal...
+                  </p>
+                </div>
+              }
+              emptyContent={
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                    <svg
+                      className="h-8 w-8 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-base font-medium text-gray-900">
+                    Tidak ada data jadwal
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Klik tombol 'Tambah Jadwal' untuk membuat jadwal baru
+                  </p>
+                </div>
+              }
+            >
+              {(item) => (
+                <TableRow key={item._id}>
+                  {(columnKey) => (
+                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Pagination Footer - Only show if more than 1 page */}
+        {!isLoading && totalPages > 1 && (
+          <div className="rounded-b-xl bg-gray-50 px-6 py-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              {/* Limit Selector */}
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span>Tampilkan</span>
+                <Select
+                  selectedKeys={new Set([String(currentLimit)])}
+                  onSelectionChange={handleLimitSelection}
+                  className="w-20"
+                  disallowEmptySelection
+                  size="sm"
+                  classNames={{
+                    trigger: 'h-8 min-h-8 bg-white border border-gray-200',
+                    value: 'text-sm',
+                  }}
+                >
+                  {LIMIT_LISTS.map((option) => (
+                    <SelectItem key={String(option.value)}>{option.label}</SelectItem>
+                  ))}
+                </Select>
+                <span>baris</span>
+              </div>
+
+              {/* Pagination */}
+              <Pagination
+                showShadow
+                showControls
+                page={currentPage}
+                total={totalPages}
+                onChange={onChangePage}
+                variant="light"
+                classNames={{
+                  wrapper: 'gap-1',
+                  item: 'w-8 h-8 min-w-8 bg-white',
+                  cursor: 'bg-primary text-white font-semibold',
+                  prev: 'bg-transparent',
+                  next: 'bg-transparent',
+                }}
+              />
+            </div>
+          </div>
         )}
       </div>
-    </div>
-  );
-
-  return (
-    <section>
-      <Table
-        aria-label="Tabel jadwal"
-        classNames={{ base: 'min-w-full', wrapper: 'rounded-lg shadow' }}
-        topContent={topContent}
-        topContentPlacement="outside"
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-      >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key} className={column.className}>
-              {column.label}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          className="align-top"
-          items={schedules}
-          emptyContent="Belum ada jadwal"
-          isLoading={isLoading}
-          loadingContent={<Spinner color="secondary" />}
-        >
-          {(item) => (
-            <TableRow
-              key={item._id}
-              className="border-border border-b last:border-0"
-            >
-              {columns.map((column) => (
-                <TableCell className="text-xsmall" key={column.key}>
-                  {renderCell(item, column.key)}
-                </TableCell>
-              ))}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
     </section>
   );
 };

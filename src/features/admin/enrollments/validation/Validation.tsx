@@ -143,7 +143,7 @@ export default function Validation() {
   return (
     <section className="space-y-4">
       {/* Table Card */}
-      <div className="bg-bg-light rounded-xl drop-shadow">
+      <div className="bg-white rounded-xl drop-shadow">
         {/* Filters */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex items-center justify-between gap-4">

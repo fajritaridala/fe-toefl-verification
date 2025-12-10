@@ -12,7 +12,7 @@ import { NAVBAR_ITEMS } from '../../Navbar/BaseNavbar/BaseNavbarConstants';
 const BaseFooter = () => {
   return (
     <footer className="bg-primary border-secondary border-t-2">
-      <div className="mx-auto w-full bg-transparent pt-16 pb-6 text-white lg:max-w-5xl">
+      <div className="mx-auto w-full bg-transparent pt-16 pb-6 text-white lg:max-w-7xl">
         <div className="grid grid-cols-4 text-sm">
           <div className="col-span-2">
             <h1 className="text-secondary mb-4 text-lg font-bold">Simpeka</h1>

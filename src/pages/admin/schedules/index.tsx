@@ -1,14 +1,10 @@
-import Head from "next/head";
-import DashboardLayout from "@/components/layouts/Dashboard";
-import { Schedules } from "@features/admin/schedules";
+import { Schedules } from '@features/admin/schedules';
+import DashboardLayout from '@/components/layouts/Dashboard';
 
 export default function AdminSchedules() {
   return (
     <>
-      <Head>
-        <title>Kelola Jadwal - Simpeka</title>
-      </Head>
-      <DashboardLayout>
+      <DashboardLayout title="Kelola jadwal">
         <Schedules />
       </DashboardLayout>
     </>
