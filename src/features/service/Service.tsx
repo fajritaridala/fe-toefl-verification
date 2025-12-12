@@ -9,7 +9,7 @@ const Service = () => {
   const { services, handleRedirect } = useService();
 
   return (
-    <div className="bg-bg-light">
+    <div className="bg-bg">
       <section className="relative mx-auto my-32 flex flex-row lg:max-w-5xl">
           <div className="bg-secondary absolute -top-50 -left-20 h-[30rem] w-[30rem] rounded-full blur-[12rem]" />
           <div className="bg-primary absolute right-30 bottom-20 h-[10rem] w-[10rem] rounded-full blur-[9rem]" />
@@ -28,7 +28,7 @@ const Service = () => {
             width={1580}
             height={1580}
             priority
-            className="!shadow-main animate-fade-right relative z-0 w-[30vw] rounded-lg border-black"
+            className="animate-fade-right relative z-0 w-[30vw] rounded-lg" // Menghapus !shadow-main dan border-black
           />
         </section>
         <section className="relative overflow-hidden">

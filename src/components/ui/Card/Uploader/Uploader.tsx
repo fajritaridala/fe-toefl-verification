@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { ChangeEvent, DragEvent, RefObject } from 'react';
 import { LuCircleCheck, LuCloudUpload, LuFilePlus } from 'react-icons/lu';
@@ -47,7 +47,7 @@ export default function UploaderCard(props: Props) {
 
   return (
     <>
-      <Card className="shadow-box w-full rounded-lg px-2 py-4">
+      <Card className="hover:shadow-neo w-full rounded-2xl border border-gray-200 px-2 py-4 shadow-none transition-all delay-75 duration-200 ease-in-out">
         <CardBody>
           <div
             onClick={handleClick}
@@ -113,7 +113,7 @@ export default function UploaderCard(props: Props) {
               onPress={handleClick}
               data-hover="false"
               startContent={<LuFilePlus strokeWidth={3} />}
-              className="border-secondary/60 text-secondary/90 rounded-lg border-2 bg-transparent font-semibold transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
+              className="border-secondary/60 text-secondary/90 rounded-full border-2 bg-transparent font-semibold transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
             >
               Pilih File
             </Button>
@@ -121,7 +121,7 @@ export default function UploaderCard(props: Props) {
               onPress={handleSubmit}
               data-hover="false"
               startContent={<LuCircleCheck strokeWidth={3} />}
-              className="text-medium bg-primary rounded-lg font-semibold text-white transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
+              className="text-medium bg-primary rounded-full font-semibold text-white transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
               isDisabled={!isPreview}
             >
               Verifikasi

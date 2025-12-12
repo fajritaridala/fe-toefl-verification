@@ -33,9 +33,6 @@ export const servicesService = {
       : endpoints.SERVICES;
     return instance.get(url);
   },
-  getService: (id: string) => {
-    return instance.get(`${endpoints.SERVICES}/${id}`);
-  },
   createService: (payload: CreateServicePayload) => {
     return instance.post(`${endpoints.SERVICES}`, payload);
   },
@@ -64,6 +61,7 @@ export const schedulesService = {
     const url = queryString
       ? `${endpoints.SCHEDULES}?${queryString}`
       : endpoints.SCHEDULES;
+    console.log(url)
     return instance.get(url);
   },
   createSchedule: (payload: SchedulePayload) => {

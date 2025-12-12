@@ -48,8 +48,8 @@ export default function Validation() {
     approveParticipant,
     rejectParticipant,
   } = useValidation();
-  
-  console.log(participants)
+
+  console.log(participants);
 
   const columns = [
     { key: 'fullName', name: 'Nama Lengkap', uid: 'fullName' },
@@ -101,7 +101,7 @@ export default function Validation() {
             <div className="flex justify-center-safe">
               <button
                 onClick={() => handleOpenPreview(rowIndex)}
-                className="border-info text-info inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all hover:shadow"
+                className="border-info text-info hover:shadow-box inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all"
               >
                 <Eye className="h-3.5 w-3.5" />
                 Lihat Bukti
@@ -113,19 +113,19 @@ export default function Validation() {
           return (
             <div className="flex w-full items-center justify-center-safe gap-2">
               <button
-                onClick={() => approveParticipant(participant._id)}
+                onClick={() => approveParticipant(participant.enrollId)}
                 disabled={isProcessing}
                 title="Approve"
-                className="border-success text-success inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all hover:shadow disabled:cursor-not-allowed disabled:opacity-50"
+                className="border-success text-success hover:shadow-box inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Check className="h-3.5 w-3.5" />
                 Approve
               </button>
               <button
-                onClick={() => rejectParticipant(participant._id)}
+                onClick={() => rejectParticipant(participant.enrollId)}
                 disabled={isProcessing}
                 title="Reject"
-                className="border-danger text-danger inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all hover:shadow disabled:cursor-not-allowed disabled:opacity-50"
+                className="border-danger text-danger hover:shadow-box inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <X className="h-3.5 w-3.5" />
                 Reject
@@ -143,13 +143,14 @@ export default function Validation() {
   return (
     <section className="space-y-4">
       {/* Table Card */}
-      <div className="bg-white rounded-xl drop-shadow">
+      <div className="shadow-box rounded-2xl border border-gray-200 bg-white">
         {/* Filters */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <Input
               isClearable
               type="search"
+              radius="full"
               placeholder="Cari nama atau NIM peserta..."
               startContent={<Search className="h-4 w-4 text-gray-400" />}
               value={searchInput}
@@ -160,7 +161,7 @@ export default function Validation() {
               onValueChange={setSearchInput}
               classNames={{
                 base: 'w-full max-w-md',
-                inputWrapper: 'h-8 bg-bg drop-shadow',
+                inputWrapper: 'h-8 bg-gray-50 drop-shadow',
                 input: 'text-sm',
               }}
             />
@@ -172,6 +173,7 @@ export default function Validation() {
                     <p className="text-small text-text-muted">Tampilkan</p>
                   }
                   disallowEmptySelection
+                  radius="full"
                   aria-label="Items per page"
                   selectedKeys={new Set([String(currentLimit)])}
                   onSelectionChange={(keys) => {
@@ -180,7 +182,7 @@ export default function Validation() {
                   }}
                   classNames={{
                     base: 'w-36 ',
-                    trigger: 'h-8 bg-white drop-shadow',
+                    trigger: 'h-8 bg-gray-50 shadow',
                     value: 'text-small text-center',
                     listbox: 'w-34',
                     popoverContent: 'w-36',
@@ -195,7 +197,7 @@ export default function Validation() {
               <button
                 onClick={handleRefresh}
                 disabled={isRefetchingEnrollments}
-                className="bg-primary hover:bg-primary/10 group text-small inline-flex h-10 w-26 items-center justify-center gap-2 rounded-xl px-2 font-semibold text-white drop-shadow transition-all delay-75 duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+                className="bg-primary hover:bg-primary/10 group text-small inline-flex h-10 w-26 items-center justify-center gap-2 rounded-full px-2 font-semibold text-white drop-shadow transition-all delay-75 duration-300 disabled:cursor-not-allowed disabled:opacity-50"
                 title="Refresh data"
               >
                 <RefreshCw
@@ -213,14 +215,23 @@ export default function Validation() {
             aria-label="Validation table"
             removeWrapper
             classNames={{
-              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b text-center border-gray-200',
+              th: 'bg-bg-light text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
-              tr: 'hover:bg-gray-50/50 transition-colors',
+              tr: 'hover:bg-gray-50 transition-colors',
               base: 'min-w-full',
             }}
           >
             <TableHeader columns={columns}>
-              {(col) => <TableColumn key={col.uid}>{col.name}</TableColumn>}
+              {(col) => (
+                <TableColumn
+                  key={col.uid}
+                  className={
+                    col.key === 'fullName' ? 'text-left' : 'text-center'
+                  }
+                >
+                  {col.name}
+                </TableColumn>
+              )}
             </TableHeader>
             <TableBody
               items={participants || []}
@@ -260,7 +271,7 @@ export default function Validation() {
               }
             >
               {(item) => (
-                <TableRow key={item.__rowKey || item._id}>
+                <TableRow key={item.__rowKey || item.enrollId}>
                   {columns.map((col) => (
                     <TableCell key={col.uid}>
                       {renderCell(item, col.key, participants.indexOf(item))}
@@ -274,7 +285,7 @@ export default function Validation() {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoadingEnrollments && totalPages > 1 && (
-          <div className="rounded-b-xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-2xl bg-gray-50 px-6 py-3">
             <div className="flex items-center justify-end-safe">
               <Pagination
                 showShadow

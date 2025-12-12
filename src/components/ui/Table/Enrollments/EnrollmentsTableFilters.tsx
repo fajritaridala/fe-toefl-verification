@@ -1,12 +1,8 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
-import { Search, RefreshCw } from 'lucide-react';
-import {
-  Input,
-  Select,
-  SelectItem,
-} from '@heroui/react';
+import { Input, Select, SelectItem } from '@heroui/react';
+import { RefreshCw, Search } from 'lucide-react';
 import { LIMIT_LISTS } from '@/constants/list.constants';
 import { useDebounce } from '@/hooks/useDebounce';
 import type { StatusOption } from './EnrollmentsTable.types';
@@ -64,14 +60,15 @@ export default function EnrollmentsTableFilters({
       <Input
         isClearable
         type="search"
+        radius="full"
         placeholder="Cari nama atau NIM peserta..."
-        startContent={<Search className="w-4 h-4 text-gray-400" />}
+        startContent={<Search className="h-4 w-4 text-gray-400" />}
         value={searchInput}
         onClear={handleClearSearch}
         onValueChange={setSearchInput}
         classNames={{
           base: 'w-full max-w-md',
-          inputWrapper: 'h-8 bg-bg drop-shadow',
+          inputWrapper: 'h-8 bg-gray-50 shadow',
           input: 'text-sm',
         }}
       />
@@ -83,6 +80,7 @@ export default function EnrollmentsTableFilters({
           <div className="flex items-center gap-2">
             <Select
               disallowEmptySelection
+              radius="full"
               aria-label="Filter status"
               placeholder="Status"
               selectedKeys={new Set([statusFilter])}
@@ -92,16 +90,14 @@ export default function EnrollmentsTableFilters({
               }}
               classNames={{
                 base: 'w-36',
-                trigger: 'h-8 bg-white drop-shadow',
+                trigger: 'h-8 bg-gray-50 shadow',
                 value: 'text-small text-center',
                 listbox: 'w-34',
                 popoverContent: 'w-36',
               }}
             >
               {statusOptions.map((opt) => (
-                <SelectItem key={opt.value}>
-                  {opt.label}
-                </SelectItem>
+                <SelectItem key={opt.value}>{opt.label}</SelectItem>
               ))}
             </Select>
           </div>
@@ -114,6 +110,7 @@ export default function EnrollmentsTableFilters({
               <p className="text-small text-text-muted">Tampilkan</p>
             }
             disallowEmptySelection
+            radius="full"
             aria-label="Items per page"
             selectedKeys={new Set([currentLimitValue])}
             onSelectionChange={(keys) => {
@@ -122,16 +119,14 @@ export default function EnrollmentsTableFilters({
             }}
             classNames={{
               base: 'w-36',
-              trigger: 'h-8 bg-white drop-shadow',
+              trigger: 'h-8 bg-gray-50 shadow',
               value: 'text-small text-center',
               listbox: 'w-34',
               popoverContent: 'w-36',
             }}
           >
             {LIMIT_LISTS.map((limit) => (
-              <SelectItem key={limit.value}>
-                {limit.label}
-              </SelectItem>
+              <SelectItem key={limit.value}>{limit.label}</SelectItem>
             ))}
           </Select>
         </div>
@@ -141,7 +136,7 @@ export default function EnrollmentsTableFilters({
           <button
             onClick={onRefresh}
             disabled={isRefetching}
-            className="bg-primary hover:bg-primary/10 group text-small inline-flex h-10 w-26 items-center justify-center gap-2 rounded-xl px-2 font-semibold text-white drop-shadow transition-all delay-75 duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-primary hover:bg-primary/10 group text-small inline-flex h-10 w-26 items-center justify-center gap-2 rounded-full px-2 font-semibold text-white shadow transition-all delay-75 duration-300 disabled:cursor-not-allowed disabled:opacity-50"
             title="Refresh data"
           >
             <RefreshCw

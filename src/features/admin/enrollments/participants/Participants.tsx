@@ -1,7 +1,6 @@
 'use client';
 
 import { Key, ReactNode } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Pagination,
@@ -13,12 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Eye } from 'lucide-react';
 import { ParticipantDetailModal } from '@/components/ui/Modal';
-import { formatDate } from '@/lib/utils';
 import EnrollmentsTableFilters from '@/components/ui/Table/Enrollments/EnrollmentsTableFilters';
-import { useParticipants } from './useParticipants';
+import { formatDate } from '@/lib/utils';
 import ColumnListEnrollments from '../shared/columns';
+import { useParticipants } from './useParticipants';
 
 export default function Participants() {
   const {
@@ -48,7 +48,9 @@ export default function Participants() {
     queryClient.invalidateQueries({ queryKey: ['enrollments'] });
   };
 
-  const renderStatusChip = (status: 'menunggu' | 'disetujui' | 'ditolak' | 'selesai') => {
+  const renderStatusChip = (
+    status: 'menunggu' | 'disetujui' | 'ditolak' | 'selesai'
+  ) => {
     const config: Record<
       'menunggu' | 'disetujui' | 'ditolak' | 'selesai',
       {
@@ -92,17 +94,19 @@ export default function Participants() {
     const { bgColor, borderColor, textColor, dotColor, label } = config[status];
 
     return (
-      <span
-        className={`inline-flex items-center gap-2 rounded-full border-[1.5px] px-3 py-1.5 ${bgColor} ${borderColor} ${textColor} text-sm font-medium`}
-      >
-        <span className={`h-1.5 w-1.5 rounded-full ${dotColor}`}></span>
-        {label}
-      </span>
+      <div className="text-center">
+        <span
+          className={`inline-flex items-center gap-2 rounded-full border-[1.5px] px-3 py-1.5 ${bgColor} ${borderColor} ${textColor} text-sm font-medium`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${dotColor}`}></span>
+          {label}
+        </span>
+      </div>
     );
   };
 
   const renderCell = (
-    participant: typeof tableItems[0],
+    participant: (typeof tableItems)[0],
     columnKey: Key
   ): ReactNode => {
     switch (columnKey) {
@@ -116,16 +120,20 @@ export default function Participants() {
           </div>
         );
       case 'nim':
-        return <p className="font-medium text-gray-700">{participant.nim}</p>;
+        return (
+          <p className="text-center font-medium text-gray-700">
+            {participant.nim}
+          </p>
+        );
       case 'serviceName':
         return (
-          <p className="font-medium text-gray-700">
+          <p className="text-center font-medium text-gray-700">
             {participant.serviceName || '-'}
           </p>
         );
       case 'scheduleDate':
         return (
-          <p className="text-sm text-gray-700">
+          <p className="text-center text-sm text-gray-700">
             {formatDate(participant.scheduleDate)}
           </p>
         );
@@ -133,16 +141,19 @@ export default function Participants() {
         return renderStatusChip(participant.status);
       case 'actions':
         return (
-          <Button
-            isIconOnly
-            size="sm"
-            variant="light"
-            aria-label="Lihat detail"
-            className="hover:text-primary text-gray-600"
-            onPress={() => handleOpenDetail(participant)}
-          >
-            <Eye className="h-4 w-4" />
-          </Button>
+          <div className="text-center">
+            <Button
+              isIconOnly
+              size="sm"
+              variant="light"
+              radius="full"
+              aria-label="Lihat detail"
+              className="hover:text-primary text-gray-600"
+              onPress={() => handleOpenDetail(participant)}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </div>
         );
       default:
         return null;
@@ -157,7 +168,7 @@ export default function Participants() {
   return (
     <section className="space-y-4">
       {/* Table Card */}
-      <div className="bg-bg-light rounded-xl drop-shadow">
+      <div className="shadow-box rounded-2xl border border-gray-200 bg-white">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <EnrollmentsTableFilters
@@ -176,21 +187,28 @@ export default function Participants() {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto rounded-b-xl">
+        <div className="overflow-x-auto rounded-b-2xl">
           <Table
             aria-label="Tabel peserta"
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b text-center border-gray-200',
+              th: 'bg-bg-light text-gray-600 font-semibold text-xs uppercase  px-6 py-4 border-b border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
-              tr: 'hover:bg-gray-50/50 transition-colors',
+              tr: 'hover:bg-gray-50 transition-colors',
               base: 'min-w-full',
             }}
           >
             <TableHeader columns={columns}>
               {(column) => (
-                <TableColumn key={column.key}>{column.name}</TableColumn>
+                <TableColumn
+                  key={column.key}
+                  className={
+                    column.key === 'fullName' ? 'text-left' : 'text-center'
+                  }
+                >
+                  {column.name}
+                </TableColumn>
               )}
             </TableHeader>
             <TableBody
@@ -243,7 +261,7 @@ export default function Participants() {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoadingEnrollments && totalPages > 1 && (
-          <div className="rounded-b-xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-2xl bg-gray-50 px-6 py-3">
             <div className="flex items-center justify-end-safe">
               <Pagination
                 showShadow

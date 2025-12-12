@@ -1,6 +1,13 @@
-"use client";
+'use client';
 
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider } from '@heroui/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+} from '@heroui/react';
 
 type Props = {
   title: string;
@@ -14,7 +21,7 @@ function Service(props: Props) {
   const { redirect, title, description, price, notes } = props;
 
   return (
-    <Card className="group hover:shadow-box rounded-xl border border-gray-300 p-2 shadow-none transition-all delay-75 duration-200 ease-in-out hover:-translate-y-2">
+    <Card className="group rounded-xl border border-gray-300 p-2 shadow-none">
       <CardHeader>
         <div className="text-primary flex w-full flex-wrap">
           <h1 className="mb-2 text-xl font-extrabold">{title}</h1>

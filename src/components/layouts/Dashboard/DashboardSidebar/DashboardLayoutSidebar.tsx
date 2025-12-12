@@ -77,7 +77,7 @@ function DashboardLayoutSidebar(props: Props) {
   return (
     <section
       className={cn(
-        'max-w-sidebar-panel z-40 flex h-screen w-full flex-col justify-between bg-gray-100 px-4 transition-all duration-200 lg:relative lg:flex',
+        'max-w-sidebar-panel bg-bg-light z-40 flex h-screen w-full flex-col justify-between px-4 transition-all duration-200 lg:relative lg:flex',
         {
           'hidden lg:flex': !isOpen,
         }

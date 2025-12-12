@@ -14,39 +14,39 @@ function AuthCard(props: Props) {
   const { handleOnPress, isLoading, heading, buttonLabel } = props;
 
   return (
-    <Card className="bg-bg-light !shadow-base flex h-full w-full items-center justify-center rounded-xl py-4">
+    <Card className="bg-white border border-border shadow-main flex h-full w-full items-center justify-center rounded-2xl py-10 px-6">
       <CardHeader>
-        <div className="mx-auto text-center">
-          <h1 className="text-text my-5 text-5xl font-bold">{heading}</h1>
-          <p className="text-text-muted">
-            Access a secure and trusted certificate
-            <br />
-            verification platform.
+        <div className="mx-auto text-center w-full">
+          <h1 className="text-text my-6 text-5xl font-extrabold tracking-tight">{heading}</h1>
+          <p className="text-text-muted text-base md:text-lg">
+            Akses platform verifikasi sertifikat yang aman dan terpercaya.
           </p>
         </div>
       </CardHeader>
-      <CardBody>
-        <div className="mx-auto w-[90%]">
+      <CardBody className="w-full">
+        <div className="mx-auto w-full max-w-md px-2 mt-4">
           <Button
             data-hover="false"
             data-active="false"
-            className="bg-primary w-full rounded-full text-lg font-bold text-white transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
+            className="bg-primary w-full h-12 rounded-full text-lg font-bold text-white transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:shadow-md"
             onPress={handleOnPress}
+            size="lg"
           >
             {isLoading ? (
               <Spinner
                 variant="wave"
                 color="current"
-                className="bottom-2 text-white"
+                size="sm"
+                className="text-white"
               />
             ) : (
               buttonLabel
             )}
           </Button>
-          <div className="mt-3 flex justify-center gap-1">
-            <LuLockKeyhole className="text-gray-600" />
-            <p className="text-text-muted text-center text-sm">
-              Secure blockchain-based certificate verification
+          <div className="mt-6 flex items-center justify-center gap-2 opacity-80">
+            <LuLockKeyhole className="text-text-muted h-4 w-4" />
+            <p className="text-text-muted text-center text-xs font-medium">
+              Verifikasi sertifikat berbasis blockchain yang aman
             </p>
           </div>
         </div>

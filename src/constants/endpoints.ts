@@ -4,6 +4,7 @@ const endpoints = {
   SCHEDULES: "/schedules",
   ENROLLMENTS: "/enrollments",
   VERIFICATIONS: "/verifications",
+  USERS: "/users",
 };
 
 export default endpoints;

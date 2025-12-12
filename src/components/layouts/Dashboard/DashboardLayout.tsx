@@ -19,9 +19,9 @@ function DashboardLayout(props: Props) {
   return (
     <>
       <Header title={title} />
-      <section className="max-w-screen-3xl 3xl:container bg-gray-100 flex">
+      <section className="max-w-screen-3xl 3xl:container bg-bg-light flex">
         <DashboardLayoutSidebar sidebarItems={SIDEBAR_ADMIN} isOpen={open} />
-        <div className="m-auto h-screen w-full overflow-y-auto bg-gray-100 p-6">
+        <div className="bg-bg-light m-auto h-screen w-full overflow-y-auto p-6">
           <DashboardNavbar
             onMenuToggle={() => setOpen(!open)}
             description={description}

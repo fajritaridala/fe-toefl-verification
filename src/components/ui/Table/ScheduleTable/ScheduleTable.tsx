@@ -1,13 +1,12 @@
 import { Key, ReactNode } from 'react';
+import { ScheduleItem } from '@features/admin';
 import {
-  RefreshCw,
-  Plus,
-  Calendar,
-  Filter,
-  PenLine,
-  Trash2,
-  Users,
-} from 'lucide-react';
+  ALL_MONTH_OPTION_VALUE,
+  ALL_SERVICE_OPTION_VALUE,
+  MonthOption,
+  ScheduleTableColumn,
+  ServiceOption,
+} from '@features/admin/schedules/Schedules.constants';
 import {
   Button,
   Chip,
@@ -28,16 +27,17 @@ import {
   TableRow,
 } from '@heroui/react';
 import type { Selection } from '@heroui/react';
-import moment from 'moment';
 import {
-  ALL_MONTH_OPTION_VALUE,
-  ALL_SERVICE_OPTION_VALUE,
-  MonthOption,
-  ScheduleTableColumn,
-  ServiceOption,
-} from '@features/admin/schedules/Schedules.constants';
+  Calendar,
+  Filter,
+  PenLine,
+  Plus,
+  RefreshCw,
+  Trash2,
+  Users,
+} from 'lucide-react';
+import moment from 'moment';
 import { LIMIT_LISTS } from '@/constants/list.constants';
-import { ScheduleItem } from '@features/admin';
 
 type Props = {
   columns: ScheduleTableColumn[];
@@ -92,16 +92,20 @@ const ScheduleTable = (props: Props) => {
   ];
   const monthSelectionValue = selectedMonth || ALL_MONTH_OPTION_VALUE;
 
-  const formatDateTimeRange = (date?: string | Date, start?: string, end?: string) => {
+  const formatDateTimeRange = (
+    date?: string | Date,
+    start?: string,
+    end?: string
+  ) => {
     const dayLabel = date ? moment(date).format('DD MMM YYYY') : '-';
-    const timeLabel = start && end ? `${moment(start).format('HH:mm')} - ${moment(end).format('HH:mm')}` : '';
+    const timeLabel =
+      start && end
+        ? `${moment(start).format('HH:mm')} - ${moment(end).format('HH:mm')}`
+        : '';
     return { dayLabel, timeLabel };
   };
 
-  const renderCell = (
-    schedule: ScheduleItem,
-    columnKey: Key
-  ): ReactNode => {
+  const renderCell = (schedule: ScheduleItem, columnKey: Key): ReactNode => {
     const registrants =
       typeof schedule.registrants === 'number' ? schedule.registrants : 0;
     const quota =
@@ -125,9 +129,7 @@ const ScheduleTable = (props: Props) => {
         return (
           <div className="flex flex-col gap-1">
             <p className="font-semibold text-gray-900">{dayLabel}</p>
-            {timeLabel && (
-              <p className="text-xs text-gray-500">{timeLabel}</p>
-            )}
+            {timeLabel && <p className="text-xs text-gray-500">{timeLabel}</p>}
           </div>
         );
       }
@@ -166,7 +168,7 @@ const ScheduleTable = (props: Props) => {
                 indicator: `rounded-full ${isFull ? 'bg-danger' : 'bg-primary'}`,
               }}
             />
-            <span className="text-xs text-gray-600 font-semibold">
+            <span className="text-xs font-semibold text-gray-600">
               {ratioLabel}
             </span>
           </div>
@@ -199,8 +201,8 @@ const ScheduleTable = (props: Props) => {
           <div className="flex justify-center">
             <Dropdown>
               <DropdownTrigger>
-                <Button 
-                  isIconOnly 
+                <Button
+                  isIconOnly
                   size="sm"
                   variant="light"
                   className="hover:text-primary text-gray-600"
@@ -286,15 +288,16 @@ const ScheduleTable = (props: Props) => {
       )}
 
       {/* Table Card */}
-      <div className="bg-white rounded-xl drop-shadow">
+      <div className="bg-bg-light shadow-box rounded-2xl border border-gray-200">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             {/* Filter Controls */}
-            <div className="flex flex-col gap-3 sm:flex-row flex-1">
+            <div className="flex flex-1 flex-col gap-3 sm:flex-row">
               <Select
                 selectedKeys={new Set([monthSelectionValue])}
                 onSelectionChange={handleMonthSelection}
+                radius="full"
                 variant="bordered"
                 labelPlacement="outside"
                 placeholder="Filter bulan"
@@ -303,7 +306,7 @@ const ScheduleTable = (props: Props) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-44"
                 classNames={{
-                  trigger: 'bg-white border-gray-200 hover:border-gray-300',
+                  trigger: 'bg-gray-50 drop-shadow',
                   value: 'text-sm font-semibold text-gray-700',
                 }}
               >
@@ -314,6 +317,7 @@ const ScheduleTable = (props: Props) => {
               <Select
                 selectedKeys={new Set([serviceSelectionValue])}
                 onSelectionChange={handleServiceSelection}
+                radius="full"
                 variant="bordered"
                 labelPlacement="outside"
                 placeholder="Filter layanan"
@@ -322,7 +326,7 @@ const ScheduleTable = (props: Props) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-52"
                 classNames={{
-                  trigger: 'bg-white border-gray-200 hover:border-gray-300',
+                  trigger: 'bg-gray-50 drop-shadow',
                   value: 'text-sm font-semibold text-gray-700',
                 }}
               >
@@ -332,8 +336,9 @@ const ScheduleTable = (props: Props) => {
               </Select>
               <Button
                 isIconOnly
+                radius="full"
                 variant="flat"
-                className="bg-white border border-gray-200 hover:border-gray-300 w-full sm:w-auto"
+                className="w-full border border-gray-200 bg-gray-50 drop-shadow hover:border-gray-300 sm:w-auto"
                 onPress={onRefresh}
                 aria-label="Refresh data"
               >
@@ -343,7 +348,8 @@ const ScheduleTable = (props: Props) => {
 
             {/* Add Button */}
             <Button
-              className="bg-primary text-white shadow-small font-semibold transition-all duration-200 hover:-translate-y-0.5"
+              radius="full"
+              className="bg-primary shadow-small font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
               startContent={<Plus size={18} />}
               onPress={onAdd}
             >
@@ -353,21 +359,26 @@ const ScheduleTable = (props: Props) => {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto rounded-b-xl">
+        <div className="overflow-x-auto rounded-b-2xl">
           <Table
             aria-label="Tabel jadwal"
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b text-center border-gray-200',
+              th: 'bg-bg-light text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
-              tr: 'hover:bg-gray-50/50 transition-colors',
+              tr: 'hover:bg-gray-50 transition-colors',
               base: 'min-w-full',
             }}
           >
             <TableHeader columns={columns}>
               {(column) => (
-                <TableColumn key={column.key} className={column.className}>
+                <TableColumn
+                  key={column.key}
+                  className={
+                    column.key === 'scheduleDate' ? 'text-left' : 'text-center'
+                  }
+                >
                   {column.label}
                 </TableColumn>
               )}
@@ -422,7 +433,7 @@ const ScheduleTable = (props: Props) => {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoading && totalPages > 1 && (
-          <div className="rounded-b-xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-2xl bg-gray-50 px-6 py-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {/* Limit Selector */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -430,16 +441,19 @@ const ScheduleTable = (props: Props) => {
                 <Select
                   selectedKeys={new Set([String(currentLimit)])}
                   onSelectionChange={handleLimitSelection}
+                  radius="full"
                   className="w-20"
                   disallowEmptySelection
                   size="sm"
                   classNames={{
-                    trigger: 'h-8 min-h-8 bg-white border border-gray-200',
+                    trigger: 'h-8 min-h-8 bg-gray-50 drop-shadow',
                     value: 'text-sm',
                   }}
                 >
                   {LIMIT_LISTS.map((option) => (
-                    <SelectItem key={String(option.value)}>{option.label}</SelectItem>
+                    <SelectItem key={String(option.value)}>
+                      {option.label}
+                    </SelectItem>
                   ))}
                 </Select>
                 <span>baris</span>

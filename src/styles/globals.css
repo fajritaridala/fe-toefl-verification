@@ -3,22 +3,34 @@
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 @theme {
-  /* custom color */
-  --color-bg-dark: hsl(0 0% 85%);
-  --color-bg: hsl(300 0% 95%);
-  --color-bg-light: hsl(300 50% 100%);
-  --color-text: hsl(300 0% 4%);
-  --color-text-muted: hsl(0 0% 50%);
-  --color-highlight: hsl(300 50% 100%);
-  --color-border: hsl(0 0% 50%);
-  --color-border-muted: hsl(211.49 94.39% 20.98%);
+  /* Clean Bento UI Color Palette (Light Mode) */
+  /* Background Halaman: Slate-50/100ish - Bersih, modern, tidak menyilaukan */
+  --color-bg-dark: hsl(210 40% 96.1%);
+
+  /* Background Card/Surface: Putih Murni */
+  --color-bg: hsl(0 0% 100%);
+
+  /* Background Highlight/Hover: Slate-50 */
+  --color-bg-light: hsl(210 40% 98%);
+
+  /* Typography */
+  --color-text: hsl(222.2 47.4% 11.2%); /* Slate-900 */
+  --color-text-muted: hsl(215.4 16.3% 46.9%); /* Slate-500 */
+
+  /* Borders */
+  --color-border: hsl(214.3 31.8% 91.4%); /* Slate-200 */
+  --color-border-muted: hsl(214.3 31.8% 91.4%);
+
+  /* Primary Accent: Tetap menggunakan nuansa sebelumnya, sedikit di-tune */
   --color-primary: hsl(239 33% 36%);
   --color-secondary: hsl(30.94 89.72% 58.04%);
-  --color-danger: hsl(359.67 95.77% 62.94%);
-  --color-warning: hsl(52 82% 24%);
-  --color-success: hsl(154 58% 29%);
-  --color-info: hsl(217 42% 43%);
-  --color-custom: hsl(239 33% 90%);
+
+  /* Status Colors */
+  --color-danger: hsl(0 84.2% 60.2%);
+  --color-warning: hsl(38 92% 50%);
+  --color-success: hsl(142.1 76.2% 36.3%);
+  --color-info: hsl(221.2 83.2% 53.3%);
+  --color-custom: hsl(239 33% 96%); /* Very light version of primary */
 
   /* custom space */
   --spacing-sidebar-panel: 15rem;
@@ -35,8 +47,15 @@
   --text-3xlarge: 1.75rem;
 
   /* custom shadow */
-  --shadow-base: 0 2px 2px hsl(0 0% 50%);
-  --shadow-box: 15px 15px 30px #bebebe, -15px -15px 30px #ffffff;
+  /* Bento Shadow: Soft, subtle, elevating */
+  --shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-box:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-main:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-neo: 8px 8px 16px hsl(210 40% 90%), -8px -8px 16px hsl(210 40% 100%);
+  --shadow-neo-inset:
+    inset 4px 4px 8px hsl(210 40% 90%), inset -4px -4px 8px hsl(210 40% 100%);
 
   /* custom animate */
   --animate-fade-top: fade-from-top 0.6s ease-in;
@@ -95,17 +114,24 @@
     }
     25% {
       transform: translate(4rem, -3rem);
-    } /* kanan-atas (segitiga) */
+    }
     50% {
       transform: translate(0, 2rem);
-    } /* bawah (segitiga) */
+    }
     75% {
       transform: translate(-3rem, 1.5rem);
-    } /* kiri-bawah (trapesium) */
+    }
     100% {
       transform: translate(0, 0);
     }
   }
+}
+
+body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text);
+  font-feature-settings:
+    'cv02', 'cv03', 'cv04', 'cv11'; /* Inter font features if available */
 }
 
 input.number-input-hide-stepper::-webkit-inner-spin-button,

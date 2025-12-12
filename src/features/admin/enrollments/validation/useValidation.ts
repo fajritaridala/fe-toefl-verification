@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type EnrollmentItem, enrollmentsService } from '@features/admin';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useEnrollments from '../shared/useEnrollments';
 
 export const useValidation = () => {
@@ -38,7 +38,7 @@ export const useValidation = () => {
     const items = (dataEnrollments?.data as EnrollmentItem[]) || [];
     return items.map((item, idx) => ({
       ...item,
-      __rowKey: item._id || item.participantId || `enrollment-${idx}`,
+      __rowKey: item.enrollId || item.participantId || `enrollment-${idx}`,
     }));
   }, [dataEnrollments]);
 
@@ -62,10 +62,14 @@ export const useValidation = () => {
         setPreviewModalOpen(false);
       }
     },
-    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
+    onError: (
+      error: Error & { response?: { data?: { message?: string } } }
+    ) => {
       console.error('Approve error:', error);
       console.error('Error response:', error?.response?.data);
-      alert(`Gagal menyetujui peserta: ${error?.response?.data?.message || error.message}`);
+      alert(
+        `Gagal menyetujui peserta: ${error?.response?.data?.message || error.message}`
+      );
     },
   });
 
@@ -86,10 +90,14 @@ export const useValidation = () => {
         setPreviewModalOpen(false);
       }
     },
-    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
+    onError: (
+      error: Error & { response?: { data?: { message?: string } } }
+    ) => {
       console.error('Reject error:', error);
       console.error('Error response:', error?.response?.data);
-      alert(`Gagal menolak peserta: ${error?.response?.data?.message || error.message}`);
+      alert(
+        `Gagal menolak peserta: ${error?.response?.data?.message || error.message}`
+      );
     },
   });
 

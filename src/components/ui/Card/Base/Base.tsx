@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from 'react';
-import { Card, cn } from '@heroui/react';
+import { cn } from '@heroui/react';
 
 type Props = {
   title: string;
@@ -13,35 +13,32 @@ type Props = {
 const BaseCard = (props: Props) => {
   const { icon, title, description, index } = props;
   return (
-    <Card
+    <div
       className={cn(
-        'rounded-sm rounded-t-none border-x-1 border-b-2 border-transparent p-8 shadow-none',
-        !index &&
-          'transition-all duration-300 hover:-translate-y-2 hover:shadow-xl',
-        {
-          'hover:!shadow-box rounded-2xl transition-all delay-75 duration-200 hover:-translate-y-2':
-            index,
-        }
+        "bg-white rounded-2xl p-8 flex flex-col items-center text-center",
+        "transition-all duration-300 hover:-translate-y-2",
+        // Shadow Neumorphism saat hover
+        "hover:shadow-[8px_8px_16px_rgba(209,217,230,0.4),_-8px_-8px_16px_rgba(255,255,255,0.7)]"
       )}
     >
       <div className="mb-6 flex justify-center">
         <div
           className={cn(
-            'bg-primary/10 text-primary w-fit rounded-full p-3 text-[2.3em]',
+            "rounded-full p-4",
             {
-              'bg-primary flex h-20 w-20 justify-center border text-white shadow-lg':
-                index,
+              "bg-primary/10 text-primary text-4xl": !index,
+              "bg-primary text-white text-3xl font-bold flex h-16 w-16 items-center justify-center": index,
             }
           )}
         >
-          {icon || <div className="">{index}</div>}
+          {icon || <div className="leading-none">{index}</div>}
         </div>
       </div>
-      <div className="text-text-muted text-center">
+      <div className="text-center">
         <h1 className="text-text mb-2 text-xl font-bold">{title}</h1>
-        <p>{description}</p>
+        <p className="text-text-muted text-sm">{description}</p>
       </div>
-    </Card>
+    </div>
   );
 };
 

@@ -1,21 +1,10 @@
-import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
-import {
-  Alert,
-  Button,
-  Card,
-  CardBody,
-  Form,
-  Input,
-  Spinner,
-} from '@heroui/react';
-import { useSearchParams } from 'next/navigation';
+import { Alert, Button, Card, CardBody, CardHeader, Form, Input } from '@heroui/react';
+import { motion } from 'framer-motion';
 import AuthCard from '@/components/ui/Card/Auth';
 import { useRegister } from './useRegister';
 
 const Register = () => {
-  const searchParams = useSearchParams();
-  const addressQuery = searchParams?.get('address') ?? '';
   const {
     connectMetamask,
     handleRegister,
@@ -27,67 +16,48 @@ const Register = () => {
     isLoading,
     isConnected,
     errors,
-    setIsConnected,
-    setIsAddress,
-    handleAddressQuery,
   } = useRegister();
-
-  useEffect(() => {
-    const handleDecrypt = async () => {
-      if (addressQuery) {
-        try {
-          const decrypted = await handleAddressQuery(addressQuery);
-          setIsAddress(decrypted);
-          setIsConnected(true);
-        } catch {
-          // Error decrypting address
-        }
-      }
-    };
-
-    handleDecrypt();
-  }, [
-    addressQuery,
-    handleAddressQuery,
-    setIsAddress,
-    setIsConnected,
-    setAlertOpen,
-  ]);
 
   return (
     <>
       {alertOpen && (
-        <div className="fixed top-[1.5rem] left-1/2 z-50 w-full max-w-md -translate-x-1/2">
+         <div className="fixed top-6 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
           <Alert
             color="danger"
-            title="Registration Error"
+            title="Registrasi Gagal"
             description={alertMessage}
             isClosable
             onClose={() => setAlertOpen(false)}
+            variant="faded"
+            // Memastikan rounded-xl dan styling lainnya konsisten
+            className="shadow-box border-danger-200 bg-white/90 rounded-xl border backdrop-blur-sm"
           />
         </div>
       )}
 
-      <div className="flex min-h-screen w-full items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="flex w-full items-center justify-center px-4 py-8 sm:px-6 lg:px-8"
+      >
         {!isConnected ? (
-          <div className="flex w-full max-w-md md:max-w-lg lg:max-w-xl">
-            <div className="mx-auto">
-              <AuthCard
-                heading="Sign Up"
-                buttonLabel="Connect MetaMask"
-                isLoading={isLoading}
-                handleOnPress={connectMetamask}
-              />
-            </div>
+          <div className="w-full max-w-md">
+            <AuthCard
+              heading="Daftar"
+              buttonLabel="Hubungkan MetaMask"
+              isLoading={isLoading}
+              handleOnPress={connectMetamask}
+            />
           </div>
         ) : (
-          <Card className="w-full max-w-md p-4 md:max-w-lg md:p-6 lg:max-w-xl lg:p-8">
-            <CardBody className="space-y-6">
-              <h1 className="text-primary-800 text-center text-2xl font-bold md:text-3xl">
-                Sign Up
-              </h1>
-              <Form onSubmit={handleSubmit(handleRegister)}>
-                <div className="w-full space-y-8 md:space-y-10">
+          <Card className="bg-white border border-border shadow-main w-full max-w-lg rounded-2xl p-6 md:p-8">
+             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+               <h1 className="text-text text-3xl font-bold tracking-tight">Buat Akun</h1>
+               <p className="text-text-muted mt-2 text-sm">Silakan isi detail Anda untuk melanjutkan.</p>
+             </CardHeader>
+            <CardBody className="overflow-visible py-6">
+              <Form onSubmit={handleSubmit(handleRegister)} className="flex flex-col gap-6">
                   <Controller
                     name="username"
                     control={control}
@@ -95,12 +65,15 @@ const Register = () => {
                       <Input
                         {...field}
                         isRequired
-                        label="Username"
+                        label="Nama Pengguna"
                         labelPlacement="outside"
-                        placeholder="Enter your username"
+                        placeholder="Masukan nama pengguna Anda"
                         type="text"
                         variant="bordered"
-                        autoComplete="off"
+                        classNames={{
+                           inputWrapper: "border-border shadow-none hover:border-primary/50 focus-within:!border-primary rounded-lg transition-colors",
+                           label: "text-text-muted font-medium mb-1",
+                        }}
                         isInvalid={!!errors.username}
                         errorMessage={errors.username?.message}
                       />
@@ -115,10 +88,13 @@ const Register = () => {
                         isRequired
                         label="Email"
                         labelPlacement="outside"
-                        placeholder="Enter your email"
+                        placeholder="nama@contoh.com"
                         type="email"
-                        variant="bordered"
-                        autoComplete="off"
+                         variant="bordered"
+                        classNames={{
+                           inputWrapper: "border-border shadow-none hover:border-primary/50 focus-within:!border-primary rounded-lg transition-colors",
+                           label: "text-text-muted font-medium mb-1",
+                        }}
                         isInvalid={!!errors.email}
                         errorMessage={errors.email?.message}
                       />
@@ -130,39 +106,35 @@ const Register = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        label="Role Token"
+                        label="Token Peran"
                         labelPlacement="outside"
-                        placeholder="optional"
+                        placeholder="Opsional"
                         type="text"
-                        variant="bordered"
-                        autoComplete="off"
+                         variant="bordered"
+                        classNames={{
+                           inputWrapper: "border-border shadow-none hover:border-primary/50 focus-within:!border-primary rounded-lg transition-colors",
+                           label: "text-text-muted font-medium mb-1",
+                        }}
                         isInvalid={!!errors.roleToken}
                         errorMessage={errors.roleToken?.message}
                       />
                     )}
                   />
-                </div>
+                
                 <Button
                   color="primary"
                   type="submit"
-                  variant="solid"
-                  className="text-md bg-primary-800 mt-6 w-full font-semibold text-white"
+                  size="lg"
+                  className="bg-primary shadow-lg shadow-primary/20 mt-4 w-full rounded-full font-bold text-white transition-all duration-100 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:shadow-md"
+                  isLoading={isLoading}
                 >
-                  {isLoading ? (
-                    <Spinner
-                      variant="wave"
-                      color="current"
-                      className="text-white"
-                    />
-                  ) : (
-                    'Submit'
-                  )}
+                  {isLoading ? 'Membuat Akun...' : 'Daftar'}
                 </Button>
               </Form>
             </CardBody>
           </Card>
         )}
-      </div>
+      </motion.div>
     </>
   );
 };

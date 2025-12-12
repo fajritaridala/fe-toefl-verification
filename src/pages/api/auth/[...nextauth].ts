@@ -1,27 +1,27 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import authServices from "@features/auth/services/auth.service";
-import { AUTH_SECRET } from "@/utils/config/env";
-import { SessionExt, UserExt } from "@features/auth/types/auth.types";
+import authServices from '@features/auth/services/auth.service';
+import { SessionExt, UserExt } from '@features/auth/types/auth.types';
+import NextAuth, { type NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { AUTH_SECRET } from '@/utils/config/env';
 
 const authOptions: NextAuthOptions = {
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
     maxAge: 60 * 24,
   },
   secret: AUTH_SECRET,
   providers: [
     CredentialsProvider({
-      id: "credentials",
-      name: "MetaMask",
+      id: 'credentials',
+      name: 'MetaMask',
       credentials: {
-        address: { label: "address", type: "text" },
+        address: { label: 'address', type: 'text' },
       },
-      async authorize(credentials: Record<"address", string> | undefined) {
+      async authorize(credentials: Record<'address', string> | undefined) {
         const address = credentials?.address as string | undefined;
         try {
           if (!address) {
-            throw new Error("address tidak diterima");
+            throw new Error('address tidak diterima');
           }
 
           const result = await authServices.login(address);
@@ -41,6 +41,7 @@ const authOptions: NextAuthOptions = {
             user.accessToken = accessToken;
             return user;
           }
+
           return null;
         } catch (error) {
           const err = error as Error;

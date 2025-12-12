@@ -1,5 +1,6 @@
 import { Key, ReactNode } from 'react';
-import { RefreshCw, Search, Plus, PenLine, Trash2 } from 'lucide-react';
+import { ServiceItem } from '@features/admin';
+import { ServiceTableColumn } from '@features/admin/services/Services.constants';
 import {
   Button,
   Dropdown,
@@ -16,8 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import { ServiceTableColumn } from '@features/admin/services/Services.constants';
-import { ServiceItem } from '@features/admin';
+import { PenLine, Plus, RefreshCw, Search, Trash2 } from 'lucide-react';
 import toRupiah from '@/utils/toRupiah';
 
 type Props = {
@@ -55,30 +55,39 @@ const ServiceTable = (props: Props) => {
     onDelete,
   } = props;
 
-  const renderCell = (
-    service: ServiceItem,
-    columnKey: Key
-  ): ReactNode => {
+  const renderCell = (service: ServiceItem, columnKey: Key): ReactNode => {
     switch (columnKey) {
       case 'name':
         return <p className="font-semibold text-gray-900">{service.name}</p>;
       case 'price':
-        return <p className="font-medium text-gray-700">{toRupiah(service.price)}</p>;
+        return (
+          <p className="text-center font-medium text-gray-700">
+            {toRupiah(service.price)}
+          </p>
+        );
       case 'notes':
-        return service.notes ? (
-          <p className="text-sm text-gray-700">{service.notes}</p>
-        ) : (
-          <span className="text-sm text-gray-400">-</span>
+        return (
+          <div className="text-center">
+            {service.notes ? (
+              <p className="text-sm text-gray-700">{service.notes}</p>
+            ) : (
+              <span className="text-sm text-gray-400">-</span>
+            )}
+          </div>
         );
       case 'description':
-        return <p className="text-sm text-gray-700">{service.description}</p>;
+        return (
+          <p className="text-center text-sm text-gray-700">
+            {service.description}
+          </p>
+        );
       case 'actions':
         return (
-          <div className="flex justify-center">
+          <div className="text-center">
             <Dropdown>
               <DropdownTrigger>
-                <Button 
-                  isIconOnly 
+                <Button
+                  isIconOnly
                   size="sm"
                   variant="light"
                   className="hover:text-primary text-gray-600"
@@ -122,7 +131,7 @@ const ServiceTable = (props: Props) => {
       )}
 
       {/* Table Card */}
-      <div className="bg-white rounded-xl drop-shadow">
+      <div className="bg-bg-light shadow-box rounded-2xl border border-gray-200">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -130,6 +139,7 @@ const ServiceTable = (props: Props) => {
             <div className="flex flex-1 gap-2">
               <Input
                 isClearable
+                radius="full"
                 placeholder="Cari layanan..."
                 value={currentSearch}
                 onValueChange={onSearch}
@@ -137,13 +147,14 @@ const ServiceTable = (props: Props) => {
                 startContent={<Search className="h-4 w-4 text-gray-400" />}
                 classNames={{
                   base: 'max-w-md',
-                  inputWrapper: 'bg-white border border-gray-200 hover:border-gray-300',
+                  inputWrapper: 'bg-gray-50 drop-shadow',
                 }}
               />
               <Button
                 isIconOnly
+                radius="full"
                 variant="flat"
-                className="bg-white border border-gray-200 hover:border-gray-300"
+                className="border border-gray-200 bg-white hover:border-gray-300"
                 onPress={onRefresh}
                 aria-label="Refresh data"
               >
@@ -153,7 +164,8 @@ const ServiceTable = (props: Props) => {
 
             {/* Add Button */}
             <Button
-              className="bg-primary text-white shadow-small font-semibold transition-all duration-200 hover:-translate-y-0.5"
+              radius="full"
+              className="bg-primary shadow-small font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
               startContent={<Plus size={18} />}
               onPress={onAdd}
             >
@@ -163,21 +175,28 @@ const ServiceTable = (props: Props) => {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto rounded-b-xl">
+        <div className="overflow-x-auto rounded-b-2xl">
           <Table
             aria-label="Tabel layanan"
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase tracking-wide px-6 py-4 border-b text-center border-gray-200',
+              th: 'bg-bg-light text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
-              tr: 'hover:bg-gray-50/50 transition-colors',
+              tr: 'hover:bg-gray-50 transition-colors',
               base: 'min-w-full',
             }}
           >
             <TableHeader columns={columns}>
               {(column) => (
-                <TableColumn key={column.key}>{column.label}</TableColumn>
+                <TableColumn
+                  key={column.key}
+                  className={
+                    column.key === 'name' ? 'text-left' : 'text-center'
+                  }
+                >
+                  {column.label}
+                </TableColumn>
               )}
             </TableHeader>
             <TableBody
@@ -232,7 +251,7 @@ const ServiceTable = (props: Props) => {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoading && totalPages > 1 && (
-          <div className="rounded-b-xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-2xl bg-gray-50 px-6 py-3">
             <div className="flex items-center justify-end">
               <Pagination
                 showShadow

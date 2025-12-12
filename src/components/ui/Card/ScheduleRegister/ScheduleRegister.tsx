@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
 import { ChangeEvent, RefObject } from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import { LuCloudUpload, LuFileCheck } from 'react-icons/lu';
+import { ScheduleRegister } from '@features/admin';
 import {
   Button,
   Card,
@@ -15,7 +16,6 @@ import {
   SelectItem,
   cn,
 } from '@heroui/react';
-import { ScheduleRegister } from '@features/admin';
 
 type Props = {
   handleSubmitAction: (
@@ -50,7 +50,7 @@ export default function ScheduleRegisterCard(props: Props) {
   } = props;
 
   return (
-    <Card className="w-full max-w-2xl rounded-lg border border-gray-200 p-6 shadow-lg">
+    <Card className="w-full max-w-2xl rounded-2xl border border-gray-200 p-6 shadow-none">
       <CardHeader>
         <div className="w-full">
           <h1 className="text-primary-800 mb-2 text-3xl font-bold">
@@ -263,6 +263,7 @@ export default function ScheduleRegisterCard(props: Props) {
           <div className="flex justify-end gap-4">
             <Button
               data-hover="false"
+              radius="full"
               onPress={handleGoBackAction}
               className="border-warning text-warning hover:bg-warning border-2 bg-transparent font-bold transition-all delay-75 duration-100 hover:-translate-y-1 hover:text-white active:translate-y-0.5"
             >
@@ -270,6 +271,7 @@ export default function ScheduleRegisterCard(props: Props) {
             </Button>
             <Button
               data-hover="false"
+              radius="full"
               color="primary"
               type="submit"
               isLoading={isLoading}

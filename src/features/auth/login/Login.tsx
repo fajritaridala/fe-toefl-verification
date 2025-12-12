@@ -9,23 +9,23 @@ const Login = () => {
   return (
     <>
       {alertOpen && (
-        <div className="fixed top-[1.5rem] left-1/2 z-50 w-full max-w-md -translate-x-1/2">
+        <div className="fixed top-6 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
           <Alert
             color="danger"
-            title="Login Error"
+            title="Gagal Masuk"
             description={alertMessage}
             isClosable
             onClose={() => setAlertOpen(false)}
-            className="shadow-main rounded-sm"
+            variant="faded"
+            // Memastikan rounded-xl dan styling lainnya konsisten
+            className="shadow-box border-danger-200 bg-white/90 rounded-xl border backdrop-blur-sm"
           />
         </div>
       )}
-      <div className="bg-primary absolute top-40 left-80 h-32 w-32 rounded-full blur-2xl" />
-      <div className="bg-secondary absolute right-80 bottom-40 h-32 w-32 rounded-full blur-2xl" />
       <div className="w-lg">
         <AuthCard
-          heading="Login"
-          buttonLabel="Connect MetaMask"
+          heading="Masuk"
+          buttonLabel="Hubungkan MetaMask"
           isLoading={isLoading}
           handleOnPress={handleLogin}
         />

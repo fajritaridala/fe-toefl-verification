@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { formatDate } from '@/lib/utils';
 
 type ParticipantData = {
-  _id: string;
+  enrollId: string;
   fullName: string;
   nim: string;
   email?: string;
@@ -45,14 +45,14 @@ export default function QuickPreviewModal({
   if (!participant) return null;
 
   const handleApprove = () => {
-    if (participant?._id) {
-      onApprove(participant._id);
+    if (participant?.enrollId) {
+      onApprove(participant.enrollId);
     }
   };
 
   const handleReject = () => {
-    if (participant?._id) {
-      onReject(participant._id);
+    if (participant?.enrollId) {
+      onReject(participant.enrollId);
     }
   };
 
