@@ -32,7 +32,7 @@ export const useScores = () => {
   } | null>(null);
   const [scoreModalOpen, setScoreModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
-  const [blockchainStatus, setBlockchainStatus] = useState<
+  const [blockchainStatus, setBlockchainStatus] = useState< 
     | 'idle'
     | 'submitting'
     | 'uploading-ipfs'
@@ -72,13 +72,13 @@ export const useScores = () => {
     const items = (dataEnrollments?.data as EnrollmentItem[]) || [];
     return items.map((item, idx) => ({
       ...item,
-      __rowKey: item._id || item.participantId || `score-${idx}`,
+      __rowKey: item.enrollId || item.participantId || `score-${idx}`,
     }));
   }, [dataEnrollments]);
 
   const totalPages = dataEnrollments?.pagination?.totalPages || 1;
 
-  // Score submission mutation (Step 1 & 2: Backend + IPFS)
+  // Score submission mutation
   const { mutate: submitScore, isPending: isSubmittingScore } = useMutation({
     mutationFn: async ({
       enrollId,
@@ -89,11 +89,6 @@ export const useScores = () => {
       participantId: string;
       scores: { listening: number; structure: number; reading: number };
     }) => {
-      console.log('📤 Step 1: Submitting scores to backend...');
-      console.log('  - Enroll ID:', enrollId);
-      console.log('  - Participant ID:', participantId);
-      console.log('  - Scores:', scores);
-      
       setBlockchainStatus('submitting');
       setStatusMessage('Mengirim nilai ke server...');
 
@@ -102,91 +97,50 @@ export const useScores = () => {
         participantId,
         scores
       );
-      console.log('✅ Backend response:', response);
 
       return response.data as SubmitScoreResponse;
     },
     onSuccess: async (response) => {
-      console.log('✅ Step 2: Backend processing completed');
-      console.log('  - Full response:', response);
-
       if (!response.data) {
         throw new Error('Invalid response from backend');
       }
 
+      console.log(response)
       const { hash, cid, participantId, enrollId } = response.data;
 
       if (!hash || !cid) {
         throw new Error('Hash or CID missing from backend response');
       }
 
-      console.log('📦 Received from backend:');
-      console.log('  - Hash:', hash);
-      console.log('  - CID:', cid);
-      console.log('  - Participant ID:', participantId);
-      console.log('  - Enroll ID:', enrollId);
-
       try {
         // Step 3: Store to blockchain
         setBlockchainStatus('storing-blockchain');
         setStatusMessage('Menyimpan ke blockchain...');
-        console.log('🔗 Step 3: Storing to blockchain...');
 
-        const blockchainResult = await storeToBlockchain({ hash, cid });
-
-        console.log('✅ Blockchain transaction successful!');
-        console.log('  - Transaction Hash:', blockchainResult.transactionHash);
-        console.log('  - Block Number:', blockchainResult.blockNumber);
+        await storeToBlockchain({ hash, cid });
 
         // Step 4: Notify backend about blockchain success
         setBlockchainStatus('updating-status');
         setStatusMessage('Memperbarui status peserta...');
-        console.log('📤 Step 4: Notifying backend about blockchain success...');
-        console.log('  - Participant ID:', participantId);
-        console.log('  - Enroll ID:', enrollId);
-        console.log('  - Hash:', hash);
 
         try {
-          // Use enrollId and participantId for blockchain-success endpoint
-          const updateResponse = await enrollmentsService.blockchainSuccess(
+          await enrollmentsService.blockchainSuccess(
             enrollId,
             participantId,
             hash
           );
-          console.log('✅ Backend status updated successfully!');
-          console.log('  - Response:', updateResponse);
         } catch (backendError) {
           const err = backendError as Error & { 
-            response?: { 
-              status?: number;
-              data?: { message?: string; [key: string]: unknown };
-              statusText?: string;
-            } 
+            response?: { data?: { message?: string } } 
           };
           
-          console.error('❌ Step 4 Failed: Backend status update error');
-          console.error('  - Error message:', err.message);
-          console.error('  - HTTP status:', err.response?.status);
-          console.error('  - Status text:', err.response?.statusText);
-          console.error('  - Response data:', err.response?.data);
-          console.error('  - Participant ID used:', participantId);
-          console.error('  - Enroll ID:', enrollId);
-          console.error('  - Hash used:', hash);
+          console.error('Backend status update error:', err);
           
-          // Show detailed error to user
           alert(
             `⚠️ Blockchain berhasil, tapi update database gagal!\n\n` +
             `Error: ${err.response?.data?.message || err.message}\n` +
-            `HTTP Status: ${err.response?.status || 'Unknown'}\n\n` +
-            `Participant ID: ${participantId}\n` +
-            `Enroll ID: ${enrollId}\n` +
-            `Hash: ${hash.substring(0, 20)}...\n\n` +
-            `Sertifikat sudah ada di blockchain.\n` +
-            `Silakan hubungi administrator untuk update manual.`
+            `Sertifikat sudah ada di blockchain. Silakan hubungi administrator.`
           );
-          
-          // Don't throw - blockchain success is more important
-          // Backend can be updated manually later if needed
         }
 
         setBlockchainStatus('success');
@@ -196,13 +150,7 @@ export const useScores = () => {
         queryClient.invalidateQueries({ queryKey: ['enrollments'] });
 
         // Show success notification
-        alert(
-          `🎉 Sertifikat berhasil disimpan!\n\n` +
-            `Transaction Hash: ${blockchainResult.transactionHash}\n` +
-            `Block Number: ${blockchainResult.blockNumber}\n` +
-            `IPFS CID: ${cid}\n\n` +
-            `Status peserta berhasil diperbarui menjadi "selesai".`
-        );
+        alert(`🎉 Sertifikat berhasil disimpan dan diverifikasi di blockchain!`);
 
         // Close modal after short delay
         setTimeout(() => {
@@ -210,26 +158,25 @@ export const useScores = () => {
           setSelectedParticipant(null);
           setBlockchainStatus('idle');
           setStatusMessage('');
-        }, 2000);
+        }, 1500);
+
       } catch (blockchainError) {
         const err = blockchainError as Error;
-        console.error('❌ Blockchain error:', err);
+        console.error('Blockchain error:', err);
         setBlockchainStatus('error');
-        setStatusMessage(`Error: ${err.message}`);
+        setStatusMessage(`Error Blockchain: ${err.message}`);
 
         alert(
           `❌ Gagal menyimpan ke blockchain!\n\n` +
-            `Error: ${err.message}\n\n` +
-            `Nilai sudah tersimpan di database, tetapi belum di blockchain.\n` +
-            `Silakan hubungi administrator.`
+            `Error: ${err.message}\n` +
+            `Nilai tersimpan di database, tapi gagal di blockchain.`
         );
       }
     },
     onError: (error: Error) => {
-      console.error('❌ Score submission error:', error);
+      console.error('Submission error:', error);
       setBlockchainStatus('error');
       setStatusMessage(`Error: ${error.message}`);
-
       alert(`❌ Gagal mengirim nilai:\n${error.message}`);
 
       // Reset status after error
@@ -243,7 +190,7 @@ export const useScores = () => {
   // Handlers
   const handleOpenScoreModal = useCallback((participant: EnrollmentItem) => {
     setSelectedParticipant({
-      enrollId: participant._id,
+      enrollId: participant.enrollId,
       participantId: participant.participantId,
       fullName: participant.fullName,
       nim: participant.nim,

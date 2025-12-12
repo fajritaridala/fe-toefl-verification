@@ -1,7 +1,7 @@
 "use client";
 
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { ScheduleData, useCalendar } from '@features/service/hooks/useCalendar';
+import { ScheduleData, useCalendar } from '@/hooks/useCalendar';
 
 type CalendarCardProps = {
   data: ScheduleData[];

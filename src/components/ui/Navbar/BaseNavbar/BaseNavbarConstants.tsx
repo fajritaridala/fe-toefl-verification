@@ -1,4 +1,4 @@
-import { LuBookmark, LuLogOut, LuUser } from 'react-icons/lu';
+import { FileCheck, User, Bookmark, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
 type RouterLike = {
@@ -15,7 +15,7 @@ const NAVBAR_DROPDOWN_ITEMS = (router: RouterLike) => [
   {
     key: 'user_profile',
     label: 'Profil saya',
-    icon: <LuUser strokeWidth={2} className="text-sm" />,
+    icon: <User strokeWidth={2} className="h-4 w-4" />,
     onPress: () => {
       router.push('/profile');
     },
@@ -23,15 +23,23 @@ const NAVBAR_DROPDOWN_ITEMS = (router: RouterLike) => [
   {
     key: 'user_activity',
     label: 'Aktivitas saya',
-    icon: <LuBookmark strokeWidth={2} className="text-sm" />,
+    icon: <Bookmark strokeWidth={2} className="h-4 w-4" />,
     onPress: () => {
       router.push('/profile/activity');
     },
   },
   {
+    key: 'user_certificates',
+    label: 'Sertifikat saya',
+    icon: <FileCheck strokeWidth={2} className="h-4 w-4" />,
+    onPress: () => {
+      router.push('/certificate');
+    },
+  },
+  {
     key: 'logout',
     label: 'Logout',
-    icon: <LuLogOut strokeWidth={2} className='text-sm' />,
+    icon: <LogOut strokeWidth={2} className='h-4 w-4' />,
     onPress: () => {
       signOut({ callbackUrl: '/auth/login' });
     },

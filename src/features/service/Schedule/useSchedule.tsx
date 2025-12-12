@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { schedulesService } from '@features/admin';
 import { ScheduleItem } from '@features/admin';
-import { ScheduleData } from '@features/service/hooks/useCalendar';
+import { ScheduleData } from '@/hooks/useCalendar';
 
 const useSchedule = (serviceId: string) => {
   const { data } = useQuery({

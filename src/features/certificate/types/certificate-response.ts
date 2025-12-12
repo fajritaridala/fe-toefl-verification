@@ -1,4 +1,6 @@
-export interface ICertificatePayload {
+export interface ICertificateData {
+  // Field disesuaikan dengan isi JSON di Pinata/IPFS
+  // Sesuai dengan ICertificatePayload yang sudah ada di src/types/certificate.ts
   nama_lengkap: string;
   jenis_kelamin: string;
   tanggal_lahir: number;
@@ -11,12 +13,5 @@ export interface ICertificatePayload {
   nilai_structure: number;
   nilai_reading: number;
   nilai_total: number;
-}
-
-export interface ICertificateRender
-  extends Omit<ICertificatePayload, "tanggal_lahir" | "tanggal_tes"> {
-  tanggal_lahir: string;
-  tanggal_tes: string;
-  nomor_serial: string;
-  tanggal_valid: string;
+  // Metadata tambahan dari IPFS jika ada
 }

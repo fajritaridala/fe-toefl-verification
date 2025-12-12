@@ -72,7 +72,7 @@ export interface SchedulePayload {
 }
 
 export interface EnrollmentItem {
-  _id: string;
+  enrollId: string;
   scheduleId: string;
   participantId: string;
   fullName: string;
