@@ -22,8 +22,8 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
   });
 
   const handleDelete = () => {
-    if (!schedule?._id) return;
-    deleteSchedule(schedule._id);
+    if (!schedule?.scheduleId) return;
+    deleteSchedule(schedule.scheduleId);
   };
 
   const serviceName = schedule?.serviceName || 'tanpa nama';

@@ -10,7 +10,7 @@ export type ScheduleData = {
   serviceName: string;
   quota: number;
   registrants: number;
-  status: 'aktif' | 'tidak aktif';
+  status: 'aktif' | 'penuh' | 'tidak aktif';
 };
 
 export const useCalendar = (data: ScheduleData[]) => {

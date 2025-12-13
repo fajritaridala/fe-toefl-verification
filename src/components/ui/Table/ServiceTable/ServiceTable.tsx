@@ -62,18 +62,8 @@ const ServiceTable = (props: Props) => {
       case 'price':
         return (
           <p className="text-center font-medium text-gray-700">
-            {toRupiah(service.price)}
+            {toRupiah(service.price ?? 0)}
           </p>
-        );
-      case 'notes':
-        return (
-          <div className="text-center">
-            {service.notes ? (
-              <p className="text-sm text-gray-700">{service.notes}</p>
-            ) : (
-              <span className="text-sm text-gray-400">-</span>
-            )}
-          </div>
         );
       case 'description':
         return (
@@ -131,7 +121,7 @@ const ServiceTable = (props: Props) => {
       )}
 
       {/* Table Card */}
-      <div className="bg-bg-light shadow-box rounded-2xl border border-gray-200">
+      <div className="bg-white shadow-sm rounded-xl border border-gray-100">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -147,7 +137,7 @@ const ServiceTable = (props: Props) => {
                 startContent={<Search className="h-4 w-4 text-gray-400" />}
                 classNames={{
                   base: 'max-w-md',
-                  inputWrapper: 'bg-gray-50 drop-shadow',
+                  inputWrapper: 'bg-gray-50 drop-shadow-sm',
                 }}
               />
               <Button
@@ -165,7 +155,7 @@ const ServiceTable = (props: Props) => {
             {/* Add Button */}
             <Button
               radius="full"
-              className="bg-primary shadow-small font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
+              className="bg-primary shadow-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
               startContent={<Plus size={18} />}
               onPress={onAdd}
             >
@@ -175,13 +165,13 @@ const ServiceTable = (props: Props) => {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto rounded-b-2xl">
+        <div className="overflow-x-auto rounded-b-xl">
           <Table
             aria-label="Tabel layanan"
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-bg-light text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
+              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
               tr: 'hover:bg-gray-50 transition-colors',
               base: 'min-w-full',
@@ -212,7 +202,7 @@ const ServiceTable = (props: Props) => {
               }
               emptyContent={
                 <div className="flex flex-col items-center justify-center py-12">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-50">
                     <svg
                       className="h-8 w-8 text-gray-400"
                       fill="none"
@@ -239,7 +229,7 @@ const ServiceTable = (props: Props) => {
               }
             >
               {(item) => (
-                <TableRow key={item._id}>
+                <TableRow key={(item as any).__rowKey || item._id}>
                   {(columnKey) => (
                     <TableCell>{renderCell(item, columnKey)}</TableCell>
                   )}
@@ -251,7 +241,7 @@ const ServiceTable = (props: Props) => {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoading && totalPages > 1 && (
-          <div className="rounded-b-2xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-xl bg-gray-50 px-6 py-3 border-t border-gray-100">
             <div className="flex items-center justify-end">
               <Pagination
                 showShadow

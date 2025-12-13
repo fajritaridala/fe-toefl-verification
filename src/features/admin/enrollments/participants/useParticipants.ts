@@ -49,7 +49,7 @@ export const useParticipants = () => {
   const tableItems = useMemo(() => {
     return filteredParticipants.map((participant, idx) => {
       const baseKey =
-        participant._id ||
+        participant.enrollId ||
         participant.participantId ||
         `${participant.nim}-${participant.scheduleId}` ||
         `${participant.fullName}-${participant.scheduleId}`;

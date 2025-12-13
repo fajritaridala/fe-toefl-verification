@@ -94,8 +94,8 @@ const useAddScheduleModal = ({
             : undefined,
       };
 
-      if (mode === 'edit' && schedule?._id) {
-        return schedulesService.updateSchedule(schedule._id, payload);
+      if (mode === 'edit' && schedule?.scheduleId) {
+        return schedulesService.updateSchedule(schedule.scheduleId, payload);
       }
       return schedulesService.createSchedule(payload);
     },

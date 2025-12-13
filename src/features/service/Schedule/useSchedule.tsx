@@ -15,7 +15,7 @@ const useSchedule = (serviceId: string) => {
     () => {
       const schedules = (data?.data.data as ScheduleItem[]) || [];
       return schedules.map((item) => ({
-        _id: item._id,
+        _id: item.scheduleId,
         scheduleDate: item.scheduleDate,
         serviceName: item.serviceName,
         quota: item.quota || 0,

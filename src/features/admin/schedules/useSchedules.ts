@@ -58,7 +58,7 @@ const useSchedules = () => {
         limit: Number(currentLimit),
         month:
           currentMonth && currentMonth !== ALL_MONTH_OPTION_VALUE
-            ? Number(currentMonth)
+            ? currentMonth
             : undefined,
         serviceId: currentService || undefined,
       });
@@ -79,10 +79,13 @@ const useSchedules = () => {
     staleTime: 1000 * 60 * 5,
   });
 
-  const schedules = useMemo(
-    () => schedulesResponse?.data || [],
-    [schedulesResponse]
-  );
+  const schedules = useMemo(() => {
+    const items = schedulesResponse?.data || [];
+    return items.map((item, idx) => ({
+      ...item,
+      __rowKey: item.scheduleId || `schedule-${idx}`,
+    }));
+  }, [schedulesResponse]);
 
   const pagination = useMemo(
     () => schedulesResponse?.pagination,

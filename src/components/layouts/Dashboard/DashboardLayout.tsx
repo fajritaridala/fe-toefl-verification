@@ -21,13 +21,15 @@ function DashboardLayout(props: Props) {
       <Header title={title} />
       <section className="max-w-screen-3xl 3xl:container bg-bg-light flex">
         <DashboardLayoutSidebar sidebarItems={SIDEBAR_ADMIN} isOpen={open} />
-        <div className="bg-bg-light m-auto h-screen w-full overflow-y-auto p-6">
+        <div className="bg-gray-50 m-auto h-screen w-full overflow-y-auto">
           <DashboardNavbar
             onMenuToggle={() => setOpen(!open)}
             description={description}
             heading={title}
           />
-          {children}
+          <main className="p-6">
+            {children}
+          </main>
         </div>
       </section>
     </>

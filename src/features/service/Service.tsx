@@ -49,8 +49,7 @@ const Service = () => {
                   key={item._id}
                   title={item.name}
                   description={item.description}
-                  price={toRupiah(item.price)}
-                  notes={item.notes}
+                  price={toRupiah(item.price ?? 0)}
                   redirect={() => handleRedirect(item._id)}
                 />
               ))}

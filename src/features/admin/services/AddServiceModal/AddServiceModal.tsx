@@ -118,19 +118,6 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
                   );
                 }}
               />
-
-              <Controller
-                name="notes"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    label="Catatan"
-                    labelPlacement="outside"
-                    placeholder="Opsional, contoh: Termasuk konsultasi"
-                  />
-                )}
-              />
             </ModalBody>
             <ModalFooter>
               <Button

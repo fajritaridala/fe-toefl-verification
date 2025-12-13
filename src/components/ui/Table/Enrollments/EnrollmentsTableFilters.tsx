@@ -68,7 +68,7 @@ export default function EnrollmentsTableFilters({
         onValueChange={setSearchInput}
         classNames={{
           base: 'w-full max-w-md',
-          inputWrapper: 'h-8 bg-gray-50 shadow',
+          inputWrapper: 'h-8 bg-gray-50 shadow-sm',
           input: 'text-sm',
         }}
       />
@@ -90,7 +90,7 @@ export default function EnrollmentsTableFilters({
               }}
               classNames={{
                 base: 'w-36',
-                trigger: 'h-8 bg-gray-50 shadow',
+                trigger: 'h-8 bg-gray-50 shadow-sm',
                 value: 'text-small text-center',
                 listbox: 'w-34',
                 popoverContent: 'w-36',
@@ -119,14 +119,14 @@ export default function EnrollmentsTableFilters({
             }}
             classNames={{
               base: 'w-36',
-              trigger: 'h-8 bg-gray-50 shadow',
+              trigger: 'h-8 bg-gray-50 shadow-sm',
               value: 'text-small text-center',
               listbox: 'w-34',
               popoverContent: 'w-36',
             }}
           >
             {LIMIT_LISTS.map((limit) => (
-              <SelectItem key={limit.value}>{limit.label}</SelectItem>
+              <SelectItem key={String(limit.value)}>{limit.label}</SelectItem>
             ))}
           </Select>
         </div>
@@ -136,7 +136,7 @@ export default function EnrollmentsTableFilters({
           <button
             onClick={onRefresh}
             disabled={isRefetching}
-            className="bg-primary hover:bg-primary/10 group text-small inline-flex h-10 w-26 items-center justify-center gap-2 rounded-full px-2 font-semibold text-white shadow transition-all delay-75 duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-primary hover:bg-primary/10 group text-small inline-flex h-10 w-26 items-center justify-center gap-2 rounded-full px-2 font-semibold text-white shadow-sm transition-all delay-75 duration-300 disabled:cursor-not-allowed disabled:opacity-50"
             title="Refresh data"
           >
             <RefreshCw

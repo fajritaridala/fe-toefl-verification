@@ -51,8 +51,21 @@ function DashboardLayoutSidebar(props: Props) {
   }, [currentPath, sidebarItems]);
 
   const renderChildButton = useCallback(
-    (child: { key: string; label: string; href: string }) => {
-      const isActive = currentPath.startsWith(child.href);
+    (
+      child: { key: string; label: string; href: string },
+      siblings: { key: string; label: string; href: string }[]
+    ) => {
+      const isMatch = currentPath.startsWith(child.href);
+      // Check if there is a more specific (longer) match among siblings
+      const hasBetterMatch = siblings.some(
+        (sibling) =>
+          sibling.href !== child.href &&
+          currentPath.startsWith(sibling.href) &&
+          sibling.href.length > child.href.length
+      );
+
+      const isActive = isMatch && !hasBetterMatch;
+
       return (
         <button
           key={child.key}
@@ -77,7 +90,7 @@ function DashboardLayoutSidebar(props: Props) {
   return (
     <section
       className={cn(
-        'max-w-sidebar-panel bg-bg-light z-40 flex h-screen w-full flex-col justify-between px-4 transition-all duration-200 lg:relative lg:flex',
+        'max-w-sidebar-panel bg-white border-r border-gray-100 z-40 flex h-screen w-full flex-col justify-between px-4 transition-all duration-200 lg:relative lg:flex',
         {
           'hidden lg:flex': !isOpen,
         }
@@ -142,7 +155,9 @@ function DashboardLayoutSidebar(props: Props) {
                 </button>
                 {hasChildren && isExpanded && (
                   <div className="border-border mt-2 ml-2 flex flex-col gap-1 border-l pl-2">
-                    {item.children!.map((child) => renderChildButton(child))}
+                    {item.children!.map((child) =>
+                      renderChildButton(child, item.children!)
+                    )}
                   </div>
                 )}
               </div>

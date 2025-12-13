@@ -50,7 +50,13 @@ const useServices = () => {
     enabled: !!currentPage && !!currentLimit,
   });
 
-  const services = useMemo(() => servicesResponse?.data || [], [servicesResponse]);
+  const services = useMemo(() => {
+    const items = servicesResponse?.data || [];
+    return items.map((item, idx) => ({
+      ...item,
+      __rowKey: item._id || `service-${idx}`,
+    }));
+  }, [servicesResponse]);
   const pagination = useMemo(() => servicesResponse?.pagination, [servicesResponse]);
 
   const ensureDefaults = useCallback(() => {

@@ -1,12 +1,12 @@
 import instance from "@/lib/axios/instance";
 import endpoints from "@/constants/endpoints";
 
+// NOTE: User akan refactor fitur ini untuk langsung ke Pinata
+// Untuk sementara endpoint diupdate agar tidak terjadi compile error
 const verificationService = {
   getVerification: (cid: string) =>
-    instance.request({
-      url: endpoints.VERIFICATIONS,
-      method: "GET",
-      data: { cid },
+    instance.get(endpoints.VERIFY, {
+      params: { cid },
     }),
 };
 

@@ -189,7 +189,7 @@ export default function Validation() {
                   }}
                 >
                   {LIMIT_LISTS.map((limit) => (
-                    <SelectItem key={limit.value}>{limit.label}</SelectItem>
+                    <SelectItem key={String(limit.value)}>{limit.label}</SelectItem>
                   ))}
                 </Select>
               </div>

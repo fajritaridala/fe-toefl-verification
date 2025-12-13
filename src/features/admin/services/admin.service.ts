@@ -49,19 +49,28 @@ type GetScheduleQuery = {
   limit?: number;
   search?: string;
   serviceId?: string;
-  status?: "aktif" | "tidak aktif";
-  month?: number;
+  status?: "aktif" | "penuh" | "tidak aktif";
+  month?: string;
+  includeDeleted?: boolean;
 };
 
 type GetScheduleParams = string | GetScheduleQuery;
 
 export const schedulesService = {
+  // Public endpoint - hanya jadwal 7 hari ke depan dan aktif
   getSchedules: (query?: GetScheduleParams) => {
     const queryString = buildQueryString(query);
     const url = queryString
       ? `${endpoints.SCHEDULES}?${queryString}`
       : endpoints.SCHEDULES;
-    console.log(url)
+    return instance.get(url);
+  },
+  // Admin endpoint - semua jadwal termasuk yang dihapus
+  getAdminSchedules: (query?: GetScheduleParams) => {
+    const queryString = buildQueryString(query);
+    const url = queryString
+      ? `${endpoints.SCHEDULES}/admin?${queryString}`
+      : `${endpoints.SCHEDULES}/admin`;
     return instance.get(url);
   },
   createSchedule: (payload: SchedulePayload) => {
@@ -73,10 +82,11 @@ export const schedulesService = {
     return instance.post(`${endpoints.SCHEDULES}?${queryString}`, rest);
   },
   updateSchedule: (scheduleId: string, payload: Partial<SchedulePayload>) => {
-    return instance.patch(`${endpoints.SCHEDULES}/${scheduleId}`, payload);
+    return instance.patch(`${endpoints.SCHEDULES}/${scheduleId}/update`, payload);
   },
+  // Soft delete - menggunakan PATCH bukan DELETE
   removeSchedule: (scheduleId: string) => {
-    return instance.delete(`${endpoints.SCHEDULES}/${scheduleId}`);
+    return instance.patch(`${endpoints.SCHEDULES}/${scheduleId}/delete`);
   },
 };
 

@@ -26,7 +26,7 @@ type Props = {
 };
 
 const ScheduleParticipantsModal = ({ isOpen, schedule, onClose }: Props) => {
-  const scheduleId = schedule?._id;
+  const scheduleId = schedule?.scheduleId;
 
   const { data, isLoading } = useQuery({
     queryKey: ['enrollments', 'schedule', scheduleId],
@@ -94,7 +94,7 @@ const ScheduleParticipantsModal = ({ isOpen, schedule, onClose }: Props) => {
             <ScrollShadow className="max-h-80 space-y-3">
               {participants.map((registrant) => (
                 <div
-                  key={registrant._id}
+                  key={registrant.enrollId}
                   className="rounded-lg border border-border bg-bg-light p-3"
                 >
                   <div className="flex items-center justify-between">

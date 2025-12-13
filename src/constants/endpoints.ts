@@ -3,7 +3,7 @@ const endpoints = {
   SERVICES: "/services",
   SCHEDULES: "/schedules",
   ENROLLMENTS: "/enrollments",
-  VERIFICATIONS: "/verifications",
+  VERIFY: "/verify",
   USERS: "/users",
 };
 

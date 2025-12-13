@@ -288,7 +288,7 @@ const ScheduleTable = (props: Props) => {
       )}
 
       {/* Table Card */}
-      <div className="bg-bg-light shadow-box rounded-2xl border border-gray-200">
+      <div className="bg-white shadow-sm rounded-xl border border-gray-100">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -306,7 +306,7 @@ const ScheduleTable = (props: Props) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-44"
                 classNames={{
-                  trigger: 'bg-gray-50 drop-shadow',
+                  trigger: 'bg-gray-50 drop-shadow-sm',
                   value: 'text-sm font-semibold text-gray-700',
                 }}
               >
@@ -326,7 +326,7 @@ const ScheduleTable = (props: Props) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-52"
                 classNames={{
-                  trigger: 'bg-gray-50 drop-shadow',
+                  trigger: 'bg-gray-50 drop-shadow-sm',
                   value: 'text-sm font-semibold text-gray-700',
                 }}
               >
@@ -338,7 +338,7 @@ const ScheduleTable = (props: Props) => {
                 isIconOnly
                 radius="full"
                 variant="flat"
-                className="w-full border border-gray-200 bg-gray-50 drop-shadow hover:border-gray-300 sm:w-auto"
+                className="w-full border border-gray-200 bg-gray-50 drop-shadow-sm hover:border-gray-300 sm:w-auto"
                 onPress={onRefresh}
                 aria-label="Refresh data"
               >
@@ -349,7 +349,7 @@ const ScheduleTable = (props: Props) => {
             {/* Add Button */}
             <Button
               radius="full"
-              className="bg-primary shadow-small font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
+              className="bg-primary shadow-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
               startContent={<Plus size={18} />}
               onPress={onAdd}
             >
@@ -359,13 +359,13 @@ const ScheduleTable = (props: Props) => {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto rounded-b-2xl">
+        <div className="overflow-x-auto rounded-b-xl">
           <Table
             aria-label="Tabel jadwal"
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-bg-light text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
+              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
               tr: 'hover:bg-gray-50 transition-colors',
               base: 'min-w-full',
@@ -396,7 +396,7 @@ const ScheduleTable = (props: Props) => {
               }
               emptyContent={
                 <div className="flex flex-col items-center justify-center py-12">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-50">
                     <svg
                       className="h-8 w-8 text-gray-400"
                       fill="none"
@@ -421,7 +421,7 @@ const ScheduleTable = (props: Props) => {
               }
             >
               {(item) => (
-                <TableRow key={item._id}>
+                <TableRow key={(item as any).__rowKey || item.scheduleId}>
                   {(columnKey) => (
                     <TableCell>{renderCell(item, columnKey)}</TableCell>
                   )}
@@ -433,7 +433,7 @@ const ScheduleTable = (props: Props) => {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoading && totalPages > 1 && (
-          <div className="rounded-b-2xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-xl bg-gray-50 px-6 py-3 border-t border-gray-100">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {/* Limit Selector */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -446,7 +446,7 @@ const ScheduleTable = (props: Props) => {
                   disallowEmptySelection
                   size="sm"
                   classNames={{
-                    trigger: 'h-8 min-h-8 bg-gray-50 drop-shadow',
+                    trigger: 'h-8 min-h-8 bg-gray-50 drop-shadow-sm',
                     value: 'text-sm',
                   }}
                 >

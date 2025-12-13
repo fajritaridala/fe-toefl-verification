@@ -2,10 +2,7 @@ export interface ServiceItem {
   _id: string;
   name: string;
   description: string;
-  price: number;
-  notes?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  price?: number;
 }
 
 export interface ServiceListResponse {
@@ -21,15 +18,15 @@ export interface ServicePayload {
   name: string;
   description: string;
   price: number;
-  notes?: string;
 }
 
 export interface ScheduleRegister {
   paymentDate: string;
   fullName: string;
+  birthDate: string;
   gender: "laki-laki" | "perempuan";
   email: string;
-  phoneNumber: string;
+  phoneNumber: number;
   nim: string;
   faculty: string;
   major: string;
@@ -37,17 +34,17 @@ export interface ScheduleRegister {
 }
 
 export interface ScheduleItem {
-  _id: string;
+  scheduleId: string;
   serviceId: string;
   serviceName: string;
   scheduleDate: string;
   startTime: string;
   endTime: string;
-  status: "aktif" | "tidak aktif";
-  quota?: number;
-  registrants?: number;
-  createdAt?: string;
-  updatedAt?: string;
+  status: "aktif" | "penuh" | "tidak aktif";
+  capacity: number;
+  quota: number;
+  registrants: number;
+  deletedAt?: string | null;
 }
 
 export interface ScheduleListResponse {

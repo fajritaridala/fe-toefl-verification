@@ -168,7 +168,7 @@ export default function Participants() {
   return (
     <section className="space-y-4">
       {/* Table Card */}
-      <div className="shadow-box rounded-2xl border border-gray-200 bg-white">
+      <div className="bg-white shadow-sm rounded-xl border border-gray-100">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <EnrollmentsTableFilters
@@ -187,13 +187,13 @@ export default function Participants() {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto rounded-b-2xl">
+        <div className="overflow-x-auto rounded-b-xl">
           <Table
             aria-label="Tabel peserta"
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-bg-light text-gray-600 font-semibold text-xs uppercase  px-6 py-4 border-b border-gray-200',
+              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase  px-6 py-4 border-b border-gray-200',
               td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
               tr: 'hover:bg-gray-50 transition-colors',
               base: 'min-w-full',
@@ -261,7 +261,7 @@ export default function Participants() {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoadingEnrollments && totalPages > 1 && (
-          <div className="rounded-b-2xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-xl bg-gray-50 px-6 py-3 border-t border-gray-100">
             <div className="flex items-center justify-end-safe">
               <Pagination
                 showShadow

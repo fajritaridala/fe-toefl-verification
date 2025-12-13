@@ -165,7 +165,7 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
   return (
     <section className="space-y-4">
       {/* Table Card */}
-      <div className="bg-bg-light rounded-xl drop-shadow">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <EnrollmentsTableFilters
@@ -251,7 +251,7 @@ const AdminEnrollmentsTable = (props: AdminEnrollmentsTableProps) => {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoading && totalPages > 1 && (
-          <div className="rounded-b-xl bg-gray-50 px-6 py-3">
+          <div className="rounded-b-xl bg-gray-50 px-6 py-3 border-t border-gray-100">
             <div className="flex items-center justify-end-safe">
               <Pagination
                 showShadow

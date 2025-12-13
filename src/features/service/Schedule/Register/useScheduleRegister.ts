@@ -11,12 +11,16 @@ import { ScheduleRegister } from '@features/admin';
 
 const scheduleRegisterSchema = yup.object().shape({
   fullName: yup.string().required('Nama lengkap wajib diisi'),
+  birthDate: yup.string().required('Tanggal lahir wajib diisi'),
   gender: yup
     .string()
     .oneOf(['laki-laki', 'perempuan'], 'Jenis kelamin tidak valid')
     .required('Jenis kelamin wajib diisi'),
   email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
-  phoneNumber: yup.string().required('Nomor telepon wajib diisi'),
+  phoneNumber: yup
+    .number()
+    .typeError('Nomor telepon harus berupa angka')
+    .required('Nomor telepon wajib diisi'),
   nim: yup.string().required('NIM wajib diisi'),
   faculty: yup.string().required('Fakultas wajib diisi'),
   major: yup.string().required('Program studi wajib diisi'),
@@ -52,9 +56,10 @@ export function useScheduleRegister() {
     resolver: yupResolver(scheduleRegisterSchema),
     defaultValues: {
       fullName: '',
+      birthDate: '',
       gender: undefined,
       email: '',
-      phoneNumber: '',
+      phoneNumber: undefined as number | undefined,
       nim: '',
       faculty: '',
       major: '',

@@ -12,6 +12,7 @@ import {
   Divider,
   Form,
   Input,
+  NumberInput,
   Select,
   SelectItem,
   cn,
@@ -85,6 +86,22 @@ export default function ScheduleRegisterCard(props: Props) {
               )}
             />
             <Controller
+              name="birthDate"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  isRequired
+                  label="Tanggal Lahir"
+                  labelPlacement="outside"
+                  type="date"
+                  variant="bordered"
+                  isInvalid={!!errors.birthDate}
+                  errorMessage={errors.birthDate?.message}
+                />
+              )}
+            />
+            <Controller
               name="gender"
               control={control}
               render={({ field }) => (
@@ -122,19 +139,36 @@ export default function ScheduleRegisterCard(props: Props) {
             <Controller
               name="phoneNumber"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="Nomor Telepon"
-                  labelPlacement="outside"
-                  placeholder="Contoh: 081234567890"
-                  type="tel"
-                  variant="bordered"
-                  isInvalid={!!errors.phoneNumber}
-                  errorMessage={errors.phoneNumber?.message}
-                />
-              )}
+              render={({ field }) => {
+                const { ref, value, onChange, ...restField } = field;
+                return (
+                  <NumberInput
+                    {...restField}
+                    ref={ref}
+                    isRequired
+                    hideStepper
+                    label="Nomor Telepon"
+                    labelPlacement="outside"
+                    placeholder="Contoh: 81234567890"
+                    value={
+                      typeof value === 'number'
+                        ? value
+                        : value
+                          ? Number(value)
+                          : undefined
+                    }
+                    onValueChange={(nextValue) =>
+                      onChange(
+                        typeof nextValue === 'number' && !Number.isNaN(nextValue)
+                          ? nextValue
+                          : undefined
+                      )
+                    }
+                    isInvalid={!!errors.phoneNumber}
+                    errorMessage={errors.phoneNumber?.message}
+                  />
+                );
+              }}
             />
             <Controller
               name="nim"
