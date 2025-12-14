@@ -2,6 +2,7 @@
 
 import { PenSquare } from 'lucide-react';
 import { ScoreInputModal } from '@/components/ui/Modal';
+import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
 import { formatDate } from '@/lib/utils';
 import { useScores } from './useScores';
 import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
@@ -27,6 +28,7 @@ export default function Scores() {
     handleSubmitScore,
     handleRefresh,
     handleCloseModal,
+    handleRetryBlockchain,
     handleChangeLimit,
     handleChangePage,
     handleClearSearch,
@@ -46,32 +48,7 @@ export default function Scores() {
         uid: 'status', 
         name: 'Status', 
         align: 'center',
-        render: (item) => {
-             // Check if participant has score based on status or score fields
-             // Reusing logic from original file
-             // TODO: Enum 'selesai'
-             const hasScore =
-             item.status === 'selesai' ||
-             (item.listening !== undefined &&
-                item.structure !== undefined &&
-                item.reading !== undefined);
- 
-           return (
-             <div className="text-center">
-               {hasScore ? (
-                 <span className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700">
-                   <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
-                   {item.status}
-                 </span>
-               ) : (
-                 <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700">
-                   <span className="h-1.5 w-1.5 rounded-full bg-gray-600"></span>
-                   {item.status}
-                 </span>
-               )}
-             </div>
-           );
-        }
+        render: (item) => <EnrollmentStatusChip status={item.status} />
     },
     { 
         uid: 'actions', 
@@ -96,6 +73,7 @@ export default function Scores() {
       <GenericEnrollmentTable
         data={participants}
         isLoading={isLoadingEnrollments}
+        isRefetching={isRefetchingEnrollments}
         columns={columns}
         search={{
             value: searchInput,
@@ -137,6 +115,7 @@ export default function Scores() {
         isSubmitting={isSubmittingScore}
         blockchainStatus={blockchainStatus}
         statusMessage={statusMessage}
+        onRetry={handleRetryBlockchain}
       />
     </section>
   );

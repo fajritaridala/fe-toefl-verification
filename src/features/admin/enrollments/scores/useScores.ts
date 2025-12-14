@@ -43,6 +43,14 @@ export const useScores = () => {
   >('idle');
   const [statusMessage, setStatusMessage] = useState('');
 
+  // Pending blockchain data for retry functionality
+  const [pendingBlockchainData, setPendingBlockchainData] = useState<{
+    hash: string;
+    cid: string;
+    enrollId: string;
+    participantId: string;
+  } | null>(null);
+
   const queryClient = useQueryClient();
 
   // Use existing enrollments hook
@@ -106,7 +114,7 @@ export const useScores = () => {
         throw new Error('Invalid response from backend');
       }
 
-      console.log(response)
+      // Response logged only in dev via storeToBlockchain's conditional logger
       const { hash, cid, participantId, enrollId } = response.data;
 
       if (!hash || !cid) {
@@ -163,14 +171,17 @@ export const useScores = () => {
 
       } catch (blockchainError) {
         const err = blockchainError as Error;
-        console.error('Blockchain error:', err);
         setBlockchainStatus('error');
         setStatusMessage(`Error Blockchain: ${err.message}`);
+
+        // Save data for retry
+        setPendingBlockchainData({ hash, cid, enrollId, participantId });
 
         alert(
           `❌ Gagal menyimpan ke blockchain!\n\n` +
             `Error: ${err.message}\n` +
-            `Nilai tersimpan di database, tapi gagal di blockchain.`
+            `Nilai tersimpan di database, tapi gagal di blockchain.\n` +
+            `Gunakan tombol "Coba Lagi" untuk mencoba kembali.`
         );
       }
     },
@@ -222,7 +233,63 @@ export const useScores = () => {
   const handleCloseModal = useCallback(() => {
     setScoreModalOpen(false);
     setSelectedParticipant(null);
+    setPendingBlockchainData(null);
+    setBlockchainStatus('idle');
+    setStatusMessage('');
   }, []);
+
+  // Retry blockchain storage after failure
+  const handleRetryBlockchain = useCallback(async () => {
+    if (!pendingBlockchainData) return;
+
+    const { hash, cid, enrollId, participantId } = pendingBlockchainData;
+
+    try {
+      setBlockchainStatus('storing-blockchain');
+      setStatusMessage('Mencoba ulang menyimpan ke blockchain...');
+
+      await storeToBlockchain({ hash, cid });
+
+      // Notify backend about blockchain success
+      setBlockchainStatus('updating-status');
+      setStatusMessage('Memperbarui status peserta...');
+
+      try {
+        await enrollmentsService.blockchainSuccess(enrollId, participantId, hash);
+      } catch (backendError) {
+        const err = backendError as Error & {
+          response?: { data?: { message?: string } };
+        };
+        alert(
+          `⚠️ Blockchain berhasil, tapi update database gagal!\n\n` +
+            `Error: ${err.response?.data?.message || err.message}\n` +
+            `Sertifikat sudah ada di blockchain. Silakan hubungi administrator.`
+        );
+      }
+
+      setBlockchainStatus('success');
+      setStatusMessage('Sertifikat berhasil disimpan!');
+      setPendingBlockchainData(null);
+
+      // Refresh data
+      queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+
+      alert(`🎉 Sertifikat berhasil disimpan dan diverifikasi di blockchain!`);
+
+      // Close modal after short delay
+      setTimeout(() => {
+        setScoreModalOpen(false);
+        setSelectedParticipant(null);
+        setBlockchainStatus('idle');
+        setStatusMessage('');
+      }, 1500);
+    } catch (retryError) {
+      const err = retryError as Error;
+      setBlockchainStatus('error');
+      setStatusMessage(`Error: ${err.message}`);
+      // Keep pendingBlockchainData for another retry attempt
+    }
+  }, [pendingBlockchainData, queryClient]);
 
   return {
     // State
@@ -238,6 +305,7 @@ export const useScores = () => {
     isSubmittingScore,
     blockchainStatus,
     statusMessage,
+    pendingBlockchainData,
 
     // Handlers
     setSearchInput,
@@ -245,6 +313,7 @@ export const useScores = () => {
     handleSubmitScore,
     handleRefresh,
     handleCloseModal,
+    handleRetryBlockchain,
     handleChangeLimit,
     handleChangePage,
     handleClearSearch,

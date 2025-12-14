@@ -3,7 +3,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye } from 'lucide-react';
 import { Button } from '@heroui/react';
-import { ParticipantDetailModal } from '@/components/ui/Modal';
+import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
+import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
 import { formatDate } from '@/lib/utils';
 import { useParticipants } from './useParticipants';
 import { EnrollmentStatus, EnrollmentItem } from '@/features/admin/types/admin.types';
@@ -44,51 +45,7 @@ export default function Participants() {
     queryClient.invalidateQueries({ queryKey: ['enrollments'] });
   };
 
-  const renderStatusChip = (status: EnrollmentStatus) => {
-    const config = {
-      [EnrollmentStatus.APPROVED]: {
-        bgColor: 'bg-transparent',
-        borderColor: 'border-green-600',
-        textColor: 'text-green-700',
-        dotColor: 'bg-green-600',
-        label: 'Disetujui',
-      },
-      [EnrollmentStatus.REJECTED]: {
-        bgColor: 'bg-transparent',
-        borderColor: 'border-red-600',
-        textColor: 'text-red-700',
-        dotColor: 'bg-red-600',
-        label: 'Ditolak',
-      },
-      [EnrollmentStatus.PENDING]: {
-        bgColor: 'bg-transparent',
-        borderColor: 'border-yellow-600',
-        textColor: 'text-yellow-700',
-        dotColor: 'bg-yellow-600',
-        label: 'Menunggu',
-      },
-      [EnrollmentStatus.COMPLETED]: {
-        bgColor: 'bg-transparent',
-        borderColor: 'border-green-600',
-        textColor: 'text-green-700',
-        dotColor: 'bg-green-600',
-        label: 'Selesai',
-      },
-    };
-
-    const style = config[status] || config[EnrollmentStatus.PENDING];
-
-    return (
-      <div className="text-center">
-        <span
-          className={`inline-flex items-center gap-2 rounded-full border-[1.5px] px-3 py-1.5 ${style.bgColor} ${style.borderColor} ${style.textColor} text-sm font-medium`}
-        >
-          <span className={`h-1.5 w-1.5 rounded-full ${style.dotColor}`}></span>
-          {style.label}
-        </span>
-      </div>
-    );
-  };
+  /* Removed renderStatusChip - Replaced by EnrollmentStatusChip component */
 
   const columns: ColumnConfig[] = [
       { uid: 'fullName', name: 'Nama Lengkap', align: 'start' },
@@ -104,7 +61,7 @@ export default function Participants() {
         uid: 'status', 
         name: 'Status', 
         align: 'center',
-        render: (item) => renderStatusChip(item.status)
+        render: (item) => <EnrollmentStatusChip status={item.status} />
       },
       {
         uid: 'actions',
@@ -133,6 +90,7 @@ export default function Participants() {
       <GenericEnrollmentTable
         data={tableItems as EnrollmentItem[]}
         isLoading={isLoadingEnrollments}
+        isRefetching={isRefetchingEnrollments}
         columns={columns}
         search={{
             value: currentSearch,
@@ -156,7 +114,7 @@ export default function Participants() {
 
       {/* Detail Modal */}
       {selectedParticipant && (
-        <ParticipantDetailModal
+        <EnrollmentDetailModal
           isOpen={detailModalOpen}
           onClose={handleCloseDetail}
           participant={selectedParticipant}

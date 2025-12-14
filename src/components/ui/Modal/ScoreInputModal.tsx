@@ -43,6 +43,7 @@ type ScoreInputModalProps = {
   isSubmitting?: boolean;
   blockchainStatus?: 'idle' | 'submitting' | 'uploading-ipfs' | 'storing-blockchain' | 'updating-status' | 'success' | 'error';
   statusMessage?: string;
+  onRetry?: () => void;
 };
 
 export default function ScoreInputModal({
@@ -53,6 +54,7 @@ export default function ScoreInputModal({
   isSubmitting = false,
   blockchainStatus = 'idle',
   statusMessage = '',
+  onRetry,
 }: ScoreInputModalProps) {
   const [scores, setScores] = useState<ScoreData>({
     listening: '',
@@ -267,12 +269,23 @@ export default function ScoreInputModal({
                           />
                         </svg>
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <p className="text-sm font-medium text-red-900">
                           Terjadi kesalahan
                         </p>
                         <p className="text-xs text-red-600">{statusMessage}</p>
                       </div>
+                      {onRetry && (
+                        <Button
+                          size="sm"
+                          color="primary"
+                          variant="flat"
+                          onPress={onRetry}
+                          className="ml-auto"
+                        >
+                          Coba Lagi
+                        </Button>
+                      )}
                     </>
                   )}
                 </div>

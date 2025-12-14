@@ -1,10 +1,7 @@
 'use client';
 
 import { Check, Eye, X } from 'lucide-react';
-import {
-  ParticipantDetailModal,
-  QuickPreviewModal,
-} from '@/components/ui/Modal';
+import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
 import { formatDate } from '@/lib/utils';
 import { useValidation } from './useValidation';
 import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
@@ -103,6 +100,7 @@ export default function Validation() {
       <GenericEnrollmentTable
         data={participants}
         isLoading={isLoadingEnrollments}
+        isRefetching={isRefetchingEnrollments}
         columns={columns}
         search={{
             value: searchInput,
@@ -135,22 +133,20 @@ export default function Validation() {
         }
       />
 
-      {/* Quick Preview Modal */}
-      <QuickPreviewModal
-        isOpen={previewModalOpen}
-        onClose={handleClosePreview}
-        participant={currentParticipant}
-        onApprove={(id) => approveParticipant(id)}
-        onReject={(id) => rejectParticipant(id)}
-        isProcessing={isProcessing}
-      />
-
-      {/* Detail Modal */}
-      <ParticipantDetailModal
-        isOpen={detailModalOpen}
-        onClose={handleCloseDetail}
-        participant={currentParticipant}
-      />
+      {/* Enrollment Detail / Validation Modal */}
+      {(previewModalOpen || detailModalOpen) && currentParticipant && (
+        <EnrollmentDetailModal
+          isOpen={previewModalOpen || detailModalOpen}
+          onClose={() => {
+             if (previewModalOpen) handleClosePreview();
+             if (detailModalOpen) handleCloseDetail();
+          }}
+          participant={currentParticipant}
+          onApprove={(id) => approveParticipant(id)}
+          onReject={(id) => rejectParticipant(id)}
+          isProcessing={isProcessing}
+        />
+      )}
     </section>
   );
 }

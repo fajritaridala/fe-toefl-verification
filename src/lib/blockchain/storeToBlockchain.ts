@@ -3,6 +3,10 @@ import { CONTRACT_ADDRESS } from '@/utils/config/env';
 import ToeflRecordABI from '@/abi/ToeflRecord.json';
 import metamask from '@/lib/metamask/metamask';
 
+// Conditional logger - only logs in development
+const isDev = process.env.NODE_ENV === 'development';
+const log = (...args: unknown[]) => isDev && console.log(...args);
+
 interface StoreToBlockchainParams {
   hash: string;
   cid: string;
@@ -15,6 +19,20 @@ interface StoreToBlockchainResult {
 }
 
 /**
+ * Timeout wrapper for promises
+ */
+const withTimeout = <T>(
+  promise: Promise<T>,
+  ms: number,
+  message: string
+): Promise<T> => {
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(message)), ms)
+  );
+  return Promise.race([promise, timeout]);
+};
+
+/**
  * Store certificate data to blockchain
  * @param hash - Hash from backend (hash of CID + crypto address)
  * @param cid - IPFS CID from Pinata
@@ -25,21 +43,21 @@ export async function storeToBlockchain({
   cid,
 }: StoreToBlockchainParams): Promise<StoreToBlockchainResult> {
   try {
-    console.log('🔗 Starting blockchain transaction...');
-    console.log('Hash:', hash);
-    console.log('CID:', cid);
+    log('🔗 Starting blockchain transaction...');
+    log('Hash:', hash);
+    log('CID:', cid);
 
     // 1. Check contract address
     if (!CONTRACT_ADDRESS) {
       throw new Error('Contract address not configured');
     }
 
-    console.log('Contract Address:', CONTRACT_ADDRESS);
+    log('Contract Address:', CONTRACT_ADDRESS);
 
     // 2. Connect MetaMask and get signer
-    const { signer, provider } = await metamask.connectAndSign();
+    const { signer } = await metamask.connectAndSign();
     const address = await signer.getAddress();
-    console.log('Connected wallet:', address);
+    log('Connected wallet:', address);
 
     // 3. Create contract instance
     const contract = new ethers.Contract(
@@ -51,38 +69,29 @@ export async function storeToBlockchain({
     // 4. Convert hash string to bytes32
     // Backend should send hash as hex string (0x...)
     const hashBytes32 = hash.startsWith('0x') ? hash : `0x${hash}`;
-    console.log('Hash (bytes32):', hashBytes32);
+    log('Hash (bytes32):', hashBytes32);
 
-    // 5. Check if record already exists (optional safety check)
-    try {
-      const existingRecord = await contract.getRecord(hashBytes32);
-      if (existingRecord && existingRecord !== '') {
-        throw new Error('Record already exists on blockchain');
-      }
-    } catch (error) {
-      // If getRecord fails, it means record doesn't exist (which is good)
-      console.log('Record does not exist yet (as expected)');
-    }
+    // 5. Call store function with timeout (2 minutes)
+    // Contract handles duplicate check internally with require statement
+    log('📝 Calling contract.store()...');
+    const tx = await withTimeout(
+      contract.store(hashBytes32, cid),
+      120000, // 2 minutes
+      'Transaksi timeout. Silakan cek MetaMask dan coba lagi.'
+    );
+    log('Transaction sent:', tx.hash);
 
-    // 6. Call store function
-    console.log('📝 Calling contract.store()...');
-    const tx = await contract.store(hashBytes32, cid);
-    console.log('Transaction sent:', tx.hash);
+    // 6. Wait for confirmation
+    // Use 1 confirmation for dev (faster), 2 for production (more secure)
+    const confirmations = isDev ? 1 : 2;
+    log(`⏳ Waiting for ${confirmations} confirmation(s)...`);
+    const receipt = await tx.wait(confirmations);
+    log('✅ Transaction confirmed!');
+    log('Block number:', receipt.blockNumber);
+    log('Transaction hash:', receipt.hash);
 
-    // 7. Wait for confirmation
-    console.log('⏳ Waiting for transaction confirmation...');
-    const receipt = await tx.wait();
-    console.log('✅ Transaction confirmed!');
-    console.log('Block number:', receipt.blockNumber);
-    console.log('Transaction hash:', receipt.hash);
-
-    // 8. Verify the record was stored
-    const storedCid = await contract.getRecord(hashBytes32);
-    console.log('Stored CID verification:', storedCid);
-
-    if (storedCid !== cid) {
-      throw new Error('CID verification failed');
-    }
+    // Transaction confirmed = data stored successfully
+    // No need to verify with getRecord - tx.wait already guarantees this
 
     return {
       transactionHash: receipt.hash,
@@ -91,17 +100,21 @@ export async function storeToBlockchain({
     };
   } catch (error) {
     const err = error as Error;
-    console.error('❌ Blockchain transaction failed:', err);
+    if (isDev) {
+      console.error('❌ Blockchain transaction failed:', err);
+    }
 
-    // Handle specific errors
+    // Handle specific errors with user-friendly messages
     if (err.message.includes('user rejected')) {
-      throw new Error('Transaction ditolak oleh user');
+      throw new Error('Transaksi ditolak oleh user');
     } else if (err.message.includes('insufficient funds')) {
       throw new Error('Saldo tidak cukup untuk membayar gas fee');
-    } else if (err.message.includes('already exists')) {
+    } else if (err.message.includes('already exists') || err.message.includes('Record already exists')) {
       throw new Error('Sertifikat sudah tersimpan di blockchain');
     } else if (err.message.includes('Contract address')) {
       throw new Error('Konfigurasi contract address tidak valid');
+    } else if (err.message.includes('timeout')) {
+      throw new Error(err.message); // Pass through timeout message
     } else {
       throw new Error(`Blockchain error: ${err.message}`);
     }

@@ -98,7 +98,7 @@ export const useLogin = () => {
     try {
       setIsLoading(true);
       setAlertOpen(false);
-      const { address } = await metamask.connect();
+      const { address } = await metamask.switchWallet();
       setAddress(address);
       await loginSchema.validate({ address });
       mutateLogin(address);

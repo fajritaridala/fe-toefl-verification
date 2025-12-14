@@ -120,7 +120,7 @@ export function useRegister() {
   async function connectMetamask() {
     try {
       setIsLoading(true);
-      const { address } = await metamask.connect();
+      const { address } = await metamask.switchWallet();
       if (address) {
         setIsConnected(true);
         setIsAddress(address);

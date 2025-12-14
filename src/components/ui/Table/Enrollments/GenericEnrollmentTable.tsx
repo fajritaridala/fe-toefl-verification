@@ -29,6 +29,7 @@ interface GenericEnrollmentTableProps {
   // Data props
   data: EnrollmentItem[];
   isLoading: boolean;
+  isRefetching?: boolean;
   emptyContent?: ReactNode;
 
   // Configuration
@@ -56,6 +57,7 @@ interface GenericEnrollmentTableProps {
 export default function GenericEnrollmentTable({
   data,
   isLoading,
+  isRefetching,
   emptyContent,
   columns,
   search,
@@ -159,6 +161,7 @@ export default function GenericEnrollmentTable({
             td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
             tr: 'hover:bg-gray-50 transition-colors',
             base: 'min-w-full',
+            table: isRefetching ? 'opacity-50 transition-opacity duration-200 pointer-events-none' : 'transition-opacity duration-200',
           }}
         >
           <TableHeader columns={columns}>
