@@ -3,6 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye } from 'lucide-react';
 import { Button } from '@heroui/react';
+import { motion, type Variants } from 'framer-motion';
 import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
 import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
 import { formatDate } from '@/utils/common';
@@ -13,6 +14,15 @@ import { ServiceFilter } from '@/components/ui/Button/Filter/ServiceFilter';
 import { StatusFilter } from '@/components/ui/Button/Filter/StatusFilter';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
+};
 
 export default function Participants() {
   const {
@@ -86,7 +96,12 @@ export default function Participants() {
   ];
 
   return (
-    <section className="space-y-4">
+    <motion.section 
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+      className="space-y-4"
+    >
       <GenericEnrollmentTable
         data={tableItems as EnrollmentItem[]}
         isLoading={isLoadingEnrollments}
@@ -120,6 +135,6 @@ export default function Participants() {
           participant={selectedParticipant}
         />
       )}
-    </section>
+    </motion.section>
   );
 }

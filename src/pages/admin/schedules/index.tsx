@@ -4,9 +4,12 @@ import DashboardLayout from '@/components/layouts/Dashboard';
 export default function AdminSchedules() {
   return (
     <>
-      <DashboardLayout title="Kelola jadwal">
-        <Schedules />
-      </DashboardLayout>
+      <DashboardLayout
+      title="Manajemen Jadwal"
+      description="Atur jadwal tes dan kuota peserta."
+    >
+      <Schedules />
+    </DashboardLayout>
     </>
   );
 }

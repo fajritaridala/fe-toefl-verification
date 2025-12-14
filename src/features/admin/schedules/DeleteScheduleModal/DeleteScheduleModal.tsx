@@ -4,11 +4,11 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
-  ModalHeader,
 } from '@heroui/react';
 import moment from 'moment';
 import { ScheduleItem } from '@features/admin';
 import useDeleteScheduleModal from './useDeleteScheduleModal';
+import { Trash2 } from 'lucide-react';
 
 type Props = {
   isOpen: boolean;
@@ -37,31 +37,57 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
       onClose={onClose}
       placement="center"
       backdrop="blur"
+      motionProps={{
+        variants: {
+          enter: {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            transition: {
+              duration: 0.4,
+              ease: "easeOut",
+            },
+          },
+          exit: {
+            y: 20,
+            opacity: 0,
+            scale: 0.95,
+            transition: {
+              duration: 0.3,
+              ease: "easeIn",
+            },
+          },
+        },
+      }}
     >
       <ModalContent>
-        <ModalHeader>
-          <div>
-            <p className="text-small text-text-muted uppercase tracking-[0.25rem]">
-              Konfirmasi
-            </p>
-            <h1 className="text-2xl font-bold text-text">Hapus jadwal</h1>
+        <ModalBody className="flex flex-col items-center justify-center py-8">
+          <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-danger-50 text-danger shadow-sm ring-8 ring-danger-50/50">
+            <Trash2 size={32} strokeWidth={2.5} />
           </div>
-        </ModalHeader>
-        <ModalBody>
-          <p className="text-sm text-text">
-            Apakah Anda yakin ingin menghapus jadwal untuk layanan{' '}
-            <span className="font-semibold">{serviceName}</span> pada tanggal{' '}
-            <span className="font-semibold">{scheduleDate}</span>? Tindakan
-            ini tidak dapat dibatalkan.
+
+          <h3 className="mb-2 text-center text-xl font-bold text-gray-900">
+            Hapus Jadwal Tes?
+          </h3>
+
+          <p className="max-w-[85%] text-center text-sm text-gray-500">
+            Anda akan menghapus jadwal{' '}
+            <span className="font-bold text-gray-900">{serviceName}</span> pada
+            tanggal <span className="font-bold text-gray-900">{scheduleDate}</span>.
+            Tindakan ini tidak dapat dibatalkan.
           </p>
         </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onClose} className="font-semibold">
+        <ModalFooter className="flex w-full justify-center gap-3 pb-8 pt-0">
+          <Button
+            variant="flat"
+            onPress={onClose}
+            className="w-1/3 font-semibold text-gray-700 hover:bg-gray-100"
+          >
             Batal
           </Button>
           <Button
             color="danger"
-            className="font-semibold"
+            className="w-1/3 font-semibold shadow-md shadow-danger/20"
             isLoading={isDeleting}
             onPress={handleDelete}
           >

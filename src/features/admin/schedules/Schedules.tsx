@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { motion, type Variants } from 'framer-motion';
 import { ScheduleItem } from '@features/admin';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';
 import {
@@ -12,6 +13,15 @@ import useSchedules from './useSchedules';
 import AddScheduleModal from './AddScheduleModal';
 import DeleteScheduleModal from './DeleteScheduleModal';
 import ScheduleParticipantsModal from './ScheduleParticipantsModal';
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
+};
 
 const AdminSchedulesPage = () => {
   const queryClient = useQueryClient();
@@ -44,6 +54,7 @@ const AdminSchedulesPage = () => {
     null
   );
   const [deleteTarget, setDeleteTarget] = useState<ScheduleItem | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [participantsSchedule, setParticipantsSchedule] =
     useState<ScheduleItem | null>(null);
   const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
@@ -84,10 +95,14 @@ const AdminSchedulesPage = () => {
 
   const openDeleteModal = (schedule: ScheduleItem) => {
     setDeleteTarget(schedule);
+    setIsDeleteModalOpen(true);
   };
 
   const closeDeleteModal = () => {
-    setDeleteTarget(null);
+    setIsDeleteModalOpen(false);
+    setTimeout(() => {
+      setDeleteTarget(null);
+    }, 400); 
   };
 
   const openParticipantsModal = (schedule: ScheduleItem) => {
@@ -101,7 +116,12 @@ const AdminSchedulesPage = () => {
   };
 
   return (
-    <section className="space-y-6 pt-4">
+    <motion.section 
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+      className="space-y-6 pt-4"
+    >
       <ScheduleTable
         columns={SCHEDULE_TABLE_COLUMNS}
         schedules={schedules}
@@ -134,7 +154,7 @@ const AdminSchedulesPage = () => {
       />
 
       <DeleteScheduleModal
-        isOpen={!!deleteTarget}
+        isOpen={isDeleteModalOpen}
         schedule={deleteTarget}
         onClose={closeDeleteModal}
       />
@@ -144,7 +164,7 @@ const AdminSchedulesPage = () => {
         schedule={participantsSchedule}
         onClose={closeParticipantsModal}
       />
-    </section>
+    </motion.section>
   );
 };
 

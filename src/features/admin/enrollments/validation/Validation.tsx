@@ -1,12 +1,22 @@
 'use client';
 
 import { Check, Eye, X } from 'lucide-react';
+import { motion, type Variants } from 'framer-motion';
 import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
 import { formatDate } from '@/utils/common';
 import { useValidation } from './useValidation';
 import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
+};
 
 export default function Validation() {
   const {
@@ -96,7 +106,12 @@ export default function Validation() {
   ];
 
   return (
-    <section className="space-y-4">
+    <motion.section 
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+      className="space-y-4"
+    >
       <GenericEnrollmentTable
         data={participants}
         isLoading={isLoadingEnrollments}
@@ -134,7 +149,7 @@ export default function Validation() {
       />
 
       {/* Enrollment Detail / Validation Modal */}
-      {(previewModalOpen || detailModalOpen) && currentParticipant && (
+      {currentParticipant && (
         <EnrollmentDetailModal
           isOpen={previewModalOpen || detailModalOpen}
           onClose={() => {
@@ -147,6 +162,6 @@ export default function Validation() {
           isProcessing={isProcessing}
         />
       )}
-    </section>
+    </motion.section>
   );
 }

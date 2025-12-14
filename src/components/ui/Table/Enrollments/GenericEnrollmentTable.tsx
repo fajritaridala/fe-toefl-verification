@@ -126,7 +126,7 @@ export default function GenericEnrollmentTable({
   };
 
   return (
-    <div className="rounded-xl border border-gray-100 bg-white shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white shadow-md shadow-gray-100/50">
       {/* Header: Filters & Search */}
       <div className="flex flex-col items-center justify-between gap-4 rounded-t-xl border-b border-gray-50 bg-transparent px-6 py-4 sm:flex-row">
         <Input
@@ -157,9 +157,9 @@ export default function GenericEnrollmentTable({
           selectionMode="none"
           removeWrapper
           classNames={{
-            th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
-            td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
-            tr: 'hover:bg-gray-50 transition-colors',
+            th: 'bg-gray-50/80 text-gray-500 font-bold text-xs uppercase tracking-wider px-6 py-4 border-b border-gray-100',
+            td: 'px-6 py-4 text-sm text-gray-700 border-b border-gray-50',
+            tr: 'hover:bg-gray-50/50 transition-colors',
             base: 'min-w-full',
             table: isRefetching ? 'opacity-50 transition-opacity duration-200 pointer-events-none' : 'transition-opacity duration-200',
           }}

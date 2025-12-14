@@ -1,4 +1,5 @@
 import { Controller } from 'react-hook-form';
+import { ServiceItem } from '@features/admin';
 import {
   Button,
   Form,
@@ -11,7 +12,6 @@ import {
   NumberInput,
   Textarea,
 } from '@heroui/react';
-import { ServiceItem } from '@features/admin';
 import useAddServiceModal from './useAddServiceModal';
 
 type Props = {
@@ -38,17 +38,18 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
       size="lg"
       onClose={onClose}
       placement="center"
+      className="px-3 py-6"
     >
       <ModalContent>
         {() => (
-          <Form onSubmit={handleSubmit} className="space-y-0">
+          <Form onSubmit={handleSubmit}>
             <ModalHeader className="flex flex-col gap-1">
               <h1 className="text-text text-2xl font-bold">{title}</h1>
               <p className="text-text-muted text-sm">
                 Isi informasi layanan secara lengkap sebelum menyimpan.
               </p>
             </ModalHeader>
-            <ModalBody className="space-y-4">
+            <ModalBody className="w-full">
               <Controller
                 name="name"
                 control={control}
@@ -56,6 +57,7 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
                   <Input
                     {...field}
                     isRequired
+                    variant="bordered"
                     label="Nama layanan"
                     labelPlacement="outside"
                     placeholder="Contoh: TOEFL ITP"
@@ -73,6 +75,7 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
                     {...field}
                     isRequired
                     minRows={3}
+                    variant="bordered"
                     label="Deskripsi"
                     labelPlacement="outside"
                     placeholder="Tuliskan deskripsi singkat layanan"
@@ -94,6 +97,7 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
                       isRequired
                       hideStepper
                       min={0}
+                      variant="bordered"
                       label="Harga (Rp)"
                       labelPlacement="outside"
                       placeholder="Masukkan harga"
@@ -119,17 +123,19 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
                 }}
               />
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="flex w-full justify-center gap-3">
               <Button
-                variant="light"
+                variant="flat"
+                color="danger"
                 onPress={onClose}
-                className="font-semibold"
+                className="w-1/3 font-semibold"
               >
                 Batal
               </Button>
               <Button
                 type="submit"
-                className="bg-primary font-semibold text-white"
+                color="primary"
+                className="w-1/3 font-semibold text-white"
                 isLoading={isSubmitting}
               >
                 Simpan

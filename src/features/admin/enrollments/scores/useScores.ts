@@ -232,10 +232,12 @@ export const useScores = () => {
 
   const handleCloseModal = useCallback(() => {
     setScoreModalOpen(false);
-    setSelectedParticipant(null);
-    setPendingBlockchainData(null);
-    setBlockchainStatus('idle');
-    setStatusMessage('');
+    setTimeout(() => {
+      setSelectedParticipant(null);
+      setPendingBlockchainData(null);
+      setBlockchainStatus('idle');
+      setStatusMessage('');
+    }, 400);
   }, []);
 
   // Retry blockchain storage after failure

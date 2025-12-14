@@ -10,7 +10,7 @@ import {
   DropdownTrigger,
   Progress,
 } from '@heroui/react';
-import { Calendar, PenLine, Trash2, Users } from 'lucide-react';
+import { Calendar, PenLine, Trash2, Users, EllipsisVertical } from 'lucide-react';
 import moment from 'moment';
 import type { Selection } from '@heroui/react';
 
@@ -69,10 +69,13 @@ export function createRenderCell(params: RenderCellParams) {
           <div className="flex justify-center">
             <Chip
               size="sm"
+              variant="flat"
+              color="primary"
               startContent={<Calendar className="h-3 w-3" />}
-              className="bg-primary/10 text-primary border-primary/30 border px-2"
+              className="gap-1 px-2"
               classNames={{
-                content: 'text-xs font-medium',
+                base: 'bg-primary-50/50 hover:bg-primary-100/50 transition-colors cursor-default border-none',
+                content: 'text-xs font-semibold text-primary-600',
               }}
             >
               {serviceName}
@@ -95,11 +98,11 @@ export function createRenderCell(params: RenderCellParams) {
               value={progressValue}
               classNames={{
                 base: 'flex-1',
-                track: 'h-2 rounded-full',
-                indicator: `rounded-full ${isFull ? 'bg-danger' : 'bg-primary'}`,
+                track: 'h-1.5 rounded-full bg-gray-100',
+                indicator: `rounded-full ${isFull ? 'bg-danger-400' : 'bg-primary-400'}`,
               }}
             />
-            <span className="text-xs font-semibold text-gray-600">
+            <span className="text-xs font-medium text-gray-500">
               {ratioLabel}
             </span>
           </div>
@@ -111,16 +114,17 @@ export function createRenderCell(params: RenderCellParams) {
             <Chip
               size="sm"
               variant="flat"
-              color={
+               color={
                 schedule.status === 'tidak aktif'
-                  ? 'warning'
+                  ? 'default' // Changed warning to default for "inactive" (usually gray/neutral is better for inactive)
                   : isFull
                     ? 'danger'
                     : 'success'
               }
+              className="px-2"
               classNames={{
-                content: 'text-xs font-medium',
-                base: 'px-2 border',
+                content: 'text-xs font-semibold capitalize',
+                base: 'border-none', // Ensure no border
               }}
             >
               {statusLabel}
@@ -136,9 +140,9 @@ export function createRenderCell(params: RenderCellParams) {
                   isIconOnly
                   size="sm"
                   variant="light"
-                  className="hover:text-primary text-gray-600"
+                  className="text-gray-400 hover:text-gray-600"
                 >
-                  <PenLine size={16} />
+                  <EllipsisVertical size={18} />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Aksi jadwal">

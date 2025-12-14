@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import { PenLine, Plus, RefreshCw, Search, Trash2 } from 'lucide-react';
+import { EllipsisVertical, PenLine, Plus, RefreshCw, Search, Trash2 } from 'lucide-react';
 import toRupiah from '@/utils/toRupiah';
 
 // Extended type with __rowKey added by useServices
@@ -85,7 +85,7 @@ const ServiceTable = (props: Props) => {
                   variant="light"
                   className="hover:text-primary text-gray-600"
                 >
-                  <PenLine size={16} />
+                  <EllipsisVertical size={18} />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Aksi layanan">
@@ -124,7 +124,7 @@ const ServiceTable = (props: Props) => {
       )}
 
       {/* Table Card */}
-      <div className="bg-white shadow-sm rounded-xl border border-gray-100">
+      <div className="bg-white shadow-md shadow-gray-100/50 rounded-2xl border border-gray-100">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -174,9 +174,9 @@ const ServiceTable = (props: Props) => {
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
-              td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
-              tr: 'hover:bg-gray-50 transition-colors',
+              th: 'bg-gray-50/80 text-gray-500 font-bold text-xs uppercase tracking-wider px-6 py-4 border-b border-gray-100',
+              td: 'px-6 py-4 text-sm text-gray-700 border-b border-gray-50',
+              tr: 'hover:bg-gray-50/50 transition-colors',
               base: 'min-w-full',
             }}
           >

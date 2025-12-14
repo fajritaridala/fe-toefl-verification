@@ -349,8 +349,14 @@ export default function ScoreInputModal({
           </div>
         </ModalBody>
 
-        <ModalFooter className="flex justify-between">
-          <Button variant="light" onPress={onClose} isDisabled={isSubmitting}>
+      <ModalFooter className="flex w-full justify-center gap-3">
+          <Button
+            variant="flat"
+            color="danger"
+            onPress={onClose}
+            isDisabled={isSubmitting}
+            className="w-1/3 font-semibold"
+          >
             Batal
           </Button>
 
@@ -359,12 +365,11 @@ export default function ScoreInputModal({
             onPress={handleSubmit}
             isDisabled={!isFormValid() || isSubmitting}
             isLoading={isSubmitting}
-            startContent={!isSubmitting && <Save className="h-4 w-4" />}
-            className="font-semibold"
+            className="w-1/3 font-semibold text-white"
           >
             {isSubmitting ? 'Menyimpan...' : 'Simpan Nilai'}
           </Button>
-        </ModalFooter>
+      </ModalFooter>
       </ModalContent>
     </Modal>
   );

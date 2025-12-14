@@ -4,9 +4,12 @@ import DashboardLayout from '@/components/layouts/Dashboard';
 export default function AdminParticipants() {
   return (
     <>
-      <DashboardLayout title="Daftar Pendaftar">
-        <Participants />
-      </DashboardLayout>
+      <DashboardLayout 
+      title="Manajemen Peserta"
+      description="Kelola data pendaftar dan status pendaftaran."
+    >
+      <Participants />
+    </DashboardLayout>
     </>
   );
 }

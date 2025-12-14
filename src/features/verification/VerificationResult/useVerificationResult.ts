@@ -65,16 +65,17 @@ const useVerificationResult = () => {
         // 2. Get Data from IPFS
         const ipfsResponse = await certificateApi.getDataFromIpfs(cid);
         const payload = ipfsResponse.content;
+        console.log(payload);
 
         // 3. Map Data
         const biodataPeserta = {
           nama_lengkap: payload.fullName,
           jenis_kelamin: payload.gender || "-",
-          tanggal_lahir: payload.dateOfBirth || "-", // Add if available in payload, otherwise '-'
+          tanggal_lahir: payload.birthDate || "-", // Add if available in payload, otherwise '-'
           nomor_induk_mahasiswa: payload.nim || "-",
           fakultas: payload.faculty || "-",
           program_studi: payload.major || "-",
-          sesi_tes: "-", // Not in current certificate payload, keep default or update if schema changes
+          layanan: payload.serviceName || "-", // Not in current certificate payload, keep default or update if schema changes
           tanggal_tes: payload.scheduleDate || "-",
         };
 

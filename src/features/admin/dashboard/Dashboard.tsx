@@ -18,12 +18,41 @@ import {
 } from 'lucide-react';
 import moment from 'moment';
 import Link from 'next/link';
+import { motion, type Variants } from 'framer-motion';
 import useDashboard from './useDashboard';
 
 const statusColorMap: Record<string, 'warning' | 'success' | 'danger'> = {
   menunggu: 'warning',
   disetujui: 'success',
   ditolak: 'danger',
+};
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const fadeInItem: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
+  },
+};
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
 };
 
 function Dashboard() {
@@ -77,11 +106,17 @@ function Dashboard() {
   return (
     <section className="space-y-8 pt-2">
       {/* Minimalist Summary Cards */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <motion.div 
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="grid gap-6 md:grid-cols-2 xl:grid-cols-4"
+      >
         {summaryCards.map((card) => (
-          <div
+          <motion.div
             key={card.key}
-            className="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:border-primary-100 hover:shadow-md"
+            variants={fadeInItem}
+            className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-md shadow-blue-500/5 transition-all hover:border-primary-100 hover:shadow-lg hover:shadow-blue-500/10"
           >
             <div className="flex items-start justify-between">
               <div>
@@ -100,14 +135,20 @@ function Dashboard() {
             </div>
             {/* Decorative background blur */}
             <div className="absolute -bottom-6 -right-6 h-24 w-24 rounded-full bg-primary-50/50 blur-2xl transition-all group-hover:bg-primary-100/50" />
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       <div className="grid gap-8 lg:grid-cols-3">
         {/* Main Content Area: Schedules */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="rounded-xl border border-gray-100 bg-white p-8 shadow-sm">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            transition={{ delay: 0.2 }}
+            className="rounded-2xl border border-gray-100 bg-white p-8 shadow-md shadow-gray-100/50"
+          >
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-gray-900">
@@ -123,6 +164,7 @@ function Dashboard() {
                 size="sm"
                 variant="light"
                 color="primary"
+                radius="full"
                 className="font-semibold"
                 endContent={<ArrowRight className="h-4 w-4" />}
               >
@@ -199,10 +241,16 @@ function Dashboard() {
                   </div>
                 )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Recent Participants */}
-          <div className="rounded-xl border border-gray-100 bg-white p-8 shadow-sm">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            transition={{ delay: 0.3 }}
+            className="rounded-2xl border border-gray-100 bg-white p-8 shadow-md shadow-gray-100/50"
+          >
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-gray-900">Pendaftar Terbaru</h3>
@@ -216,6 +264,7 @@ function Dashboard() {
                 size="sm"
                 variant="light"
                 color="primary"
+                radius="full"
                 className="font-semibold"
               >
                 Lihat Semua
@@ -271,13 +320,19 @@ function Dashboard() {
                 <p className="text-center text-sm text-gray-500 py-4">Belum ada pendaftar baru</p>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Sidebar */}
         <div className="space-y-8">
           {/* Approval Stats */}
-          <div className="rounded-xl border border-gray-100 bg-white p-8 shadow-sm">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            transition={{ delay: 0.4 }}
+            className="rounded-2xl border border-gray-100 bg-white p-8 shadow-md shadow-gray-100/50"
+          >
             <h3 className="text-xl font-bold text-gray-900">Ringkasan Validasi</h3>
             <p className="text-sm text-gray-500">Statistik persetujuan peserta</p>
             
@@ -325,17 +380,23 @@ function Dashboard() {
                  </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Access */}
-          <div className="space-y-4">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            transition={{ delay: 0.5 }}
+            className="space-y-4"
+          >
              <h4 className="px-2 text-xs font-bold uppercase tracking-wider text-gray-400">
                Quick Actions
              </h4>
              <div className="grid gap-4">
                <Link
                  href="/admin/services"
-                 className="group flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-md hover:shadow-blue-500/5"
+                 className="group flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-md hover:shadow-blue-500/5"
                >
                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
                     <Package className="h-6 w-6" />
@@ -348,7 +409,7 @@ function Dashboard() {
 
                <Link
                  href="/admin/schedules"
-                 className="group flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-5 transition-all hover:border-emerald-200 hover:shadow-md hover:shadow-emerald-500/5"
+                 className="group flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 transition-all hover:border-emerald-200 hover:shadow-md hover:shadow-emerald-500/5"
                >
                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition-colors group-hover:bg-emerald-600 group-hover:text-white">
                     <Calendar className="h-6 w-6" />
@@ -361,7 +422,7 @@ function Dashboard() {
 
                <Link
                  href="/admin/participants"
-                 className="group flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-5 transition-all hover:border-violet-200 hover:shadow-md hover:shadow-violet-500/5"
+                 className="group flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 transition-all hover:border-violet-200 hover:shadow-md hover:shadow-violet-500/5"
                >
                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-violet-50 text-violet-600 transition-colors group-hover:bg-violet-600 group-hover:text-white">
                     <Users className="h-6 w-6" />
@@ -372,7 +433,7 @@ function Dashboard() {
                  </div>
                </Link>
              </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

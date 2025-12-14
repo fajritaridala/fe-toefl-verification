@@ -55,13 +55,15 @@ export const useValidation = () => {
     },
     onSuccess: () => {
       console.log('Approve success!');
-      queryClient.invalidateQueries({ queryKey: ['enrollments'] });
-      // Auto move to next in preview
-      if (currentPreviewIndex < participants.length - 1) {
-        setCurrentPreviewIndex((prev) => prev + 1);
-      } else {
-        setPreviewModalOpen(false);
-      }
+      // Close modal to trigger exit animation
+      setPreviewModalOpen(false);
+      setDetailModalOpen(false); // Ensure both are closed
+
+      // Wait for animation to finish before refetching data
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+        // Reset preview if needed, or let the list rebuild
+      }, 450);
     },
     onError: (
       error: Error & { response?: { data?: { message?: string } } }
@@ -83,13 +85,14 @@ export const useValidation = () => {
     },
     onSuccess: () => {
       console.log('Reject success!');
-      queryClient.invalidateQueries({ queryKey: ['enrollments'] });
-      // Auto move to next in preview
-      if (currentPreviewIndex < participants.length - 1) {
-        setCurrentPreviewIndex((prev) => prev + 1);
-      } else {
-        setPreviewModalOpen(false);
-      }
+      // Close modal to trigger exit animation
+      setPreviewModalOpen(false);
+      setDetailModalOpen(false);
+
+      // Wait for animation to finish before refetching data
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+      }, 450);
     },
     onError: (
       error: Error & { response?: { data?: { message?: string } } }

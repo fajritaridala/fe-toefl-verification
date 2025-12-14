@@ -85,9 +85,9 @@ const ScheduleTable = (props: ScheduleTableProps) => {
         </div>
       )}
 
-      <div className="bg-white shadow-sm rounded-xl border border-gray-100">
+      <div className="bg-white shadow-md shadow-gray-100/50 rounded-2xl border border-gray-100">
         {/* Filters Section */}
-        <div className="bg-transparent px-6 py-4">
+        <div className="bg-transparent px-6 py-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-1 flex-col gap-3 sm:flex-row">
               <Select
@@ -102,8 +102,8 @@ const ScheduleTable = (props: ScheduleTableProps) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-44"
                 classNames={{
-                  trigger: 'bg-gray-50 drop-shadow-sm',
-                  value: 'text-sm font-semibold text-gray-700',
+                  trigger: 'bg-white border-gray-200 hover:border-gray-300 transition-colors',
+                  value: 'text-sm font-medium text-gray-700',
                 }}
               >
                 {(option) => <SelectItem key={option.value}>{option.label}</SelectItem>}
@@ -120,8 +120,8 @@ const ScheduleTable = (props: ScheduleTableProps) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-52"
                 classNames={{
-                  trigger: 'bg-gray-50 drop-shadow-sm',
-                  value: 'text-sm font-semibold text-gray-700',
+                  trigger: 'bg-white border-gray-200 hover:border-gray-300 transition-colors',
+                  value: 'text-sm font-medium text-gray-700',
                 }}
               >
                 {(option) => <SelectItem key={option.value}>{option.label}</SelectItem>}
@@ -130,16 +130,17 @@ const ScheduleTable = (props: ScheduleTableProps) => {
                 isIconOnly
                 radius="full"
                 variant="flat"
-                className="w-full border border-gray-200 bg-gray-50 drop-shadow-sm hover:border-gray-300 sm:w-auto"
+                className="w-full border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 sm:w-auto"
                 onPress={onRefresh}
                 aria-label="Refresh data"
               >
-                <RefreshCw className="h-4 w-4 text-gray-600" />
+                <RefreshCw className="h-4 w-4 text-gray-500" />
               </Button>
             </div>
             <Button
               radius="full"
-              className="bg-primary shadow-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
+              color='primary'
+              className="shadow-lg shadow-primary/20 font-semibold text-white transition-transform hover:scale-[1.02]"
               startContent={<Plus size={18} />}
               onPress={onAdd}
             >
@@ -149,15 +150,15 @@ const ScheduleTable = (props: ScheduleTableProps) => {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto rounded-b-xl">
+        <div className="overflow-x-auto rounded-b-2xl">
           <Table
             aria-label="Tabel jadwal"
             selectionMode="none"
             removeWrapper
             classNames={{
-              th: 'bg-gray-50 text-gray-600 font-semibold text-xs uppercase px-6 py-4 border-b border-gray-200',
-              td: 'px-6 py-4 text-sm text-gray-900 border-b border-gray-100',
-              tr: 'hover:bg-gray-50 transition-colors',
+              th: 'bg-gray-50/80 text-gray-500 font-bold text-xs uppercase tracking-wider px-6 py-4 border-b border-gray-100',
+              td: 'px-6 py-4 text-sm text-gray-700 border-b border-gray-50',
+              tr: 'hover:bg-gray-50/50 transition-colors',
               base: 'min-w-full',
             }}
           >

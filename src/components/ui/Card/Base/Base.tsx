@@ -8,17 +8,19 @@ type Props = {
   description: string;
   icon?: ReactNode;
   index?: number;
+  className?: string;
 };
 
 const BaseCard = (props: Props) => {
-  const { icon, title, description, index } = props;
+  const { icon, title, description, index, className } = props;
   return (
     <div
       className={cn(
         "bg-white rounded-2xl p-8 flex flex-col items-center text-center",
         "transition-all duration-300 hover:-translate-y-2",
         // Shadow Neumorphism saat hover
-        "hover:shadow-[8px_8px_16px_rgba(209,217,230,0.4),_-8px_-8px_16px_rgba(255,255,255,0.7)]"
+        "hover:shadow-[8px_8px_16px_rgba(209,217,230,0.4),_-8px_-8px_16px_rgba(255,255,255,0.7)]",
+        className
       )}
     >
       <div className="mb-6 flex justify-center">

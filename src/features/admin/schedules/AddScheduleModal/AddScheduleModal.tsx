@@ -1,4 +1,5 @@
 import { Controller } from 'react-hook-form';
+import { ScheduleItem } from '@features/admin';
 import {
   Button,
   Form,
@@ -12,7 +13,6 @@ import {
   Select,
   SelectItem,
 } from '@heroui/react';
-import { ScheduleItem } from '@features/admin';
 import { ServiceOption } from '../Schedules.constants';
 import useAddScheduleModal from './useAddScheduleModal';
 
@@ -48,6 +48,7 @@ const AddScheduleModal = ({
       onClose={onClose}
       placement="center"
       backdrop="blur"
+      className="px-3 py-6"
     >
       <ModalContent>
         {() => (
@@ -58,7 +59,7 @@ const AddScheduleModal = ({
                 Tentukan layanan, tanggal, serta kuota untuk jadwal TOEFL.
               </p>
             </ModalHeader>
-            <ModalBody className="space-y-4">
+            <ModalBody className="w-full space-y-4">
               <Controller
                 name="serviceId"
                 control={control}
@@ -69,6 +70,7 @@ const AddScheduleModal = ({
                       {...restField}
                       ref={ref}
                       isRequired
+                      variant="bordered"
                       label="Layanan"
                       labelPlacement="outside"
                       placeholder={
@@ -86,7 +88,9 @@ const AddScheduleModal = ({
                       errorMessage={errors.serviceId?.message}
                     >
                       {serviceOptions.map((option) => (
-                        <SelectItem key={option.value}>{option.label}</SelectItem>
+                        <SelectItem key={option.value}>
+                          {option.label}
+                        </SelectItem>
                       ))}
                     </Select>
                   );
@@ -101,6 +105,7 @@ const AddScheduleModal = ({
                     {...field}
                     type="date"
                     isRequired
+                    variant="bordered"
                     label="Tanggal jadwal"
                     labelPlacement="outside"
                     placeholder="Pilih tanggal pelaksanaan"
@@ -119,6 +124,7 @@ const AddScheduleModal = ({
                       {...field}
                       type="time"
                       isRequired
+                      variant="bordered"
                       label="Waktu Mulai"
                       labelPlacement="outside"
                       placeholder="00:00"
@@ -136,6 +142,7 @@ const AddScheduleModal = ({
                       {...field}
                       type="time"
                       isRequired
+                      variant="bordered"
                       label="Waktu Selesai"
                       labelPlacement="outside"
                       placeholder="00:00"
@@ -157,6 +164,7 @@ const AddScheduleModal = ({
                       ref={ref}
                       hideStepper
                       min={0}
+                      variant="bordered"
                       label="Kuota (opsional)"
                       labelPlacement="outside"
                       placeholder="Masukkan jumlah kuota"
@@ -169,7 +177,8 @@ const AddScheduleModal = ({
                       }
                       onValueChange={(nextValue) =>
                         onChange(
-                          typeof nextValue === 'number' && !Number.isNaN(nextValue)
+                          typeof nextValue === 'number' &&
+                            !Number.isNaN(nextValue)
                             ? nextValue
                             : undefined
                         )
@@ -181,13 +190,20 @@ const AddScheduleModal = ({
                 }}
               />
             </ModalBody>
-            <ModalFooter>
-              <Button variant="light" onPress={onClose} className="font-semibold">
+            <ModalFooter className="flex w-full justify-center gap-3">
+              <Button
+                variant="flat"
+                color="danger"
+                onPress={onClose}
+                className="w-1/3 font-semibold"
+              >
                 Batal
               </Button>
               <Button
                 type="submit"
-                className="bg-primary font-semibold text-white"
+                variant="solid"
+                color="primary"
+                className="w-1/3 font-semibold"
                 isLoading={isSubmitting}
                 isDisabled={!hasServiceOptions}
               >

@@ -86,6 +86,28 @@ export default function EnrollmentDetailModal({
       size="3xl"
       backdrop="blur"
       scrollBehavior="inside"
+      motionProps={{
+        variants: {
+          enter: {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            transition: {
+              duration: 0.4,
+              ease: "easeOut",
+            },
+          },
+          exit: {
+            y: 20,
+            opacity: 0,
+            scale: 0.95,
+            transition: {
+              duration: 0.3,
+              ease: "easeIn",
+            },
+          },
+        },
+      }}
       classNames={{
         base: 'bg-white',
         header: 'border-b border-gray-200 px-6 py-4',
@@ -270,20 +292,20 @@ export default function EnrollmentDetailModal({
 
         <ModalFooter>
           {showActions ? (
-            <div className="flex w-full items-center justify-end gap-3">
+            <div className="flex w-full justify-center gap-3">
               <Button
                 variant="flat"
                 color="danger"
                 onPress={handleReject}
                 isDisabled={isProcessing}
                 startContent={<XCircle className="h-4 w-4" />}
-                className="font-medium"
+                className="w-1/3 font-semibold"
               >
                 Tolak
               </Button>
               <Button
                 color="success"
-                className="text-white font-medium"
+                className="w-1/3 font-semibold text-white"
                 onPress={handleApprove}
                 isDisabled={isProcessing}
                 startContent={<Check className="h-4 w-4" />}
@@ -293,14 +315,17 @@ export default function EnrollmentDetailModal({
               </Button>
             </div>
           ) : (
-            <Button
-              variant="light"
-              radius="full"
-              onPress={onClose}
-              startContent={<X className="h-4 w-4" />}
-            >
-              Tutup
-            </Button>
+            <div className="flex w-full justify-center">
+              <Button
+                variant="light"
+                radius="full"
+                onPress={onClose}
+                startContent={<X className="h-4 w-4" />}
+                className="w-1/3 font-semibold text-gray-600"
+              >
+                Tutup
+              </Button>
+            </div>
           )}
         </ModalFooter>
       </ModalContent>

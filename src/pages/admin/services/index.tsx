@@ -8,9 +8,12 @@ export default function AdminServices() {
       <Head>
         <title>Kelola Layanan - Simpeka</title>
       </Head>
-      <DashboardLayout>
-        <Services />
-      </DashboardLayout>
+      <DashboardLayout 
+      title="Manajemen Layanan"
+      description="Kelola jenis layanan tes yang tersedia."
+    >
+      <Services />
+    </DashboardLayout>
     </>
   );
 }

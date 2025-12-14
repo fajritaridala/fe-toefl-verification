@@ -60,13 +60,13 @@ const BaseNavbar = (props: Props) => {
       >
         {/* left start */}
         <NavbarBrand>
-          <p className="text-primary text-xl font-extrabold">Simpeka</p>
+          <p className="text-primary text-2xl font-extrabold">Simpeka</p>
         </NavbarBrand>
         {/* left end */}
 
         {/* center start */}
         <NavbarContent justify="end">
-          <NavbarItem className="flex gap-4 text-sm">
+          <NavbarItem className="flex gap-4">
             {NAVBAR_ITEMS.map((item, index) => {
               return (
                 <Link
@@ -92,7 +92,7 @@ const BaseNavbar = (props: Props) => {
                 <DropdownTrigger>
                   <Button
                     data-hover={false}
-                    className="border-primary hover:bg-primary group text-primary border-1.5 rounded-full bg-transparent px-2 text-sm transition-all delay-75 duration-100 active:translate-y-0.5"
+                    className="bg-primary hover:bg-primary/90 group border-1.5 rounded-full px-4 text-white transition-all delay-75 duration-100 active:translate-y-0.5"
                     startContent={
                       <LuUser
                         strokeWidth={2}
@@ -119,7 +119,7 @@ const BaseNavbar = (props: Props) => {
                     onPress={item.onPress}
                     startContent={item.icon}
                     className={cn(
-                      'text-text data-[hover=true]:bg-primary data-[hover=true]:text-bg-light rounded-full text-sm delay-[.05s]',
+                      'text-text data-[hover=true]:bg-primary data-[hover=true]:text-bg-light rounded-xl px-3 text-sm delay-[.05s]',
                       {
                         'text-danger data-[hover=true]:bg-danger':
                           item.label === 'Logout',
@@ -136,7 +136,7 @@ const BaseNavbar = (props: Props) => {
               data-hover={false}
               onPress={handleLogin}
               size="md"
-              className="border-primary hover:bg-primary hover:text-bg-light text-primary text-medium rounded-full border-2 bg-transparent px-8 font-semibold delay-75 duration-0 active:translate-y-0.5"
+              className="bg-primary hover:bg-primary/90 text-medium rounded-full px-8 font-semibold text-white transition-all delay-75 duration-200 active:translate-y-0.5"
             >
               Login
             </Button>

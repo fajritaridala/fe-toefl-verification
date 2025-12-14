@@ -4,9 +4,12 @@ import DashboardLayout from '@/components/layouts/Dashboard';
 export default function AdminParticipantsValidation() {
   return (
     <>
-      <DashboardLayout title="Validasi Peserta" description='Approve atau reject pendaftaran peserta baru'>
-        <Validation />
-      </DashboardLayout>
+      <DashboardLayout
+      title="Validasi Pendaftaran"
+      description="Verifikasi bukti pembayaran dan berkas peserta."
+    >
+      <Validation />
+    </DashboardLayout>
     </>
   );
 }

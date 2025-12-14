@@ -1,5 +1,15 @@
+import { motion, type Variants } from 'framer-motion';
 import UploaderCard from "@/components/ui/Card/Uploader";
 import useVerification from "./useVerification";
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
+};
 
 const Verification = () => {
   const {
@@ -16,7 +26,12 @@ const Verification = () => {
   return (
     <div className="bg-bg min-h-screen">
       <section className="mb-20 flex flex-col">
-        <div className="mt-24 text-center">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="mt-24 text-center"
+        >
           <h1 className="text-text mx-auto mb-4 text-4xl font-extrabold">
             Verifikasi Keaslian Sertifikat
           </h1>
@@ -25,8 +40,14 @@ const Verification = () => {
             blockchain kami. Pastikan sertifikat yang Anda unggah adalah file
             resmi dari SIMPEKA.
           </p>
-        </div>
-        <div className="mx-auto animate-fade-bottom mt-12 w-xl">
+        </motion.div>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          transition={{ delay: 0.2 }}
+          className="mx-auto mt-12 w-xl"
+        >
           <UploaderCard
             handleSubmit={handleSubmit}
             fileInputRef={fileInputRef}
@@ -37,7 +58,7 @@ const Verification = () => {
             isDragging={isDragging}
             dragHandlers={dragHandlers}
           />
-        </div>
+        </motion.div>
       </section>
     </div>
   );

@@ -127,6 +127,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--color-bg-dark);
   color: var(--color-text);

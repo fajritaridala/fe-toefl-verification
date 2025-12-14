@@ -90,7 +90,10 @@ export const useParticipants = () => {
 
   const handleCloseDetail = useCallback(() => {
     setDetailModalOpen(false);
-    setSelectedParticipant(null);
+    // Delay clearing the data to allow exit animation to play
+    setTimeout(() => {
+      setSelectedParticipant(null);
+    }, 400); 
   }, []);
 
   /* -------------------------------------------------------------------------- */

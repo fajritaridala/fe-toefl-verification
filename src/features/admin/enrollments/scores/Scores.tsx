@@ -1,6 +1,7 @@
 'use client';
 
 import { PenSquare } from 'lucide-react';
+import { motion, type Variants } from 'framer-motion';
 import { ScoreInputModal } from '@/components/ui/Modal';
 import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
 import { formatDate } from '@/utils/common';
@@ -8,6 +9,15 @@ import { useScores } from './useScores';
 import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
+};
 
 export default function Scores() {
   const {
@@ -69,7 +79,12 @@ export default function Scores() {
   ];
 
   return (
-    <section className="space-y-4">
+    <motion.section 
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+      className="space-y-4"
+    >
       <GenericEnrollmentTable
         data={participants}
         isLoading={isLoadingEnrollments}
@@ -117,6 +132,6 @@ export default function Scores() {
         statusMessage={statusMessage}
         onRetry={handleRetryBlockchain}
       />
-    </section>
+    </motion.section>
   );
 }
