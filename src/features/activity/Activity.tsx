@@ -5,7 +5,7 @@ import { Calendar, CheckCircle, ChevronRight, History, Trophy } from 'lucide-rea
 import { useRouter } from 'next/router';
 import { useActivity } from './useActivity';
 import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/common';
 import { ActivityItem } from './activity.service';
 
 export default function Activity() {

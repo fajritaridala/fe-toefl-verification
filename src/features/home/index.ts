@@ -1,2 +1,2 @@
 export { default as Home } from "./Home";
-export { homeConstants } from "./home.constants";
+export { CONTENT_WHY, CONTENT_HOW, CONTENT_TESTIMONY } from "./home.constants";

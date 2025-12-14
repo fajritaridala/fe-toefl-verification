@@ -22,7 +22,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import Image from 'next/image';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/common';
 import { EnrollmentItem } from '@/features/admin/types/admin.types';
 
 // Extend EnrollmentItem or create a compatible type that covers all fields from both previous modals

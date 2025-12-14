@@ -20,9 +20,12 @@ import {
 import { PenLine, Plus, RefreshCw, Search, Trash2 } from 'lucide-react';
 import toRupiah from '@/utils/toRupiah';
 
+// Extended type with __rowKey added by useServices
+type ServiceItemWithRowKey = ServiceItem & { __rowKey?: string };
+
 type Props = {
   columns: ServiceTableColumn[];
-  services: ServiceItem[];
+  services: ServiceItemWithRowKey[];
   isLoading: boolean;
   isRefetching: boolean;
   currentPage: number;
@@ -229,7 +232,7 @@ const ServiceTable = (props: Props) => {
               }
             >
               {(item) => (
-                <TableRow key={(item as any).__rowKey || item._id}>
+                <TableRow key={item.__rowKey || item._id}>
                   {(columnKey) => (
                     <TableCell>{renderCell(item, columnKey)}</TableCell>
                   )}

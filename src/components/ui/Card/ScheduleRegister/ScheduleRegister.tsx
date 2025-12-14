@@ -213,7 +213,6 @@ export default function ScheduleRegisterForm(props: Props) {
             <input
               type="file"
               ref={(node) => {
-                // @ts-ignore
                 fileInputRef.current = node;
               }}
               onChange={handleFileChangeAction}

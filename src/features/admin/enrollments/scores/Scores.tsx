@@ -3,7 +3,7 @@
 import { PenSquare } from 'lucide-react';
 import { ScoreInputModal } from '@/components/ui/Modal';
 import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/common';
 import { useScores } from './useScores';
 import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';

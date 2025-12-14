@@ -2,7 +2,7 @@
 
 import { Check, Eye, X } from 'lucide-react';
 import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/common';
 import { useValidation } from './useValidation';
 import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';

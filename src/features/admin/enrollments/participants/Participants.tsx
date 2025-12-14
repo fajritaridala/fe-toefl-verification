@@ -5,7 +5,7 @@ import { Eye } from 'lucide-react';
 import { Button } from '@heroui/react';
 import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
 import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/common';
 import { useParticipants } from './useParticipants';
 import { EnrollmentStatus, EnrollmentItem } from '@/features/admin/types/admin.types';
 import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';

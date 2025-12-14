@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useDeleteMutation from '@/hooks/useDeleteMutation';
 import { servicesService } from '@features/admin';
 
 type UseDeleteServiceModalProps = {
@@ -6,26 +6,24 @@ type UseDeleteServiceModalProps = {
   onError?: (error: Error) => void;
 };
 
+/**
+ * Hook for deleting services.
+ * Refactored to use shared useDeleteMutation hook.
+ */
 const useDeleteServiceModal = ({
   onSuccess,
   onError,
 }: UseDeleteServiceModalProps = {}) => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isPending } = useMutation({
+  const { deleteMutate, isDeleting } = useDeleteMutation({
     mutationFn: (serviceId: string) => servicesService.removeService(serviceId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['services'] });
-      onSuccess?.();
-    },
-    onError: (error: Error) => {
-      onError?.(error);
-    },
+    queryKey: ['services'],
+    onSuccess,
+    onError,
   });
 
   return {
-    deleteService: mutate,
-    isDeleting: isPending,
+    deleteService: deleteMutate,
+    isDeleting,
   };
 };
 

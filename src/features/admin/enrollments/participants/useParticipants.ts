@@ -111,7 +111,7 @@ export const useParticipants = () => {
 
   const serviceOptions = useMemo(() => {
     const items = servicesData?.data || [];
-    return items.map((svc: any) => ({
+    return items.map((svc: { name: string; _id: string }) => ({
       label: svc.name,
       value: svc._id,
     }));

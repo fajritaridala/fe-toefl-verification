@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useDeleteMutation from '@/hooks/useDeleteMutation';
 import { schedulesService } from '@features/admin';
 
 type UseDeleteScheduleModalProps = {
@@ -6,27 +6,24 @@ type UseDeleteScheduleModalProps = {
   onError?: (error: Error) => void;
 };
 
+/**
+ * Hook for deleting schedules.
+ * Refactored to use shared useDeleteMutation hook.
+ */
 const useDeleteScheduleModal = ({
   onSuccess,
   onError,
 }: UseDeleteScheduleModalProps = {}) => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: (scheduleId: string) =>
-      schedulesService.removeSchedule(scheduleId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['schedules'] });
-      onSuccess?.();
-    },
-    onError: (error: Error) => {
-      onError?.(error);
-    },
+  const { deleteMutate, isDeleting } = useDeleteMutation({
+    mutationFn: (scheduleId: string) => schedulesService.removeSchedule(scheduleId),
+    queryKey: ['schedules'],
+    onSuccess,
+    onError,
   });
 
   return {
-    deleteSchedule: mutate,
-    isDeleting: isPending,
+    deleteSchedule: deleteMutate,
+    isDeleting,
   };
 };
 

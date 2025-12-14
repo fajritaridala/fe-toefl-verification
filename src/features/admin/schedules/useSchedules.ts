@@ -1,43 +1,30 @@
-import { useCallback, useEffect, useMemo } from 'react';
+'use client';
+
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { PAGINATION_OPTIONS } from '@/constants/list.constants';
-import { schedulesService } from '@features/admin';
-import { servicesService } from '@features/admin';
-import { ScheduleListResponse } from '@features/admin';
-import { ServiceListResponse } from '@features/admin';
-import {
-  ALL_MONTH_OPTION_VALUE,
-  ALL_SERVICE_OPTION_VALUE,
-  ServiceOption,
-} from './Schedules.constants';
+import usePagination from '@/hooks/usePagination';
+import useServiceOptions from '@/hooks/useServiceOptions';
+import { schedulesService, ScheduleListResponse } from '@features/admin';
+import { ALL_MONTH_OPTION_VALUE, ALL_SERVICE_OPTION_VALUE } from './Schedules.constants';
 
+/**
+ * Hook for managing schedules list with pagination and filtering.
+ * Refactored to use shared usePagination and useServiceOptions hooks.
+ */
 const useSchedules = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const {
+    currentPage,
+    currentLimit,
+    getParam,
+    setParams,
+    handleChangePage,
+    handleChangeLimit,
+  } = usePagination();
 
-  const currentLimit = searchParams?.get('limit') ?? String(PAGINATION_OPTIONS.limitDefault);
-  const currentPage = searchParams?.get('page') ?? String(PAGINATION_OPTIONS.pageDefault);
-  const currentMonth = searchParams?.get('month') ?? '';
-  const currentService = searchParams?.get('serviceId') ?? '';
+  const { serviceOptions } = useServiceOptions();
 
-  const buildUrl = useCallback(
-    (updates: Record<string, string | null | undefined>, method: 'push' | 'replace' = 'push') => {
-      const params = new URLSearchParams(searchParams?.toString() ?? '');
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === null || value === undefined || value === '') {
-          params.delete(key);
-          return;
-        }
-        params.set(key, value);
-      });
-      const queryString = params.toString();
-      const href = queryString ? `${pathname}?${queryString}` : pathname;
-      router[method](href);
-    },
-    [pathname, router, searchParams]
-  );
+  const currentMonth = getParam('month');
+  const currentService = getParam('serviceId');
 
   const {
     data: schedulesResponse,
@@ -67,18 +54,6 @@ const useSchedules = () => {
     enabled: !!currentPage && !!currentLimit,
   });
 
-  const { data: servicesResponse } = useQuery({
-    queryKey: ['services', 'options', 'schedules'],
-    queryFn: async () => {
-      const response = await servicesService.getServices({
-        page: 1,
-        limit: 100,
-      });
-      return response.data as ServiceListResponse;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-
   const schedules = useMemo(() => {
     const items = schedulesResponse?.data || [];
     return items.map((item, idx) => ({
@@ -92,54 +67,21 @@ const useSchedules = () => {
     [schedulesResponse]
   );
 
-  const serviceOptions = useMemo<ServiceOption[]>(() => {
-    if (!servicesResponse?.data?.length) return [];
-    return servicesResponse.data.map((service) => ({
-      label: service.name,
-      value: service._id,
-    }));
-  }, [servicesResponse]);
-
-  const ensureDefaults = useCallback(() => {
-    const hasLimit = searchParams?.has('limit');
-    const hasPage = searchParams?.has('page');
-    if (hasLimit && hasPage) return;
-
-    const params = new URLSearchParams(searchParams?.toString() ?? '');
-    if (!hasLimit) params.set('limit', String(PAGINATION_OPTIONS.limitDefault));
-    if (!hasPage) params.set('page', String(PAGINATION_OPTIONS.pageDefault));
-    const queryString = params.toString();
-    const href = queryString ? `${pathname}?${queryString}` : pathname;
-    router.replace(href);
-  }, [pathname, router, searchParams]);
-
-  function handleChangePage(page: number) {
-    buildUrl({ page: String(page) });
-  }
-
-  function handleChangeLimit(value: string) {
-    buildUrl({ limit: value, page: String(PAGINATION_OPTIONS.pageDefault) });
-  }
-
   function handleFilterService(serviceId: string) {
-    buildUrl({
+    setParams({
       serviceId:
         serviceId && serviceId !== ALL_SERVICE_OPTION_VALUE ? serviceId : null,
-      page: String(PAGINATION_OPTIONS.pageDefault),
+      page: '1',
     });
   }
 
   function handleFilterMonth(monthValue: string) {
-    buildUrl({
+    setParams({
       month:
         monthValue && monthValue !== ALL_MONTH_OPTION_VALUE ? monthValue : null,
-      page: String(PAGINATION_OPTIONS.pageDefault),
+      page: '1',
     });
   }
-
-  useEffect(() => {
-    ensureDefaults();
-  }, [ensureDefaults]);
 
   return {
     schedules,

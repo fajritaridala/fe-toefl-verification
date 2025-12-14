@@ -1,49 +1,38 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { PAGINATION_OPTIONS } from '@/constants/list.constants';
-import useDebounceCallback from '@/hooks/useDebounce';
-import { enrollmentsService } from '@features/admin';
-import { EnrollmentItem, EnrollmentListResponse } from '@features/admin';
+import usePagination from '@/hooks/usePagination';
+import { enrollmentsService, EnrollmentItem, EnrollmentListResponse } from '@features/admin';
 
-type UseEnrollmentsOptions = {
+export type UseEnrollmentsOptions = {
   fixedStatus?: EnrollmentItem['status'];
 };
 
+/**
+ * Hook for managing enrollments list with pagination, search, and filtering.
+ * Refactored to use shared usePagination hook for DRY compliance.
+ */
 function useEnrollments(options?: UseEnrollmentsOptions) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const debounce = useDebounceCallback();
-  const fixedStatus = options?.fixedStatus;
+  const {
+    currentPage,
+    currentLimit,
+    currentSearch,
+    getParam,
+    setParams,
+    handleChangePage,
+    handleChangeLimit,
+    handleSearch,
+    handleClearSearch,
+  } = usePagination();
 
-  const currentLimit = searchParams?.get('limit') ?? String(PAGINATION_OPTIONS.limitDefault);
-  const currentPage = searchParams?.get('page') ?? String(PAGINATION_OPTIONS.pageDefault);
-  const currentSearch = searchParams?.get('search') ?? '';
-  const currentStatus = fixedStatus ?? searchParams?.get('status') ?? 'all';
-  const currentServiceId = searchParams?.get('serviceId') ?? 'all';
+  const fixedStatus = options?.fixedStatus;
+  const currentStatus = fixedStatus ?? (getParam('status') || 'all');
+  const currentServiceId = getParam('serviceId') || 'all';
+  
   const normalizedStatus =
     fixedStatus ?? (currentStatus !== 'all' ? (currentStatus as EnrollmentItem['status']) : undefined);
   const normalizedServiceId = currentServiceId !== 'all' ? currentServiceId : undefined;
-
-  const buildUrl = useCallback(
-    (updates: Record<string, string | null | undefined>, method: 'push' | 'replace' = 'push') => {
-      const params = new URLSearchParams(searchParams?.toString() ?? '');
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === null || value === undefined || value === '') {
-          params.delete(key);
-          return;
-        }
-        params.set(key, value);
-      });
-      const queryString = params.toString();
-      const href = queryString ? `${pathname}?${queryString}` : pathname;
-      router[method](href);
-    },
-    [pathname, router, searchParams]
-  );
 
   const {
     data: dataEnrollments,
@@ -63,56 +52,21 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     },
     enabled: !!currentPage && !!currentLimit,
   });
-  
-  // console.log(dataEnrollments)
-
-  useEffect(() => {
-    const hasLimit = searchParams?.has('limit');
-    const hasPage = searchParams?.has('page');
-    if (hasLimit && hasPage) return;
-
-    const params = new URLSearchParams(searchParams?.toString() ?? '');
-    if (!hasLimit) params.set('limit', String(PAGINATION_OPTIONS.limitDefault));
-    if (!hasPage) params.set('page', String(PAGINATION_OPTIONS.pageDefault));
-    if (fixedStatus) params.set('status', fixedStatus);
-    const queryString = params.toString();
-    const href = queryString ? `${pathname}?${queryString}` : pathname;
-    router.replace(href);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);  // Only run once on mount
-
-  const handleChangePage = useCallback((page: number) => {
-    buildUrl({ page: String(page) });
-  }, [buildUrl]);
-
-  const handleChangeLimit = useCallback((selectedLimit: string) => {
-    buildUrl({ limit: selectedLimit, page: String(PAGINATION_OPTIONS.pageDefault) });
-  }, [buildUrl]);
-
-  const handleSearch = useCallback((value: string) => {
-    debounce(() => {
-      buildUrl({ search: value, page: String(PAGINATION_OPTIONS.pageDefault) });
-    }, PAGINATION_OPTIONS.delay);
-  }, [buildUrl, debounce]);
 
   const handleChangeStatus = useCallback((status: string) => {
     if (fixedStatus) return;
-    buildUrl({
+    setParams({
       status: !status || status === 'all' ? null : status,
-      page: String(PAGINATION_OPTIONS.pageDefault),
+      page: '1',
     });
-  }, [buildUrl, fixedStatus]);
-
-  const handleClearSearch = useCallback(() => {
-    buildUrl({ search: null, page: String(PAGINATION_OPTIONS.pageDefault) });
-  }, [buildUrl]);
+  }, [setParams, fixedStatus]);
 
   const handleChangeService = useCallback((serviceId: string) => {
-    buildUrl({
+    setParams({
       serviceId: !serviceId || serviceId === 'all' ? null : serviceId,
-      page: String(PAGINATION_OPTIONS.pageDefault),
+      page: '1',
     });
-  }, [buildUrl]);
+  }, [setParams]);
 
   return {
     dataEnrollments,

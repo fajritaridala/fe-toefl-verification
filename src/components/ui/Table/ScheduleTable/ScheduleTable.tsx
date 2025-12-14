@@ -1,21 +1,10 @@
-import { Key, ReactNode } from 'react';
-import { ScheduleItem } from '@features/admin';
 import {
   ALL_MONTH_OPTION_VALUE,
   ALL_SERVICE_OPTION_VALUE,
-  MonthOption,
-  ScheduleTableColumn,
-  ServiceOption,
 } from '@features/admin/schedules/Schedules.constants';
 import {
   Button,
-  Chip,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Pagination,
-  Progress,
   Select,
   SelectItem,
   Spinner,
@@ -27,42 +16,12 @@ import {
   TableRow,
 } from '@heroui/react';
 import type { Selection } from '@heroui/react';
-import {
-  Calendar,
-  Filter,
-  PenLine,
-  Plus,
-  RefreshCw,
-  Trash2,
-  Users,
-} from 'lucide-react';
-import moment from 'moment';
+import { Filter, Plus, RefreshCw } from 'lucide-react';
 import { LIMIT_LISTS } from '@/constants/list.constants';
+import { ScheduleTableProps } from './ScheduleTable.types';
+import { createRenderCell, handleSelectionChange } from './ScheduleTable.utils';
 
-type Props = {
-  columns: ScheduleTableColumn[];
-  schedules: ScheduleItem[];
-  serviceOptions: ServiceOption[];
-  monthOptions: MonthOption[];
-  selectedMonth: string;
-  selectedService: string;
-  isLoading: boolean;
-  isRefetching: boolean;
-  currentLimit: number;
-  currentPage: number;
-  totalPages: number;
-  onChangePage: (page: number) => void;
-  onChangeLimit: (value: number) => void;
-  onSelectMonth: (value: string) => void;
-  onSelectService: (value: string) => void;
-  onRefresh: () => void;
-  onAdd: () => void;
-  onEdit: (schedule: ScheduleItem) => void;
-  onDelete: (schedule: ScheduleItem) => void;
-  onViewParticipants: (schedule: ScheduleItem) => void;
-};
-
-const ScheduleTable = (props: Props) => {
+const ScheduleTable = (props: ScheduleTableProps) => {
   const {
     columns,
     schedules,
@@ -91,185 +50,25 @@ const ScheduleTable = (props: Props) => {
     ...serviceOptions,
   ];
   const monthSelectionValue = selectedMonth || ALL_MONTH_OPTION_VALUE;
-
-  const formatDateTimeRange = (
-    date?: string | Date,
-    start?: string,
-    end?: string
-  ) => {
-    const dayLabel = date ? moment(date).format('DD MMM YYYY') : '-';
-    const timeLabel =
-      start && end
-        ? `${moment(start).format('HH:mm')} - ${moment(end).format('HH:mm')}`
-        : '';
-    return { dayLabel, timeLabel };
-  };
-
-  const renderCell = (schedule: ScheduleItem, columnKey: Key): ReactNode => {
-    const registrants =
-      typeof schedule.registrants === 'number' ? schedule.registrants : 0;
-    const quota =
-      typeof schedule.quota === 'number' ? Number(schedule.quota) : undefined;
-    const isFull = quota ? registrants >= quota : false;
-    const statusLabel =
-      schedule.status === 'aktif'
-        ? isFull
-          ? 'Penuh'
-          : 'Aktif'
-        : 'Tidak aktif';
-    const serviceName = schedule.serviceName || 'Tidak diketahui';
-
-    switch (columnKey) {
-      case 'scheduleDate': {
-        const { dayLabel, timeLabel } = formatDateTimeRange(
-          schedule.scheduleDate,
-          schedule.startTime,
-          schedule.endTime
-        );
-        return (
-          <div className="flex flex-col gap-1">
-            <p className="font-semibold text-gray-900">{dayLabel}</p>
-            {timeLabel && <p className="text-xs text-gray-500">{timeLabel}</p>}
-          </div>
-        );
-      }
-      case 'service':
-        return (
-          <div className="flex justify-center">
-            <Chip
-              size="sm"
-              startContent={<Calendar className="h-3 w-3" />}
-              className="bg-primary/10 text-primary border-primary/30 border px-2"
-              classNames={{
-                content: 'text-xs font-medium',
-              }}
-            >
-              {serviceName}
-            </Chip>
-          </div>
-        );
-      case 'quota': {
-        const ratioLabel = quota ? `${registrants}/${quota}` : `${registrants}`;
-        const progressValue = quota
-          ? Math.min((registrants / quota) * 100, 100)
-          : registrants > 0
-            ? 100
-            : 0;
-
-        return (
-          <div className="mx-auto flex w-32 items-center gap-3">
-            <Progress
-              aria-label="Disponibilitas kuota"
-              size="sm"
-              value={progressValue}
-              classNames={{
-                base: 'flex-1',
-                track: 'h-2 rounded-full',
-                indicator: `rounded-full ${isFull ? 'bg-danger' : 'bg-primary'}`,
-              }}
-            />
-            <span className="text-xs font-semibold text-gray-600">
-              {ratioLabel}
-            </span>
-          </div>
-        );
-      }
-      case 'status':
-        return (
-          <div className="flex justify-center">
-            <Chip
-              size="sm"
-              variant="flat"
-              color={
-                schedule.status === 'tidak aktif'
-                  ? 'warning'
-                  : isFull
-                    ? 'danger'
-                    : 'success'
-              }
-              classNames={{
-                content: 'text-xs font-medium',
-                base: 'px-2 border',
-              }}
-            >
-              {statusLabel}
-            </Chip>
-          </div>
-        );
-      case 'actions':
-        return (
-          <div className="flex justify-center">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  className="hover:text-primary text-gray-600"
-                >
-                  <PenLine size={16} />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Aksi jadwal">
-                <DropdownItem
-                  key="view-participants"
-                  startContent={<Users size={16} />}
-                  onPress={() => onViewParticipants(schedule)}
-                >
-                  Daftar Pendaftar
-                </DropdownItem>
-                <DropdownItem
-                  key="edit-schedule"
-                  startContent={<PenLine size={16} />}
-                  onPress={() => onEdit(schedule)}
-                >
-                  Ubah
-                </DropdownItem>
-                <DropdownItem
-                  key="delete-schedule"
-                  className="text-danger"
-                  startContent={<Trash2 size={16} />}
-                  onPress={() => onDelete(schedule)}
-                >
-                  Hapus
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
   const serviceSelectionValue = selectedService || ALL_SERVICE_OPTION_VALUE;
 
+  const renderCell = createRenderCell({ onEdit, onDelete, onViewParticipants });
+
   const handleMonthSelection = (keys: Selection) => {
-    if (keys === 'all') {
-      onSelectMonth(ALL_MONTH_OPTION_VALUE);
-      return;
-    }
-    const firstKey =
-      keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
-    const nextValue = firstKey ?? ALL_MONTH_OPTION_VALUE;
-    onSelectMonth(nextValue === ALL_MONTH_OPTION_VALUE ? '' : nextValue);
+    handleSelectionChange(keys, ALL_MONTH_OPTION_VALUE, (val) =>
+      onSelectMonth(val === ALL_MONTH_OPTION_VALUE ? '' : val)
+    );
   };
 
   const handleServiceSelection = (keys: Selection) => {
-    if (keys === 'all') {
-      onSelectService('');
-      return;
-    }
-    const firstKey =
-      keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
-    const nextValue = firstKey ?? ALL_SERVICE_OPTION_VALUE;
-    onSelectService(nextValue === ALL_SERVICE_OPTION_VALUE ? '' : nextValue);
+    handleSelectionChange(keys, ALL_SERVICE_OPTION_VALUE, (val) =>
+      onSelectService(val === ALL_SERVICE_OPTION_VALUE ? '' : val)
+    );
   };
 
   const handleLimitSelection = (keys: Selection) => {
     if (keys === 'all') return;
-    const firstKey =
-      keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
+    const firstKey = keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
     if (!firstKey) return;
     const nextValue = Number(firstKey);
     if (!Number.isNaN(nextValue)) {
@@ -279,7 +78,6 @@ const ScheduleTable = (props: Props) => {
 
   return (
     <section className="space-y-4">
-      {/* Refetch Indicator */}
       {isRefetching && (
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Spinner size="sm" color="primary" />
@@ -287,12 +85,10 @@ const ScheduleTable = (props: Props) => {
         </div>
       )}
 
-      {/* Table Card */}
       <div className="bg-white shadow-sm rounded-xl border border-gray-100">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            {/* Filter Controls */}
             <div className="flex flex-1 flex-col gap-3 sm:flex-row">
               <Select
                 selectedKeys={new Set([monthSelectionValue])}
@@ -310,9 +106,7 @@ const ScheduleTable = (props: Props) => {
                   value: 'text-sm font-semibold text-gray-700',
                 }}
               >
-                {(option) => (
-                  <SelectItem key={option.value}>{option.label}</SelectItem>
-                )}
+                {(option) => <SelectItem key={option.value}>{option.label}</SelectItem>}
               </Select>
               <Select
                 selectedKeys={new Set([serviceSelectionValue])}
@@ -330,9 +124,7 @@ const ScheduleTable = (props: Props) => {
                   value: 'text-sm font-semibold text-gray-700',
                 }}
               >
-                {(option) => (
-                  <SelectItem key={option.value}>{option.label}</SelectItem>
-                )}
+                {(option) => <SelectItem key={option.value}>{option.label}</SelectItem>}
               </Select>
               <Button
                 isIconOnly
@@ -345,8 +137,6 @@ const ScheduleTable = (props: Props) => {
                 <RefreshCw className="h-4 w-4 text-gray-600" />
               </Button>
             </div>
-
-            {/* Add Button */}
             <Button
               radius="full"
               className="bg-primary shadow-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
@@ -375,9 +165,7 @@ const ScheduleTable = (props: Props) => {
               {(column) => (
                 <TableColumn
                   key={column.key}
-                  className={
-                    column.key === 'scheduleDate' ? 'text-left' : 'text-center'
-                  }
+                  className={column.key === 'scheduleDate' ? 'text-left' : 'text-center'}
                 >
                   {column.label}
                 </TableColumn>
@@ -389,53 +177,34 @@ const ScheduleTable = (props: Props) => {
               loadingContent={
                 <div className="flex flex-col items-center justify-center py-12">
                   <Spinner size="lg" color="primary" />
-                  <p className="mt-3 text-sm text-gray-500">
-                    Memuat data jadwal...
-                  </p>
+                  <p className="mt-3 text-sm text-gray-500">Memuat data jadwal...</p>
                 </div>
               }
               emptyContent={
                 <div className="flex flex-col items-center justify-center py-12">
                   <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-50">
-                    <svg
-                      className="h-8 w-8 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
+                    <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <p className="text-base font-medium text-gray-900">
-                    Tidak ada data jadwal
-                  </p>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Klik tombol 'Tambah Jadwal' untuk membuat jadwal baru
-                  </p>
+                  <p className="text-base font-medium text-gray-900">Tidak ada data jadwal</p>
+                  <p className="mt-1 text-sm text-gray-500">Klik tombol Tambah Jadwal untuk membuat jadwal baru</p>
                 </div>
               }
             >
               {(item) => (
-                <TableRow key={(item as any).__rowKey || item.scheduleId}>
-                  {(columnKey) => (
-                    <TableCell>{renderCell(item, columnKey)}</TableCell>
-                  )}
+                <TableRow key={item.__rowKey || item.scheduleId}>
+                  {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </div>
 
-        {/* Pagination Footer - Only show if more than 1 page */}
+        {/* Pagination Footer */}
         {!isLoading && totalPages > 1 && (
           <div className="rounded-b-xl bg-gray-50 px-6 py-3 border-t border-gray-100">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              {/* Limit Selector */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <span>Tampilkan</span>
                 <Select
@@ -451,15 +220,11 @@ const ScheduleTable = (props: Props) => {
                   }}
                 >
                   {LIMIT_LISTS.map((option) => (
-                    <SelectItem key={String(option.value)}>
-                      {option.label}
-                    </SelectItem>
+                    <SelectItem key={String(option.value)}>{option.label}</SelectItem>
                   ))}
                 </Select>
                 <span>baris</span>
               </div>
-
-              {/* Pagination */}
               <Pagination
                 showShadow
                 showControls

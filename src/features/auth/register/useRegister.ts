@@ -77,9 +77,10 @@ export function useRegister() {
         throw new Error("Tidak ada respons dari server.");
       }
       return result;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Menangani error dari backend (misal: duplikat email/username)
-      const errorMessage = error?.response?.data?.message || error.message || "Registrasi gagal";
+      const err = error as { response?: { data?: { message?: string } }; message?: string };
+      const errorMessage = err?.response?.data?.message || err.message || "Registrasi gagal";
       throw new Error(errorMessage);
     }
   }

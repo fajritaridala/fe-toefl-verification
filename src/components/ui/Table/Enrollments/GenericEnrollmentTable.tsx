@@ -120,7 +120,7 @@ export default function GenericEnrollmentTable({
           </p>
         );
       default:
-        // @ts-ignore - dynamic access
+        // @ts-expect-error - dynamic value for row key - dynamic access
         return item[columnKey] as ReactNode;
     }
   };

@@ -29,4 +29,3 @@ export function formatDate(dateString: string | undefined): string {
     return dateString;
   }
 }
-
