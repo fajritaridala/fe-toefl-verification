@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import verificationService from "@features/verification/services/verification.service";
-import { VerificationResponse } from "@features/verification/types/verification.types";
+import { useRouter } from "next/router";
+import { getRecordFromBlockchain } from "@/lib/blockchain/storeToBlockchain";
+import certificateApi from "@features/certificate/services/certificate.api";
 
 type ParticipantInfo = {
   nama_lengkap?: string;
@@ -40,33 +40,41 @@ const initialScore: ScoreInfo = {
 };
 
 const useVerificationResult = () => {
-  const [isPeserta, setIsPeserta] = useState<ParticipantInfo>(
-    initialParticipant
-  );
-  const [isScorePeserta, setIsScorePeserta] =
-    useState<ScoreInfo>(initialScore);
+  const router = useRouter();
+  const [isPeserta, setIsPeserta] = useState<ParticipantInfo>(initialParticipant);
+  const [isScorePeserta, setIsScorePeserta] = useState<ScoreInfo>(initialScore);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
-  const params = useParams<{ hash?: string }>();
-  const hash = useMemo(() => params?.hash ?? null, [params?.hash]);
+  const { hash: queryHash } = router.query;
+  const hash = queryHash as string | undefined;
 
   useEffect(() => {
     const fetchData = async () => {
-      if (typeof hash !== "string") return;
+      if (!hash) return; // Wait for hash query param
+
       try {
         setIsLoading(true);
-        const response = await verificationService.getVerification(hash);
-        const payload = (response.data as VerificationResponse).data;
+        setIsError("");
+        setIsVerified(false);
 
+        // 1. Get CID from Blockchain
+        const cid = await getRecordFromBlockchain(hash);
+        
+        // 2. Get Data from IPFS
+        const ipfsResponse = await certificateApi.getDataFromIpfs(cid);
+        const payload = ipfsResponse.content;
+
+        // 3. Map Data
         const biodataPeserta = {
           nama_lengkap: payload.fullName,
           jenis_kelamin: payload.gender || "-",
-          tanggal_lahir: "-",
+          tanggal_lahir: payload.dateOfBirth || "-", // Add if available in payload, otherwise '-'
           nomor_induk_mahasiswa: payload.nim || "-",
           fakultas: payload.faculty || "-",
           program_studi: payload.major || "-",
-          sesi_tes: "-",
+          sesi_tes: "-", // Not in current certificate payload, keep default or update if schema changes
           tanggal_tes: payload.scheduleDate || "-",
         };
 
@@ -79,18 +87,23 @@ const useVerificationResult = () => {
 
         setIsPeserta(biodataPeserta);
         setIsScorePeserta(scorePeserta);
+        setIsVerified(true);
+
       } catch (error) {
         const err = error as Error;
-        setIsError(err.message);
+        setIsError(err.message || "Gagal memverifikasi sertifikat.");
+        setIsVerified(false);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, [hash]);
+    if (router.isReady) {
+       fetchData();
+    }
+  }, [hash, router.isReady]);
 
-  return { isPeserta, isScorePeserta, isLoading, isError };
+  return { isPeserta, isScorePeserta, isLoading, isError, isVerified };
 };
 
 export default useVerificationResult;

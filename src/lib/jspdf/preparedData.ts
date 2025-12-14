@@ -6,7 +6,7 @@ import {
 
 export function preparedData(data: CertificatePayload): CertificatePdfRender {
   const {
-    registerAt,
+    scheduleDate,
     birthDate,
     listening,
     reading,
@@ -14,22 +14,26 @@ export function preparedData(data: CertificatePayload): CertificatePdfRender {
     totalScore,
   } = data;
 
-  // Pastikan input number/date dihandle dengan benar
-  const tanggalTesUnix = typeof registerAt === 'number' ? registerAt : new Date(registerAt).getTime() / 1000;
-  const tanggalLahirUnix = birthDate instanceof Date ? birthDate.getTime() / 1000 : new Date(birthDate).getTime() / 1000;
+  // Handle scheduleDate - bisa string atau Date
+  const scheduleDateParsed = scheduleDate instanceof Date 
+    ? scheduleDate 
+    : new Date(scheduleDate);
+  
+  // Handle birthDate - bisa string atau Date
+  const birthDateParsed = birthDate instanceof Date 
+    ? birthDate 
+    : new Date(birthDate);
 
-  const tanggal_valid = moment.unix(tanggalTesUnix)
+  const tanggal_valid = moment(scheduleDateParsed)
     .add(2, 'years')
     .locale('id')
     .format('D MMMM YYYY');
     
-  const _tanggal_tes = moment
-    .unix(tanggalTesUnix)
+  const _tanggal_tes = moment(scheduleDateParsed)
     .locale('id')
     .format('D MMMM YYYY');
     
-  const _tanggal_lahir = moment
-    .unix(tanggalLahirUnix)
+  const _tanggal_lahir = moment(birthDateParsed)
     .locale('id')
     .format('D MMMM YYYY');
 

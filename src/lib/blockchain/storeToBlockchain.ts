@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
-import { CONTRACT_ADDRESS } from '@/utils/config/env';
 import ToeflRecordABI from '@/abi/ToeflRecord.json';
 import metamask from '@/lib/metamask/metamask';
+import { CONTRACT_ADDRESS, RPC_URL } from '@/utils/config/env';
 
 // Conditional logger - only logs in development
 const isDev = process.env.NODE_ENV === 'development';
@@ -109,7 +109,10 @@ export async function storeToBlockchain({
       throw new Error('Transaksi ditolak oleh user');
     } else if (err.message.includes('insufficient funds')) {
       throw new Error('Saldo tidak cukup untuk membayar gas fee');
-    } else if (err.message.includes('already exists') || err.message.includes('Record already exists')) {
+    } else if (
+      err.message.includes('already exists') ||
+      err.message.includes('Record already exists')
+    ) {
       throw new Error('Sertifikat sudah tersimpan di blockchain');
     } else if (err.message.includes('Contract address')) {
       throw new Error('Konfigurasi contract address tidak valid');
@@ -132,16 +135,23 @@ export async function getRecordFromBlockchain(hash: string): Promise<string> {
       throw new Error('Contract address not configured');
     }
 
-    // Connect to provider (read-only, no signer needed)
-    const { provider } = await metamask.connectAndSign();
+    // Use JsonRpcProvider for read-only access (no MetaMask needed)
+    if (!RPC_URL) {
+      throw new Error('RPC_URL tidak ditemukan');
+    }
+
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
     const contract = new ethers.Contract(
       CONTRACT_ADDRESS,
       ToeflRecordABI.abi,
       provider
     );
 
-    const hashBytes32 = hash.startsWith('0x') ? hash : `0x${hash}`;
-    const cid = await contract.getRecord(hashBytes32);
+    const cid = await contract.getRecord(hash);
+
+    if (!cid || cid === '') {
+      throw new Error('Sertifikat belum tercatat di Blockchain');
+    }
 
     return cid;
   } catch (error) {

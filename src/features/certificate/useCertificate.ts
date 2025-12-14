@@ -1,38 +1,32 @@
-import { useState, useEffect } from 'react';
-import QRCode from 'qrcode';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import QRCode from 'qrcode';
+import { getRecordFromBlockchain } from '@/lib/blockchain/storeToBlockchain';
 import { generateCertificate } from '@/lib/jspdf/generateCertificate';
 import { CertificatePayload } from '@/types/certificate.type';
+import { CERTIFICATE_LINK } from '@/utils/config/env';
 import certificateApi from './services/certificate.api';
-import certificateBlockchain from './services/certificate.blockchain';
 
 export const useCertificate = () => {
+  const router = useRouter();
+  const { hash: queryHash } = router.query;
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [pdfBlobUrl, setPdfBlobUrl] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // 1. Fetch Hash from Backend
-  const { 
-    data: hashData, 
-    isLoading: isLoadingHash,
-    error: hashError 
-  } = useQuery({
-    queryKey: ['certificateHash'],
-    queryFn: certificateApi.getHash,
-    retry: 1,
-  });
-
-  const hash = hashData?.data?.hash;
+  // Hash is now exclusively provided via URL query parameter
+  const hash = queryHash as string | undefined;
 
   // 2. Fetch CID from Blockchain (Dependent on Hash)
   const {
     data: cid,
     isLoading: isLoadingCid,
-    error: cidError
+    error: cidError,
   } = useQuery({
     queryKey: ['certificateCid', hash],
-    queryFn: () => certificateBlockchain.getCidFromContract(hash!),
-    enabled: !!hash, 
+    queryFn: () => getRecordFromBlockchain(hash!),
+    enabled: !!hash,
     retry: 1,
   });
 
@@ -40,15 +34,16 @@ export const useCertificate = () => {
   const {
     data: certificateData,
     isLoading: isLoadingIpfs,
-    error: ipfsError
+    error: ipfsError,
   } = useQuery({
     queryKey: ['certificateIpfs', cid],
     queryFn: () => certificateApi.getDataFromIpfs(cid!),
     enabled: !!cid,
     retry: 1,
   });
-
   console.log(certificateData)
+
+  const url = `${CERTIFICATE_LINK}?hash=${hash}`;
 
   // 4. Generate PDF & QR saat data lengkap (Hash -> CID -> Data)
   useEffect(() => {
@@ -58,9 +53,9 @@ export const useCertificate = () => {
 
       try {
         setIsGenerating(true);
-        
+
         // A. Generate QR dari Hash
-        const qrUrl = await QRCode.toDataURL(hash);
+        const qrUrl = await QRCode.toDataURL(url);
         setQrCodeUrl(qrUrl);
 
         // B. Generate PDF Preview menggunakan Data IPFS Asli
@@ -69,7 +64,6 @@ export const useCertificate = () => {
         const doc = await generateCertificate(payload, qrUrl);
         const blobUrl = doc.output('bloburl');
         setPdfBlobUrl(blobUrl.toString());
-
       } catch (err) {
         console.error('Failed to generate certificate preview', err);
       } finally {
@@ -82,22 +76,22 @@ export const useCertificate = () => {
     return () => {
       if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hash, certificateData]); // Re-run jika hash atau data berubah
 
   const handleDownload = async () => {
     if (!qrCodeUrl || !certificateData) return;
     try {
-      const payload = certificateData as CertificatePayload;
+      const payload = certificateData.content as CertificatePayload;
       const doc = await generateCertificate(payload, qrCodeUrl);
       doc.save(`Sertifikat-${payload.fullName}.pdf`);
     } catch (error) {
-      console.error("Gagal download PDF:", error);
+      console.error('Gagal download PDF:', error);
     }
   };
 
-  const isLoading = isLoadingHash || isLoadingCid || isLoadingIpfs || isGenerating;
-  const error = hashError || cidError || ipfsError;
+  const isLoading = isLoadingCid || isLoadingIpfs || isGenerating;
+  const error = cidError || ipfsError;
 
   return {
     certificateData: certificateData as CertificatePayload | undefined,
@@ -107,6 +101,6 @@ export const useCertificate = () => {
     pdfBlobUrl,
     handleDownload,
     hash,
-    cid
+    cid,
   };
 };

@@ -25,17 +25,10 @@ const NAVBAR_DROPDOWN_ITEMS = (router: RouterLike) => [
     label: 'Aktivitas saya',
     icon: <Bookmark strokeWidth={2} className="h-4 w-4" />,
     onPress: () => {
-      router.push('/profile/activity');
+      router.push('/activity');
     },
   },
-  {
-    key: 'user_certificates',
-    label: 'Sertifikat saya',
-    icon: <FileCheck strokeWidth={2} className="h-4 w-4" />,
-    onPress: () => {
-      router.push('/certificate');
-    },
-  },
+
   {
     key: 'logout',
     label: 'Logout',

@@ -1,5 +1,6 @@
 interface CertificatePayload {
   serviceName: string;
+  scheduleDate: Date;
   fullName: string;
   gender:  string;
   birthDate: Date;
@@ -10,7 +11,6 @@ interface CertificatePayload {
   reading: number;
   structure: number;
   totalScore: number;
-  registerAt: number;
 }
 
 interface CertificateRenderer extends CertificatePayload {
