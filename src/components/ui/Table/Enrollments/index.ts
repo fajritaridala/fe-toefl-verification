@@ -1,2 +1,2 @@
-export { default } from "./AdminEnrollmentsTable";
-export type { EnrollmentRow, AdminEnrollmentsTableProps } from "./EnrollmentsTable.types";
+export { default as GenericEnrollmentTable } from './GenericEnrollmentTable';
+export type { ColumnConfig } from './GenericEnrollmentTable';

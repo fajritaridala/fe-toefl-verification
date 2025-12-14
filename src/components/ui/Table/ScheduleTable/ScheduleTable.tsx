@@ -216,7 +216,7 @@ const ScheduleTable = (props: Props) => {
                   startContent={<Users size={16} />}
                   onPress={() => onViewParticipants(schedule)}
                 >
-                  Daftar Peserta
+                  Daftar Pendaftar
                 </DropdownItem>
                 <DropdownItem
                   key="edit-schedule"

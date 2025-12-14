@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { EnrollmentItem } from '@features/admin';
+import { useQuery } from '@tanstack/react-query';
+import { EnrollmentItem, servicesService } from '@features/admin';
 import { FILTER_OPTIONS } from '@/constants/list.constants';
 import useEnrollments from '../shared/useEnrollments';
 
@@ -17,6 +18,8 @@ export const useParticipants = () => {
     handleSearch,
     handleClearSearch,
     handleChangeStatus,
+    currentServiceId,
+    handleChangeService,
   } = useEnrollments({});
 
   const [statusFilter, setStatusFilter] = useState<string>(
@@ -90,6 +93,30 @@ export const useParticipants = () => {
     setSelectedParticipant(null);
   }, []);
 
+  /* -------------------------------------------------------------------------- */
+  /*                                SERVICES DATA                               */
+  /* -------------------------------------------------------------------------- */
+  // Fetch services for dropdown filter (fetch all/active)
+  // We use a separate query key to avoid conflict with admin services table cache if needed
+  const { data: servicesData } = useQuery({
+    queryKey: ['services', 'options'],
+    queryFn: async () => {
+      // Fetch with large limit to get all services
+      // Adjust params as needed based on backend capability to return all
+      const response = await servicesService.getServices({ limit: 100 });
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+  });
+
+  const serviceOptions = useMemo(() => {
+    const items = servicesData?.data || [];
+    return items.map((svc: any) => ({
+      label: svc.name,
+      value: svc._id,
+    }));
+  }, [servicesData]);
+
   return {
     // State
     tableItems,
@@ -103,6 +130,8 @@ export const useParticipants = () => {
     isRefetchingEnrollments,
     detailModalOpen,
     selectedParticipant,
+    currentServiceId,
+    serviceOptions,
 
     // Handlers
     handleSearch,
@@ -112,5 +141,6 @@ export const useParticipants = () => {
     handleChangePage,
     handleOpenDetail,
     handleCloseDetail,
+    handleChangeService,
   };
 };

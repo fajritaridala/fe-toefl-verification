@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { type EnrollmentItem, enrollmentsService } from '@features/admin';
+import { EnrollmentStatus, type EnrollmentItem, enrollmentsService } from '@features/admin';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useEnrollments from '../shared/useEnrollments';
 
@@ -18,11 +18,12 @@ export const useValidation = () => {
     isRefetchingEnrollments,
     currentLimit,
     currentPage,
+    currentSearch,
     handleChangeLimit,
     handleChangePage,
     handleSearch,
     handleClearSearch,
-  } = useEnrollments({ fixedStatus: 'menunggu' });
+  } = useEnrollments({ fixedStatus: EnrollmentStatus.PENDING });
 
   // Debounced search effect
   useEffect(() => {

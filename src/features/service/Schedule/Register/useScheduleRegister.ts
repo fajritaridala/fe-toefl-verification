@@ -7,14 +7,14 @@ import { useMutation } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import { enrollmentsService } from '@features/admin';
-import { ScheduleRegister } from '@features/admin';
+import { Gender, ScheduleRegister } from '@features/admin';
 
 const scheduleRegisterSchema = yup.object().shape({
   fullName: yup.string().required('Nama lengkap wajib diisi'),
   birthDate: yup.string().required('Tanggal lahir wajib diisi'),
   gender: yup
-    .string()
-    .oneOf(['laki-laki', 'perempuan'], 'Jenis kelamin tidak valid')
+    .mixed<Gender>()
+    .oneOf(Object.values(Gender), 'Jenis kelamin tidak valid')
     .required('Jenis kelamin wajib diisi'),
   email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
   phoneNumber: yup
@@ -52,7 +52,7 @@ export function useScheduleRegister() {
     reset,
     setValue,
     watch,
-  } = useForm({
+  } = useForm<ScheduleRegister>({
     resolver: yupResolver(scheduleRegisterSchema),
     defaultValues: {
       fullName: '',

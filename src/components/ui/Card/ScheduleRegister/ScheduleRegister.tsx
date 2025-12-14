@@ -1,9 +1,7 @@
-'use client';
-
 import { ChangeEvent, RefObject } from 'react';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { Control, FieldErrors, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
 import { LuCloudUpload, LuFileCheck } from 'react-icons/lu';
-import { ScheduleRegister } from '@features/admin';
+import { ScheduleRegister, Gender } from '@features/admin';
 import {
   Button,
   Card,
@@ -11,12 +9,10 @@ import {
   CardHeader,
   Divider,
   Form,
-  Input,
-  NumberInput,
-  Select,
-  SelectItem,
   cn,
 } from '@heroui/react';
+import { FormInput } from '@/components/ui/Form/FormInput';
+import { FormSelect } from '@/components/ui/Form/FormSelect';
 
 type Props = {
   handleSubmitAction: (
@@ -35,7 +31,7 @@ type Props = {
   handleFilePickerAction: () => void;
 };
 
-export default function ScheduleRegisterCard(props: Props) {
+export default function ScheduleRegisterForm(props: Props) {
   const {
     handleSubmitAction,
     handleRegisterAction,
@@ -51,7 +47,7 @@ export default function ScheduleRegisterCard(props: Props) {
   } = props;
 
   return (
-    <Card className="w-full max-w-2xl rounded-2xl border border-gray-200 p-6 shadow-none">
+    <Card className="w-full  rounded-2xl border border-gray-200 p-6 shadow-none">
       <CardHeader>
         <div className="w-full">
           <h1 className="text-primary-800 mb-2 text-3xl font-bold">
@@ -66,254 +62,187 @@ export default function ScheduleRegisterCard(props: Props) {
       <CardBody>
         <Form
           onSubmit={handleSubmitAction(handleRegisterAction, onErrorAction)}
-          className="space-y-6"
+          className="space-y-6 my-2"
         >
-          <div className="grid w-full grid-cols-1 gap-y-4">
-            <Controller
+          <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-x-8 gap-y-4">
+            {/* Kolom Kiri: Data Diri */}
+          <div className="space-y-4">
+            <FormInput
+              control={control}
               name="fullName"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="Nama Lengkap"
-                  labelPlacement="outside"
-                  placeholder="Masukkan nama lengkap"
-                  variant="bordered"
-                  isInvalid={!!errors.fullName}
-                  errorMessage={errors.fullName?.message}
-                />
-              )}
+              label="Nama Lengkap"
+              placeholder="Masukkan nama lengkap"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
             />
-            <Controller
+
+            <FormInput
+              control={control}
               name="birthDate"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="Tanggal Lahir"
-                  labelPlacement="outside"
-                  type="date"
-                  variant="bordered"
-                  isInvalid={!!errors.birthDate}
-                  errorMessage={errors.birthDate?.message}
-                />
-              )}
+              label="Tanggal Lahir"
+              placeholder="Pilih tanggal lahir"
+              type="date"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
             />
-            <Controller
+
+            <FormSelect
+              control={control}
               name="gender"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  isRequired
-                  label="Jenis Kelamin"
-                  labelPlacement="outside"
-                  placeholder="Pilih jenis kelamin"
-                  variant="bordered"
-                  isInvalid={!!errors.gender}
-                  errorMessage={errors.gender?.message}
-                >
-                  <SelectItem key="laki-laki">Laki-laki</SelectItem>
-                  <SelectItem key="perempuan">Perempuan</SelectItem>
-                </Select>
-              )}
+              label="Jenis Kelamin"
+              placeholder="Pilih jenis kelamin"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
+              options={[
+                { label: 'Laki-laki', value: Gender.MALE },
+                { label: 'Perempuan', value: Gender.FEMALE },
+              ]}
             />
-            <Controller
+            
+            <FormInput
+              control={control}
               name="email"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="Email"
-                  labelPlacement="outside-top"
-                  type="email"
-                  variant="bordered"
-                  isInvalid={!!errors.email}
-                  errorMessage={errors.email?.message}
-                />
-              )}
+              label="Email"
+              placeholder="Contoh: email@gmail.com"
+              type="email"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside-top"
             />
-            <Controller
+
+            <FormInput
+              control={control}
               name="phoneNumber"
-              control={control}
-              render={({ field }) => {
-                const { ref, value, onChange, ...restField } = field;
-                return (
-                  <NumberInput
-                    {...restField}
-                    ref={ref}
-                    isRequired
-                    hideStepper
-                    label="Nomor Telepon"
-                    labelPlacement="outside"
-                    placeholder="Contoh: 81234567890"
-                    value={
-                      typeof value === 'number'
-                        ? value
-                        : value
-                          ? Number(value)
-                          : undefined
-                    }
-                    onValueChange={(nextValue) =>
-                      onChange(
-                        typeof nextValue === 'number' && !Number.isNaN(nextValue)
-                          ? nextValue
-                          : undefined
-                      )
-                    }
-                    isInvalid={!!errors.phoneNumber}
-                    errorMessage={errors.phoneNumber?.message}
-                  />
-                );
-              }}
+              label="Nomor Telepon"
+              placeholder="Contoh: 081234567890"
+              type="tel"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
             />
-            <Controller
+          </div>
+
+          {/* Kolom Kanan: Data Kontak & Akademik */}
+          <div className="space-y-4">
+            <FormInput
+              control={control}
               name="nim"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="NIM (Nomor Induk Mahasiswa)"
-                  labelPlacement="outside"
-                  placeholder="Masukkan NIM"
-                  variant="bordered"
-                  isInvalid={!!errors.nim}
-                  errorMessage={errors.nim?.message}
-                />
-              )}
+              label="Nomor Induk Mahasiswa"
+              placeholder="Masukkan NIM"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
             />
-            <Controller
+
+            <FormInput
+              control={control}
               name="faculty"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="Fakultas"
-                  labelPlacement="outside"
-                  placeholder="Masukkan fakultas"
-                  variant="bordered"
-                  isInvalid={!!errors.faculty}
-                  errorMessage={errors.faculty?.message}
-                />
-              )}
+              label="Fakultas"
+              placeholder="Masukkan fakultas"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
             />
-            <Controller
+
+            <FormInput
+              control={control}
               name="major"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="Program Studi"
-                  labelPlacement="outside"
-                  placeholder="Masukkan program studi"
-                  variant="bordered"
-                  isInvalid={!!errors.major}
-                  errorMessage={errors.major?.message}
-                />
-              )}
+              label="Program Studi"
+              placeholder="Masukkan program studi"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
             />
-            <Controller
+
+            <FormInput
+              control={control}
               name="paymentDate"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  isRequired
-                  label="Tanggal Pembayaran"
-                  labelPlacement="outside"
-                  type="date"
-                  variant="bordered"
-                  isInvalid={!!errors.paymentDate}
-                  errorMessage={errors.paymentDate?.message}
-                />
-              )}
+              label="Tanggal Pembayaran"
+              type="date"
+              isRequired
+              variant="bordered"
+              labelPlacement="outside"
             />
-            <div className="flex flex-col">
-              <label className="text-default-700 text-sm font-medium">
-                Bukti Pembayaran
-                <span className="text-danger-500">*</span>
-              </label>
-              <div
-                onClick={handleFilePickerAction}
-                className={cn(
-                  'border-default-200 hover:border-primary mt-2 flex cursor-pointer justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors',
-                  { 'border-danger-500': !!errors.file }
+          </div>
+
+          {/* Full Width: Upload Bukti Pembayaran */}
+          <div className="flex flex-col col-span-1 md:col-span-2 pt-2">
+            <label className="text-default-700 text-sm font-medium">
+              Bukti Pembayaran
+              <span className="text-danger-500">*</span>
+            </label>
+            <div
+              onClick={handleFilePickerAction}
+              className={cn(
+                'border-default-200 hover:border-primary mt-2 flex cursor-pointer justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors',
+                { 'border-danger-500': !!errors.file }
+              )}
+            >
+              <div className="text-center">
+                {paymentReceipt ? (
+                  <LuFileCheck
+                    className="text-success-500 mx-auto h-12 w-12"
+                    strokeWidth={1.5}
+                  />
+                ) : (
+                  <LuCloudUpload
+                    className="text-default-400 mx-auto h-12 w-12"
+                    strokeWidth={1.5}
+                  />
                 )}
-              >
-                <div className="text-center">
-                  {paymentReceipt ? (
-                    <LuFileCheck
-                      className="text-success-500 mx-auto h-12 w-12"
-                      strokeWidth={1.5}
-                    />
-                  ) : (
-                    <LuCloudUpload
-                      className="text-default-400 mx-auto h-12 w-12"
-                      strokeWidth={1.5}
-                    />
-                  )}
-                  <div className="text-default-600 mt-4 flex text-sm leading-6">
-                    <p className="pl-1">
-                      {paymentReceipt
-                        ? 'File terpilih:'
-                        : 'Unggah file atau seret dan lepas'}
-                    </p>
-                  </div>
-                  <p className="text-default-500 text-xs leading-5">
-                    {paymentReceipt?.name || 'PNG, JPG, PDF hingga 10MB'}
+                <div className="text-default-600 mt-4 flex text-sm leading-6">
+                  <p className="pl-1">
+                    {paymentReceipt
+                      ? 'File terpilih:'
+                      : 'Unggah file atau seret dan lepas'}
                   </p>
                 </div>
-              </div>
-              {errors.file && (
-                <p className="text-danger-500 mt-1 text-xs">
-                  {errors.file?.message}
+                <p className="text-default-500 text-xs leading-5">
+                  {paymentReceipt?.name || 'PNG, JPG, PDF hingga 10MB'}
                 </p>
-              )}
-              <Controller
-                name="file"
-                control={control}
-                render={({ field: { ref } }) => (
-                  <input
-                    type="file"
-                    ref={(node) => {
-                      fileInputRef.current = node;
-                      ref(node);
-                    }}
-                    onChange={handleFileChangeAction}
-                    className="hidden"
-                    accept="image/png, image/jpeg, application/pdf"
-                  />
-                )}
-              />
+              </div>
             </div>
-          </div>{' '}
-          <Divider className="my-6" />
-          <div className="flex justify-end gap-4">
-            <Button
-              data-hover="false"
-              radius="full"
-              onPress={handleGoBackAction}
-              className="border-warning text-warning hover:bg-warning border-2 bg-transparent font-bold transition-all delay-75 duration-100 hover:-translate-y-1 hover:text-white active:translate-y-0.5"
-            >
-              Kembali
-            </Button>
-            <Button
-              data-hover="false"
-              radius="full"
-              color="primary"
-              type="submit"
-              isLoading={isLoading}
-              className="bg-primary-800 font-semibold text-white transition-all delay-75 duration-100 hover:-translate-y-1 active:translate-y-0.5"
-            >
-              {isLoading ? 'Mendaftar...' : 'Daftar Sekarang'}
-            </Button>
+            {errors.file && (
+              <p className="text-danger-500 mt-1 text-xs">
+                {errors.file?.message}
+              </p>
+            )}
+            <input
+              type="file"
+              ref={(node) => {
+                // @ts-ignore
+                fileInputRef.current = node;
+              }}
+              onChange={handleFileChangeAction}
+              className="hidden"
+              accept="image/png, image/jpeg, application/pdf"
+            />
           </div>
+        </div>
+
+          <div className="flex justify-end gap-4 pt-4">
+          <Button
+            data-hover="false"
+            radius="full"
+            onPress={handleGoBackAction}
+            className="border-warning text-warning hover:bg-warning border-2 bg-transparent font-bold transition-all delay-75 duration-100 hover:-translate-y-1 hover:text-white active:translate-y-0.5"
+          >
+            Kembali
+          </Button>
+          <Button
+            data-hover="false"
+            radius="full"
+            color="primary"
+            type="submit"
+            isLoading={isLoading}
+            className="bg-primary-800 font-semibold text-white transition-all delay-75 duration-100 hover:-translate-y-1 active:translate-y-0.5"
+          >
+            {isLoading ? 'Mendaftar...' : 'Daftar Sekarang'}
+          </Button>
+        </div>
         </Form>
       </CardBody>
     </Card>

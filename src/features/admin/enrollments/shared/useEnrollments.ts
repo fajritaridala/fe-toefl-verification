@@ -23,8 +23,10 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
   const currentPage = searchParams?.get('page') ?? String(PAGINATION_OPTIONS.pageDefault);
   const currentSearch = searchParams?.get('search') ?? '';
   const currentStatus = fixedStatus ?? searchParams?.get('status') ?? 'all';
+  const currentServiceId = searchParams?.get('serviceId') ?? 'all';
   const normalizedStatus =
     fixedStatus ?? (currentStatus !== 'all' ? (currentStatus as EnrollmentItem['status']) : undefined);
+  const normalizedServiceId = currentServiceId !== 'all' ? currentServiceId : undefined;
 
   const buildUrl = useCallback(
     (updates: Record<string, string | null | undefined>, method: 'push' | 'replace' = 'push') => {
@@ -48,18 +50,21 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     isLoading: isLoadingEnrollments,
     isRefetching: isRefetchingEnrollments,
   } = useQuery({
-    queryKey: ['enrollments', currentPage, currentLimit, currentSearch, normalizedStatus],
+    queryKey: ['enrollments', currentPage, currentLimit, currentSearch, normalizedStatus, normalizedServiceId],
     queryFn: async () => {
       const response = await enrollmentsService.getEnrollments({
         page: Number(currentPage),
         limit: Number(currentLimit),
         search: currentSearch || undefined,
         status: normalizedStatus,
+        serviceId: normalizedServiceId,
       });
       return response.data as EnrollmentListResponse;
     },
     enabled: !!currentPage && !!currentLimit,
   });
+  
+  // console.log(dataEnrollments)
 
   useEffect(() => {
     const hasLimit = searchParams?.has('limit');
@@ -102,6 +107,13 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     buildUrl({ search: null, page: String(PAGINATION_OPTIONS.pageDefault) });
   }, [buildUrl]);
 
+  const handleChangeService = useCallback((serviceId: string) => {
+    buildUrl({
+      serviceId: !serviceId || serviceId === 'all' ? null : serviceId,
+      page: String(PAGINATION_OPTIONS.pageDefault),
+    });
+  }, [buildUrl]);
+
   return {
     dataEnrollments,
     isLoadingEnrollments,
@@ -110,11 +122,13 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     currentPage,
     currentSearch,
     currentStatus,
+    currentServiceId,
     handleChangePage,
     handleChangeLimit,
     handleSearch,
     handleClearSearch,
     handleChangeStatus,
+    handleChangeService,
     fixedStatus,
   };
 }

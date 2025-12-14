@@ -1,7 +1,7 @@
 import instance from "@/lib/axios/instance";
 import endpoints from "@/constants/endpoints";
 import buildQueryString from "@/utils/helpers/queryString";
-import type { SchedulePayload, ScheduleRegister } from "@features/admin/types/admin.types";
+import { EnrollmentStatus, SchedulePayload, ScheduleRegister, ScheduleStatus, ServiceItem } from "@features/admin/types/admin.types";
 
 type GetServicesQuery = {
   page?: number;
@@ -49,7 +49,7 @@ type GetScheduleQuery = {
   limit?: number;
   search?: string;
   serviceId?: string;
-  status?: "aktif" | "penuh" | "tidak aktif";
+  status?: ScheduleStatus;
   month?: string;
   includeDeleted?: boolean;
 };
@@ -94,7 +94,8 @@ type EnrollmentQuery = {
   page?: number;
   limit?: number;
   search?: string;
-  status?: "menunggu" | "disetujui" | "ditolak" | "selesai";
+  status?: EnrollmentStatus;
+  serviceId?: string;
 };
 
 type ScorePayload = {

@@ -35,7 +35,7 @@ const Register = () => {
           />
         </div>
       )}
-      <div className="animate-fade-bottom">
+      <div className="animate-fade-bottom w-full max-w-3xl">
         <ScheduleRegisterCard
           control={control}
           errors={errors}

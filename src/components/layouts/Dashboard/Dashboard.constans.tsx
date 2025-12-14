@@ -15,7 +15,7 @@ const SIDEBAR_ADMIN = [
     children: [
       {
         key: 'participants-list',
-        label: 'Daftar Peserta',
+        label: 'Daftar Pendaftar',
         href: '/admin/participants',
       },
       {

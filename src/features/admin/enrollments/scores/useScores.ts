@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { type EnrollmentItem, enrollmentsService } from '@features/admin';
+import { EnrollmentStatus, type EnrollmentItem, enrollmentsService } from '@features/admin';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { storeToBlockchain } from '@/lib/blockchain/storeToBlockchain';
 import useEnrollments from '../shared/useEnrollments';
@@ -52,11 +52,12 @@ export const useScores = () => {
     isRefetchingEnrollments,
     currentLimit,
     currentPage,
+    currentSearch,
     handleChangeLimit,
     handleChangePage,
     handleSearch,
     handleClearSearch,
-  } = useEnrollments({ fixedStatus: 'disetujui' });
+  } = useEnrollments({ fixedStatus: EnrollmentStatus.APPROVED });
 
   // Debounced search effect
   useEffect(() => {

@@ -4,7 +4,7 @@ import DashboardLayout from '@/components/layouts/Dashboard';
 export default function AdminParticipants() {
   return (
     <>
-      <DashboardLayout title="Daftar Peserta">
+      <DashboardLayout title="Daftar Pendaftar">
         <Participants />
       </DashboardLayout>
     </>

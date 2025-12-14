@@ -1,3 +1,21 @@
+export enum ScheduleStatus {
+  ACTIVE = 'aktif',
+  FULL = 'penuh',
+  INACTIVE = 'tidak aktif',
+}
+
+export enum EnrollmentStatus {
+  PENDING = 'menunggu',
+  APPROVED = 'disetujui',
+  REJECTED = 'ditolak',
+  COMPLETED = 'selesai',
+}
+
+export enum Gender {
+  MALE = 'laki-laki',
+  FEMALE = 'perempuan',
+}
+
 export interface ServiceItem {
   _id: string;
   name: string;
@@ -24,7 +42,7 @@ export interface ScheduleRegister {
   paymentDate: string;
   fullName: string;
   birthDate: string;
-  gender: "laki-laki" | "perempuan";
+  gender: Gender;
   email: string;
   phoneNumber: number;
   nim: string;
@@ -40,7 +58,7 @@ export interface ScheduleItem {
   scheduleDate: string;
   startTime: string;
   endTime: string;
-  status: "aktif" | "penuh" | "tidak aktif";
+  status: ScheduleStatus;
   capacity: number;
   quota: number;
   registrants: number;
@@ -74,7 +92,7 @@ export interface EnrollmentItem {
   participantId: string;
   fullName: string;
   nim: string;
-  status: "menunggu" | "disetujui" | "ditolak" | "selesai";
+  status: EnrollmentStatus;
   paymentProof?: string;
   email?: string;
   phoneNumber?: string;
@@ -86,7 +104,7 @@ export interface EnrollmentItem {
   scheduleName?: string;
   scheduleDate?: string;
   paymentDate?: string;
-  gender?: "laki-laki" | "perempuan";
+  gender?: Gender;
   // Score fields (when status is "selesai")
   listening?: number;
   structure?: number;

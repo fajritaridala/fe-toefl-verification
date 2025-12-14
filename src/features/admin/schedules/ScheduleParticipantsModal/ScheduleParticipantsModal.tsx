@@ -76,7 +76,7 @@ const ScheduleParticipantsModal = ({ isOpen, schedule, onClose }: Props) => {
           <p className="text-2xsmall uppercase tracking-[0.4em] text-text-muted">
             Jadwal
           </p>
-          <h1 className="text-2xl font-bold text-text">Daftar Peserta</h1>
+          <h1 className="text-2xl font-bold text-text">Daftar Pendaftar</h1>
           <p className="text-sm text-text-muted">
             {serviceName} — {scheduleDate}
           </p>

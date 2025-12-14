@@ -1,7 +1,10 @@
+import { EnrollmentStatus } from '@/features/admin/types/admin.types';
+
 const FILTER_OPTIONS = [
-  { name: 'Menunggu', uid: 'menunggu' },
-  { name: 'Disetujui', uid: 'disetujui' },
-  { name: 'Ditolak', uid: 'ditolak' },
+  { name: 'Menunggu', uid: EnrollmentStatus.PENDING },
+  { name: 'Disetujui', uid: EnrollmentStatus.APPROVED },
+  { name: 'Ditolak', uid: EnrollmentStatus.REJECTED },
+  { name: 'Selesai', uid: EnrollmentStatus.COMPLETED },
 ];
 
 const LIMIT_LISTS = [
