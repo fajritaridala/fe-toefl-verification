@@ -22,6 +22,7 @@ export const useLogin = () => {
   const callbackUrl = (router.query.callbackUrl as string) ?? "/";
 
   const loginService = async (address: string) => {
+    console.log(address)
     const result = await signIn("credentials", {
       address,
       redirect: false,
