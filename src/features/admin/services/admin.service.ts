@@ -104,6 +104,7 @@ type EnrollmentQuery = {
   search?: string;
   status?: EnrollmentStatus;
   serviceId?: string;
+  scheduleId?: string;
 };
 
 type ScorePayload = {

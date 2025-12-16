@@ -14,10 +14,11 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  cn,
 } from '@heroui/react';
 import type { Selection } from '@heroui/react';
 import { Filter, Plus, RefreshCw } from 'lucide-react';
-import { LIMIT_LISTS } from '@/constants/list.constants';
+import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { ScheduleTableProps } from './ScheduleTable.types';
 import { createRenderCell, handleSelectionChange } from './ScheduleTable.utils';
 
@@ -66,26 +67,9 @@ const ScheduleTable = (props: ScheduleTableProps) => {
     );
   };
 
-  const handleLimitSelection = (keys: Selection) => {
-    if (keys === 'all') return;
-    const firstKey = keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
-    if (!firstKey) return;
-    const nextValue = Number(firstKey);
-    if (!Number.isNaN(nextValue)) {
-      onChangeLimit(nextValue);
-    }
-  };
-
   return (
     <section className="space-y-4">
-      {isRefetching && (
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Spinner size="sm" color="primary" />
-          <p>Mengambil data terbaru...</p>
-        </div>
-      )}
-
-      <div className="bg-white shadow-md shadow-gray-100/50 rounded-2xl border border-gray-100">
+      <div className="rounded-2xl border border-gray-100 bg-white shadow-md shadow-gray-100/50">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -102,11 +86,14 @@ const ScheduleTable = (props: ScheduleTableProps) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-44"
                 classNames={{
-                  trigger: 'bg-white border-gray-200 hover:border-gray-300 transition-colors',
+                  trigger:
+                    'bg-white border-gray-200 hover:border-gray-300 transition-colors',
                   value: 'text-sm font-medium text-gray-700',
                 }}
               >
-                {(option) => <SelectItem key={option.value}>{option.label}</SelectItem>}
+                {(option) => (
+                  <SelectItem key={option.value}>{option.label}</SelectItem>
+                )}
               </Select>
               <Select
                 selectedKeys={new Set([serviceSelectionValue])}
@@ -120,32 +107,47 @@ const ScheduleTable = (props: ScheduleTableProps) => {
                 startContent={<Filter className="h-4 w-4 text-gray-400" />}
                 className="w-full sm:w-52"
                 classNames={{
-                  trigger: 'bg-white border-gray-200 hover:border-gray-300 transition-colors',
+                  trigger:
+                    'bg-white border-gray-200 hover:border-gray-300 transition-colors',
                   value: 'text-sm font-medium text-gray-700',
                 }}
               >
-                {(option) => <SelectItem key={option.value}>{option.label}</SelectItem>}
+                {(option) => (
+                  <SelectItem key={option.value}>{option.label}</SelectItem>
+                )}
               </Select>
+              <LimitFilter
+                value={String(currentLimit)}
+                onChange={(val) => onChangeLimit(Number(val))}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                radius="full"
+                color="primary"
+                className="shadow-primary/20 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02]"
+                startContent={<Plus size={18} />}
+                onPress={onAdd}
+              >
+                Tambah Jadwal
+              </Button>
               <Button
                 isIconOnly
                 radius="full"
                 variant="flat"
-                className="w-full border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 sm:w-auto"
+                className="border-secondary hover:border-secondary/70 w-full border bg-white hover:bg-gray-50 sm:w-auto"
                 onPress={onRefresh}
+                isDisabled={isRefetching}
                 aria-label="Refresh data"
               >
-                <RefreshCw className="h-4 w-4 text-gray-500" />
+                <RefreshCw
+                  className={cn(
+                    'text-secondary h-4 w-4',
+                    isRefetching && 'animate-spin'
+                  )}
+                />
               </Button>
             </div>
-            <Button
-              radius="full"
-              color='primary'
-              className="shadow-lg shadow-primary/20 font-semibold text-white transition-transform hover:scale-[1.02]"
-              startContent={<Plus size={18} />}
-              onPress={onAdd}
-            >
-              Tambah Jadwal
-            </Button>
           </div>
         </div>
 
@@ -166,7 +168,9 @@ const ScheduleTable = (props: ScheduleTableProps) => {
               {(column) => (
                 <TableColumn
                   key={column.key}
-                  className={column.key === 'scheduleDate' ? 'text-left' : 'text-center'}
+                  className={
+                    column.key === 'scheduleDate' ? 'text-left' : 'text-center'
+                  }
                 >
                   {column.label}
                 </TableColumn>
@@ -178,24 +182,42 @@ const ScheduleTable = (props: ScheduleTableProps) => {
               loadingContent={
                 <div className="flex flex-col items-center justify-center py-12">
                   <Spinner size="lg" color="primary" />
-                  <p className="mt-3 text-sm text-gray-500">Memuat data jadwal...</p>
+                  <p className="mt-3 text-sm text-gray-500">
+                    Memuat data jadwal...
+                  </p>
                 </div>
               }
               emptyContent={
                 <div className="flex flex-col items-center justify-center py-12">
                   <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-50">
-                    <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="h-8 w-8 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
-                  <p className="text-base font-medium text-gray-900">Tidak ada data jadwal</p>
-                  <p className="mt-1 text-sm text-gray-500">Klik tombol Tambah Jadwal untuk membuat jadwal baru</p>
+                  <p className="text-base font-medium text-gray-900">
+                    Tidak ada data jadwal
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Klik tombol Tambah Jadwal untuk membuat jadwal baru
+                  </p>
                 </div>
               }
             >
               {(item) => (
                 <TableRow key={item.__rowKey || item.scheduleId}>
-                  {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                  {(columnKey) => (
+                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  )}
                 </TableRow>
               )}
             </TableBody>
@@ -204,28 +226,8 @@ const ScheduleTable = (props: ScheduleTableProps) => {
 
         {/* Pagination Footer */}
         {!isLoading && totalPages > 1 && (
-          <div className="rounded-b-xl bg-gray-50 px-6 py-3 border-t border-gray-100">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Tampilkan</span>
-                <Select
-                  selectedKeys={new Set([String(currentLimit)])}
-                  onSelectionChange={handleLimitSelection}
-                  radius="full"
-                  className="w-20"
-                  disallowEmptySelection
-                  size="sm"
-                  classNames={{
-                    trigger: 'h-8 min-h-8 bg-gray-50 drop-shadow-sm',
-                    value: 'text-sm',
-                  }}
-                >
-                  {LIMIT_LISTS.map((option) => (
-                    <SelectItem key={String(option.value)}>{option.label}</SelectItem>
-                  ))}
-                </Select>
-                <span>baris</span>
-              </div>
+          <div className="rounded-b-xl border-t border-gray-100 bg-gray-50 px-6 py-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <Pagination
                 showShadow
                 showControls

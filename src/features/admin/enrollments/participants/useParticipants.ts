@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  EnrollmentItem,
+  schedulesService,
+  servicesService,
+} from '@features/admin';
 import { useQuery } from '@tanstack/react-query';
-import { EnrollmentItem, servicesService } from '@features/admin';
 import { FILTER_OPTIONS } from '@/constants/list.constants';
+import { formatDate } from '@/utils/common';
 import useEnrollments from '../shared/useEnrollments';
 
 export const useParticipants = () => {
@@ -20,6 +25,8 @@ export const useParticipants = () => {
     handleChangeStatus,
     currentServiceId,
     handleChangeService,
+    currentScheduleId,
+    handleChangeSchedule,
   } = useEnrollments({});
 
   const [statusFilter, setStatusFilter] = useState<string>(
@@ -93,7 +100,7 @@ export const useParticipants = () => {
     // Delay clearing the data to allow exit animation to play
     setTimeout(() => {
       setSelectedParticipant(null);
-    }, 400); 
+    }, 400);
   }, []);
 
   /* -------------------------------------------------------------------------- */
@@ -120,6 +127,27 @@ export const useParticipants = () => {
     }));
   }, [servicesData]);
 
+  const { data: schedulesData } = useQuery({
+    queryKey: ['schedules', 'options', currentServiceId],
+    queryFn: async () => {
+      const query =
+        currentServiceId && currentServiceId !== 'all'
+          ? { serviceId: currentServiceId, limit: 100 }
+          : { limit: 100 };
+      const response = await schedulesService.getAdminSchedules(query);
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const scheduleOptions = useMemo(() => {
+    const items = schedulesData?.data || [];
+    return items.map((sch: { date: string; _id: string; quota: number }) => ({
+      label: `${formatDate(sch.date)} (Kuota: ${sch.quota})`,
+      value: sch._id,
+    }));
+  }, [schedulesData]);
+
   return {
     // State
     tableItems,
@@ -145,5 +173,8 @@ export const useParticipants = () => {
     handleOpenDetail,
     handleCloseDetail,
     handleChangeService,
+    currentScheduleId,
+    handleChangeSchedule,
+    scheduleOptions,
   };
 };

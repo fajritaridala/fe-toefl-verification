@@ -6,28 +6,27 @@ type Option = {
   value: string;
 };
 
-type ServiceFilterProps = {
+type ScheduleFilterProps = {
   value?: string;
   onChange: (value: string) => void;
   options: Option[];
 };
 
-export function ServiceFilter({
+export function ScheduleFilter({
   value,
   onChange,
   options,
-}: ServiceFilterProps) {
+}: ScheduleFilterProps) {
   return (
     <div className="flex items-center gap-2">
       <Select
         disallowEmptySelection
         radius="full"
-        aria-label="Filter layanan"
-        placeholder="Layanan"
+        aria-label="Filter jadwal"
+        placeholder="Jadwal"
         startContent={<Filter size={18} className="text-text-muted" />}
         selectedKeys={value && value !== 'all' ? new Set([value]) : new Set([])}
         onSelectionChange={(keys) => {
-          // If empty selection (e.g. from clearing), default to 'all'
           if (keys === 'all') {
             onChange('all');
             return;
@@ -40,15 +39,15 @@ export function ServiceFilter({
           onChange(selectedValue);
         }}
         classNames={{
-          base: 'w-36',
+          base: 'w-56', // Wider for dates
           trigger:
             'h-9 bg-white border border-gray-200 shadow-sm hover:border-gray-300',
           value: 'text-small text-center font-medium text-gray-700',
           listbox: 'w-full',
-          popoverContent: 'w-38',
+          popoverContent: 'w-56',
         }}
       >
-        {[{ label: 'Semua', value: 'all' }, ...options].map((opt) => (
+        {[{ label: 'Semua Jadwal', value: 'all' }, ...options].map((opt) => (
           <SelectItem key={opt.value} textValue={opt.label}>
             {opt.label}
           </SelectItem>

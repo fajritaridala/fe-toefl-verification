@@ -1,7 +1,16 @@
+import { useEffect, useState } from 'react';
 import { LuArrowRight } from 'react-icons/lu';
 // Menghapus ikon-ikon kecil yang tidak lagi digunakan
-import { Button } from '@heroui/react';
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@heroui/react';
 import { type Variants, motion } from 'framer-motion';
+import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
 import BaseCard from '@/components/ui/Card/Base';
 import TestimonyCard from '@/components/ui/Card/Testimony';
@@ -54,6 +63,25 @@ const fadeInItem: Variants = {
 
 const Home = () => {
   const router = useRouter();
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (router.query.success_registration === 'true') {
+      setIsSuccessModalOpen(true);
+      // Clean up URL without reload
+      const newQuery = { ...router.query };
+      delete newQuery.success_registration;
+      router.replace(
+        { pathname: router.pathname, query: newQuery },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [router.query]);
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+  };
 
   const handlePress = () => {
     router.push('/verification');
@@ -217,7 +245,7 @@ const Home = () => {
                 name={item.name}
                 job={item.job}
                 testimony={item.testimony}
-                className="bg-transparent border-[3px] border-bg-light hover:shadow-none [&>p]:text-bg-light [&>h1]:text-bg-light [&>h2]:text-bg-light/80 hover:-translate-y-2 hover:bg-white/5"
+                className="border-bg-light [&>p]:text-bg-light [&>h1]:text-bg-light [&>h2]:text-bg-light/80 border-[3px] bg-transparent hover:-translate-y-2 hover:bg-white/5 hover:shadow-none"
               />
             </motion.div>
           ))}
@@ -249,6 +277,46 @@ const Home = () => {
           </Button>
         </motion.div>
       </section>
+
+      {/* Success Modal */}
+      <Modal
+        isOpen={isSuccessModalOpen}
+        onClose={handleCloseSuccessModal}
+        placement="center"
+        backdrop="blur"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col items-center gap-1 pt-8">
+                <div className="bg-success-50 text-success mb-2 flex h-16 w-16 items-center justify-center rounded-full">
+                  <CheckCircle size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Pendaftaran Berhasil!
+                </h3>
+              </ModalHeader>
+              <ModalBody className="pb-6 text-center">
+                <p className="text-gray-600">
+                  Data pendaftaran Anda telah berhasil kami terima. Mohon pantau
+                  email Anda secara berkala untuk mendapatkan informasi jadwal
+                  tes & langkah selanjutnya.
+                </p>
+              </ModalBody>
+              <ModalFooter className="flex justify-center pb-8">
+                <Button
+                  color="primary"
+                  onPress={onClose}
+                  className="w-full px-8 font-semibold sm:w-auto"
+                  radius="full"
+                >
+                  Saya Mengerti
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };

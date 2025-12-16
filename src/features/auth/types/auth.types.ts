@@ -1,5 +1,5 @@
-import { Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import { Session, User } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 
 export interface ILogin {
   address: string;
@@ -24,6 +24,7 @@ export interface SessionExt extends Session {
     email: string;
     role: string;
     accessToken?: string;
+    needsRegistration?: boolean;
   };
 }
 

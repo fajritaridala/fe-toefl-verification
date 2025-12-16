@@ -86,7 +86,7 @@ const BaseNavbar = (props: Props) => {
             })}
           </NavbarItem>
           <Divider orientation="vertical" className="bg-secondary h-5" />
-          {isAuthenticated ? (
+          {isAuthenticated && !user?.user?.needsRegistration ? (
             <Dropdown className="bg-bg-light mt-3 rounded-sm !shadow">
               <NavbarItem>
                 <DropdownTrigger>
@@ -143,7 +143,6 @@ const BaseNavbar = (props: Props) => {
           )}
         </NavbarContent>
         {/* center end */}
-
         {/* right start */}
         {/* right end */}
       </Navbar>

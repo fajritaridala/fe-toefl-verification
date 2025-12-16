@@ -16,8 +16,17 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  cn,
 } from '@heroui/react';
-import { EllipsisVertical, PenLine, Plus, RefreshCw, Search, Trash2 } from 'lucide-react';
+import {
+  EllipsisVertical,
+  PenLine,
+  Plus,
+  RefreshCw,
+  Search,
+  Trash2,
+} from 'lucide-react';
+import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import toRupiah from '@/utils/toRupiah';
 
 // Extended type with __rowKey added by useServices
@@ -31,7 +40,9 @@ type Props = {
   currentPage: number;
   totalPages: number;
   currentSearch: string;
+  currentLimit: number | string;
   onChangePage: (page: number) => void;
+  onChangeLimit: (limit: number) => void;
   onSearch: (value: string) => void;
   onClearSearch: () => void;
   onRefresh: () => void;
@@ -49,7 +60,9 @@ const ServiceTable = (props: Props) => {
     currentPage,
     totalPages,
     currentSearch,
+    currentLimit,
     onChangePage,
+    onChangeLimit,
     onSearch,
     onClearSearch,
     onRefresh,
@@ -115,16 +128,8 @@ const ServiceTable = (props: Props) => {
 
   return (
     <section className="space-y-4">
-      {/* Refetch Indicator */}
-      {isRefetching && (
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Spinner size="sm" color="primary" />
-          <p>Mengambil data terbaru...</p>
-        </div>
-      )}
-
       {/* Table Card */}
-      <div className="bg-white shadow-md shadow-gray-100/50 rounded-2xl border border-gray-100">
+      <div className="rounded-2xl border border-gray-100 bg-white shadow-md shadow-gray-100/50">
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -143,27 +148,39 @@ const ServiceTable = (props: Props) => {
                   inputWrapper: 'bg-gray-50 drop-shadow-sm',
                 }}
               />
+              <LimitFilter
+                value={String(currentLimit)}
+                onChange={(val) => onChangeLimit(Number(val))}
+              />
+            </div>
+
+            {/* Added Service & Refresh */}
+            <div className="flex items-center gap-2">
+              <Button
+                radius="full"
+                className="bg-primary font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5"
+                startContent={<Plus size={18} />}
+                onPress={onAdd}
+              >
+                Tambah Layanan
+              </Button>
               <Button
                 isIconOnly
                 radius="full"
                 variant="flat"
-                className="border border-gray-200 bg-white hover:border-gray-300"
+                className="border-secondary hover:border-secondary/70 border bg-white"
                 onPress={onRefresh}
+                isDisabled={isRefetching}
                 aria-label="Refresh data"
               >
-                <RefreshCw className="h-4 w-4 text-gray-600" />
+                <RefreshCw
+                  className={cn(
+                    'text-secondary h-4 w-4',
+                    isRefetching && 'animate-spin'
+                  )}
+                />
               </Button>
             </div>
-
-            {/* Add Button */}
-            <Button
-              radius="full"
-              className="bg-primary shadow-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
-              startContent={<Plus size={18} />}
-              onPress={onAdd}
-            >
-              Tambah Layanan
-            </Button>
           </div>
         </div>
 
@@ -244,7 +261,7 @@ const ServiceTable = (props: Props) => {
 
         {/* Pagination Footer - Only show if more than 1 page */}
         {!isLoading && totalPages > 1 && (
-          <div className="rounded-b-xl bg-gray-50 px-6 py-3 border-t border-gray-100">
+          <div className="rounded-b-xl border-t border-gray-100 bg-gray-50 px-6 py-3">
             <div className="flex items-center justify-end">
               <Pagination
                 showShadow

@@ -29,17 +29,19 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
   const fixedStatus = options?.fixedStatus;
   const currentStatus = fixedStatus ?? (getParam('status') || 'all');
   const currentServiceId = getParam('serviceId') || 'all';
+  const currentScheduleId = getParam('scheduleId') || 'all';
   
   const normalizedStatus =
     fixedStatus ?? (currentStatus !== 'all' ? (currentStatus as EnrollmentItem['status']) : undefined);
   const normalizedServiceId = currentServiceId !== 'all' ? currentServiceId : undefined;
+  const normalizedScheduleId = currentScheduleId !== 'all' ? currentScheduleId : undefined;
 
   const {
     data: dataEnrollments,
     isLoading: isLoadingEnrollments,
     isRefetching: isRefetchingEnrollments,
   } = useQuery({
-    queryKey: ['enrollments', currentPage, currentLimit, currentSearch, normalizedStatus, normalizedServiceId],
+    queryKey: ['enrollments', currentPage, currentLimit, currentSearch, normalizedStatus, normalizedServiceId, normalizedScheduleId],
     queryFn: async () => {
       const response = await enrollmentsService.getEnrollments({
         page: Number(currentPage),
@@ -47,6 +49,7 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
         search: currentSearch || undefined,
         status: normalizedStatus,
         serviceId: normalizedServiceId,
+        scheduleId: normalizedScheduleId,
       });
       return response.data as EnrollmentListResponse;
     },
@@ -68,6 +71,13 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     });
   }, [setParams]);
 
+  const handleChangeSchedule = useCallback((scheduleId: string) => {
+    setParams({
+      scheduleId: !scheduleId || scheduleId === 'all' ? null : scheduleId,
+      page: '1',
+    });
+  }, [setParams]);
+
   return {
     dataEnrollments,
     isLoadingEnrollments,
@@ -77,12 +87,14 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     currentSearch,
     currentStatus,
     currentServiceId,
+    currentScheduleId,
     handleChangePage,
     handleChangeLimit,
     handleSearch,
     handleClearSearch,
     handleChangeStatus,
     handleChangeService,
+    handleChangeSchedule,
     fixedStatus,
   };
 }

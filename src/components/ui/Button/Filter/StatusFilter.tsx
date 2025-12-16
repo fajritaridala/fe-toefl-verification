@@ -1,5 +1,5 @@
 import { Select, SelectItem } from '@heroui/react';
-import { ListFilter } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { EnrollmentStatus } from '@/features/admin/types/admin.types';
 
 type Option = {
@@ -29,7 +29,7 @@ export function StatusFilter({ value, onChange, options = DEFAULT_OPTIONS }: Sta
         radius="full"
         aria-label="Filter status"
         placeholder="Status"
-        startContent={<ListFilter size={18} className="text-text-muted" />}
+        startContent={<Filter size={18} className="text-text-muted" />}
         selectedKeys={value === 'all' ? new Set([]) : new Set([value])}
         onSelectionChange={(keys) => {
             if (keys === 'all') {

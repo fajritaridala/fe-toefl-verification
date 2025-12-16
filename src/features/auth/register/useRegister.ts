@@ -1,20 +1,28 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/router"; // Fix: Use Pages Router
-import * as Yup from "yup";
-import authServices from "@features/auth/services/auth.service";
-import randomize from "@/utils/config/randomize";
-import { IRegister } from "@features/auth/types/auth.types";
-import metamask from "@/lib/metamask/metamask";
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import authServices from '@features/auth/services/auth.service';
+import { IRegister } from '@features/auth/types/auth.types';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
+// Fix: Use Pages Router
+import * as Yup from 'yup';
+import metamask from '@/lib/metamask/metamask';
+import randomize from '@/utils/config/randomize';
 
 const registerSchema = Yup.object().shape({
-  username: Yup.string().required("Username wajib diisi"),
+  username: Yup.string()
+    .required('Nama Pengguna wajib diisi')
+    .min(3, 'Nama Pengguna minimal 3 karakter')
+    .max(50, 'Nama Pengguna maksimal 50 karakter')
+    .matches(
+      /^[a-zA-Z0-9\s._]+$/,
+      'Nama Pengguna hanya boleh mengandung huruf, angka, spasi, titik, dan underscore'
+    ),
   email: Yup.string()
-    .email("Format email tidak valid")
-    .required("Email wajib diisi"),
+    .email('Format email tidak valid')
+    .required('Email wajib diisi'),
   roleToken: Yup.string().optional(),
 });
 
@@ -22,8 +30,8 @@ export function useRegister() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [isAddress, setIsAddress] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
+  const [isAddress, setIsAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
 
   // Mengambil addressQuery dari router.query
@@ -37,15 +45,15 @@ export function useRegister() {
           // Decode URI component terlebih dahulu karena sering ter-encode di URL
           const decodedQuery = decodeURIComponent(addressQuery);
           const decrypted = await randomize.decrypt(decodedQuery);
-          
+
           if (decrypted) {
             setIsAddress(decrypted);
             setIsConnected(true);
           }
         } catch (error) {
-          console.error("Gagal mendekripsi alamat:", error);
+          console.error('Gagal mendekripsi alamat:', error);
           setAlertOpen(true);
-          setAlertMessage("Tautan registrasi tidak valid atau kadaluarsa.");
+          setAlertMessage('Tautan registrasi tidak valid atau kadaluarsa.');
         }
       }
     };
@@ -64,9 +72,9 @@ export function useRegister() {
   } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      roleToken: "",
+      username: '',
+      email: '',
+      roleToken: '',
     },
   });
 
@@ -74,13 +82,17 @@ export function useRegister() {
     try {
       const result = await authServices.register(payload);
       if (!result) {
-        throw new Error("Tidak ada respons dari server.");
+        throw new Error('Tidak ada respons dari server.');
       }
       return result;
     } catch (error: unknown) {
       // Menangani error dari backend (misal: duplikat email/username)
-      const err = error as { response?: { data?: { message?: string } }; message?: string };
-      const errorMessage = err?.response?.data?.message || err.message || "Registrasi gagal";
+      const err = error as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const errorMessage =
+        err?.response?.data?.message || err.message || 'Registrasi gagal';
       throw new Error(errorMessage);
     }
   }
@@ -91,24 +103,24 @@ export function useRegister() {
       const role = result?.data?.data?.role;
       try {
         // Auto login setelah register
-        const signInResult = await signIn("credentials", {
+        const signInResult = await signIn('credentials', {
           address: isAddress,
           redirect: false,
         });
 
         if (signInResult?.ok) {
-          if (role === "admin") {
-            await router.push("/admin/dashboard");
+          if (role === 'admin') {
+            await router.push('/admin/dashboard');
           } else {
-            await router.push("/");
+            await router.push('/');
           }
           reset();
         } else {
-            // Fallback jika auto-login gagal
-             await router.push("/auth/login");
+          // Fallback jika auto-login gagal
+          await router.push('/auth/login');
         }
       } catch {
-        await router.push("/auth/login");
+        await router.push('/auth/login');
       }
     },
     onError(error) {
@@ -136,10 +148,12 @@ export function useRegister() {
     }
   }
 
-  function handleRegister(data: Omit<IRegister, "address">) {
+  function handleRegister(data: Omit<IRegister, 'address'>) {
     if (!isAddress) {
       setAlertOpen(true);
-      setAlertMessage("Alamat dompet tidak terdeteksi. Silakan hubungkan ulang MetaMask.");
+      setAlertMessage(
+        'Alamat dompet tidak terdeteksi. Silakan hubungkan ulang MetaMask.'
+      );
       return;
     }
 
@@ -148,7 +162,7 @@ export function useRegister() {
       address: isAddress,
       username: data.username,
       email: data.email,
-      roleToken: data.roleToken || "",
+      roleToken: data.roleToken || '',
     };
 
     mutateRegister(payload);

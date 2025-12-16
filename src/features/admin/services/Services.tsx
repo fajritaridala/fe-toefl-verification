@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { motion, type Variants } from 'framer-motion';
 import { ServiceItem } from '@features/admin';
+import { useQueryClient } from '@tanstack/react-query';
+import { type Variants, motion } from 'framer-motion';
 import ServiceTable from '@/components/ui/Table/ServiceTable';
-import { SERVICE_TABLE_COLUMNS } from './Services.constants';
 import AddServiceModal from './AddServiceModal';
 import DeleteServiceModal from './DeleteServiceModal';
+import { SERVICE_TABLE_COLUMNS } from './Services.constants';
 import useServices from './useServices';
 
 const fadeInUp: Variants = {
@@ -29,7 +29,9 @@ const AdminServicesPage = () => {
     isRefetchingServices,
     currentPage,
     currentSearch,
+    currentLimit,
     handleChangePage,
+    handleChangeLimit,
     handleSearch,
     handleClearSearch,
   } = useServices();
@@ -75,7 +77,7 @@ const AdminServicesPage = () => {
   };
 
   return (
-    <motion.section 
+    <motion.section
       initial="hidden"
       animate="visible"
       variants={fadeInUp}
@@ -89,6 +91,8 @@ const AdminServicesPage = () => {
         currentPage={Number(currentPage)}
         totalPages={pagination?.totalPages || 1}
         currentSearch={currentSearch}
+        currentLimit={currentLimit}
+        onChangeLimit={(val) => handleChangeLimit(String(val))}
         onChangePage={handleChangePage}
         onSearch={handleSearch}
         onClearSearch={handleClearSearch}

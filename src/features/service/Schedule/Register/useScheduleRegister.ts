@@ -101,7 +101,7 @@ export function useScheduleRegister() {
       });
       reset();
       setTimeout(() => {
-        router.push('/service'); // Redirect to a success page or another relevant page
+        router.push('/?success_registration=true');
       }, 2000);
     },
     onError: (error) => {
