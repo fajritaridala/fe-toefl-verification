@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
 import { ChangeEvent, useRef, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
+import { enrollmentsService } from '@features/admin';
+import { Gender, ScheduleRegister } from '@features/admin';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import * as yup from 'yup';
-import { enrollmentsService } from '@features/admin';
-import { Gender, ScheduleRegister } from '@features/admin';
 
 const scheduleRegisterSchema = yup.object().shape({
   fullName: yup.string().required('Nama lengkap wajib diisi'),
@@ -25,10 +25,15 @@ const scheduleRegisterSchema = yup.object().shape({
   faculty: yup.string().required('Fakultas wajib diisi'),
   major: yup.string().required('Program studi wajib diisi'),
   paymentDate: yup.string().required('Tanggal pembayaran wajib diisi'),
-  file: yup
+  paymentProof: yup
     .mixed<File>()
-    .required('Bukti pembayaran wajib diunggah')
-    .nullable(),
+    .nullable()
+    .defined()
+    .test(
+      'fileRequired',
+      'Bukti pembayaran wajib diunggah',
+      (value) => value instanceof File
+    ),
 });
 
 export function useScheduleRegister() {
@@ -64,15 +69,15 @@ export function useScheduleRegister() {
       faculty: '',
       major: '',
       paymentDate: '',
-      file: null,
+      paymentProof: null,
     },
   });
 
-  const paymentReceipt = watch('file');
+  const paymentReceipt = watch('paymentProof');
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setValue('file', e.target.files[0], { shouldValidate: true });
+      setValue('paymentProof', e.target.files[0], { shouldValidate: true });
     }
   };
 

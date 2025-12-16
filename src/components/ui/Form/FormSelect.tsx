@@ -1,12 +1,13 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Select, SelectItem, SelectProps } from "@heroui/react";
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import { Select, SelectItem, SelectProps } from '@heroui/react';
 
 interface Option {
   label: string;
   value: string | number;
 }
 
-interface FormSelectProps<T extends FieldValues> extends Omit<SelectProps, "name" | "children"> {
+interface FormSelectProps<T extends FieldValues>
+  extends Omit<SelectProps, 'name' | 'children'> {
   name: Path<T>;
   control: Control<T>;
   label: string;
@@ -32,11 +33,11 @@ export const FormSelect = <T extends FieldValues>({
           selectedKeys={field.value ? [field.value.toString()] : []}
           isInvalid={!!error}
           errorMessage={error?.message}
+          color={error ? 'danger' : 'default'}
+          validationBehavior="aria"
         >
           {options.map((option) => (
-            <SelectItem key={option.value}>
-              {option.label}
-            </SelectItem>
+            <SelectItem key={option.value}>{option.label}</SelectItem>
           ))}
         </Select>
       )}

@@ -48,7 +48,7 @@ export interface ScheduleRegister {
   nim: string;
   faculty: string;
   major: string;
-  file: File | null;
+  paymentProof: File | null;
 }
 
 export interface ScheduleItem {

@@ -1,17 +1,11 @@
-import { motion, type Variants } from 'framer-motion';
-import UploaderCard from "@/components/ui/Card/Uploader";
-import useVerification from "./useVerification";
-
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: 'easeOut' },
-  },
-};
+import { Button } from '@heroui/react';
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import UploaderCard from '@/components/ui/Card/Uploader';
+import useVerification from './useVerification';
 
 const Verification = () => {
+  const router = useRouter();
   const {
     isPreview,
     handleClick,
@@ -24,30 +18,36 @@ const Verification = () => {
   } = useVerification();
 
   return (
-    <div className="bg-bg min-h-screen">
-      <section className="mb-20 flex flex-col">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          className="mt-24 text-center"
-        >
-          <h1 className="text-text mx-auto mb-4 text-4xl font-extrabold">
-            Verifikasi Keaslian Sertifikat
-          </h1>
-          <p className="text-text-muted mx-auto mt-2 lg:max-w-2xl">
-            Unggah sertifikat Anda untuk memeriksa keasliannya pada sistem
-            blockchain kami. Pastikan sertifikat yang Anda unggah adalah file
-            resmi dari SIMPEKA.
-          </p>
-        </motion.div>
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          transition={{ delay: 0.2 }}
-          className="mx-auto mt-12 w-xl"
-        >
+    <section className="flex justify-center bg-white py-10">
+      <div className="animate-fade-bottom my-10 flex w-full flex-col gap-6 px-6 lg:max-w-6xl lg:flex-row">
+        {/* Header */}
+        <div className="w-full space-y-2 lg:w-1/3">
+          <Button
+            variant="light"
+            data-hover={false}
+            onPress={() => router.back()}
+            className="text-secondary hover:text-secondary/60 group -ml-3 w-fit p-0"
+            startContent={
+              <ArrowLeft
+                size={18}
+                className="transform duration-300 group-hover:-translate-x-1"
+              />
+            }
+          >
+            Kembali
+          </Button>
+          <div>
+            <h1 className="text-2xl font-extrabold text-black">
+              Verifikasi Keaslian Sertifikat
+            </h1>
+            <p className="text-sm text-gray-500">
+              Unggah sertifikat resmi SIMPEKA Anda untuk memverifikasi
+              keasliannya.
+            </p>
+          </div>
+        </div>
+
+        <div className="w-full lg:w-2/3 lg:pt-8">
           <UploaderCard
             handleSubmit={handleSubmit}
             fileInputRef={fileInputRef}
@@ -58,9 +58,9 @@ const Verification = () => {
             isDragging={isDragging}
             dragHandlers={dragHandlers}
           />
-        </motion.div>
-      </section>
-    </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

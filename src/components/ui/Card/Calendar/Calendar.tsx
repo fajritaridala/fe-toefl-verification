@@ -16,9 +16,7 @@ const Calendar = ({ data = [], className = '' }: CalendarCardProps) => {
 
   return (
     <div
-      // CONTAINER UTAMA
-      // Border diubah menjadi border-secondary (sesuai request)
-      className={`w-full max-w-3xl rounded-2xl border border-secondary bg-bg-light p-6 shadow-sm ${className}`}
+      className={`w-full max-w-3xl shadow-neo rounded-2xl border border-secondary bg-bg-light p-6 ${className}`}
     >
       {/* --- NAVIGASI BULAN --- */}
       <div className="mb-4 flex items-center justify-between px-1">

@@ -47,7 +47,7 @@ export default function UploaderCard(props: Props) {
 
   return (
     <>
-      <Card className="hover:shadow-neo w-full rounded-2xl border border-gray-200 px-2 py-4 shadow-none transition-all delay-75 duration-200 ease-in-out">
+      <Card className="shadow-neo w-full rounded-2xl border border-gray-200 px-2 py-4 transition-all delay-75 duration-200 ease-in-out">
         <CardBody>
           <div
             onClick={handleClick}
@@ -108,21 +108,14 @@ export default function UploaderCard(props: Props) {
         </CardBody>
         <Divider className="bg-secondary/60 my-2" />
         <CardFooter>
-          <div className="grid grid-cols-4 gap-4">
-            <Button
-              onPress={handleClick}
-              data-hover="false"
-              startContent={<LuFilePlus strokeWidth={3} />}
-              className="border-secondary/60 text-secondary/90 rounded-full border-2 bg-transparent font-semibold transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
-            >
-              Pilih File
-            </Button>
+          <div className="flex w-full justify-end">
             <Button
               onPress={handleSubmit}
-              data-hover="false"
+              size="lg"
+              radius="full"
+              color="primary"
               startContent={<LuCircleCheck strokeWidth={3} />}
-              className="text-medium bg-primary rounded-full font-semibold text-white transition-all delay-75 duration-100 hover:-translate-y-1 hover:shadow-lg active:translate-y-1 active:shadow"
-              isDisabled={!isPreview}
+              className="text-medium font-semibold text-white"
             >
               Verifikasi
             </Button>

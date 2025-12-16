@@ -1,16 +1,8 @@
 import { ChangeEvent, RefObject } from 'react';
-import { Control, FieldErrors, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
+import { Control, FieldErrors } from 'react-hook-form';
 import { LuCloudUpload, LuFileCheck } from 'react-icons/lu';
-import { ScheduleRegister, Gender } from '@features/admin';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Form,
-  cn,
-} from '@heroui/react';
+import { Gender, ScheduleRegister } from '@features/admin';
+import { Button, Card, CardBody, Form, cn } from '@heroui/react';
 import { FormInput } from '@/components/ui/Form/FormInput';
 import { FormSelect } from '@/components/ui/Form/FormSelect';
 
@@ -24,7 +16,6 @@ type Props = {
   control: Control<ScheduleRegister>;
   errors: FieldErrors<ScheduleRegister>;
   isLoading: boolean;
-  handleGoBackAction: () => void;
   fileInputRef: RefObject<HTMLInputElement | null>;
   paymentReceipt: File | null;
   handleFileChangeAction: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -39,209 +30,209 @@ export default function ScheduleRegisterForm(props: Props) {
     control,
     errors,
     isLoading,
-    handleGoBackAction,
     fileInputRef,
     paymentReceipt,
     handleFileChangeAction,
     handleFilePickerAction,
   } = props;
+  console.log(errors);
 
   return (
-    <Card className="w-full  rounded-2xl border border-gray-200 p-6 shadow-none">
-      <CardHeader>
-        <div className="w-full">
-          <h1 className="text-primary-800 mb-2 text-3xl font-bold">
-            Formulir Pendaftaran Jadwal
-          </h1>
-          <p className="text-default-500 text-base">
-            Lengkapi data di bawah ini untuk menyelesaikan pendaftaran Anda.
-          </p>
-        </div>
-      </CardHeader>
-      <Divider />
+    <Card className="hover:border-secondary shadow-neo w-full rounded-2xl border border-gray-200 p-6 transition-colors delay-100 duration-300">
       <CardBody>
         <Form
           onSubmit={handleSubmitAction(handleRegisterAction, onErrorAction)}
-          className="space-y-6 my-2"
+          className="my-2 space-y-6"
         >
-          <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-x-8 gap-y-4">
+          <div className="grid w-full grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
             {/* Kolom Kiri: Data Diri */}
-          <div className="space-y-4">
-            <FormInput
-              control={control}
-              name="fullName"
-              label="Nama Lengkap"
-              placeholder="Masukkan nama lengkap"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-            />
+            <div className="flex flex-col gap-4">
+              <FormInput
+                control={control}
+                name="fullName"
+                label="Nama Lengkap"
+                placeholder="Masukkan nama lengkap"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+              />
 
-            <FormInput
-              control={control}
-              name="birthDate"
-              label="Tanggal Lahir"
-              placeholder="Pilih tanggal lahir"
-              type="date"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-            />
+              <FormInput
+                control={control}
+                name="birthDate"
+                label="Tanggal Lahir"
+                placeholder="Pilih tanggal lahir"
+                type="date"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+              />
 
-            <FormSelect
-              control={control}
-              name="gender"
-              label="Jenis Kelamin"
-              placeholder="Pilih jenis kelamin"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-              options={[
-                { label: 'Laki-laki', value: Gender.MALE },
-                { label: 'Perempuan', value: Gender.FEMALE },
-              ]}
-            />
-            
-            <FormInput
-              control={control}
-              name="email"
-              label="Email"
-              placeholder="Contoh: email@gmail.com"
-              type="email"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside-top"
-            />
+              <FormSelect
+                control={control}
+                name="gender"
+                label="Jenis Kelamin"
+                placeholder="Pilih jenis kelamin"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+                options={[
+                  { label: 'Laki-laki', value: Gender.MALE },
+                  { label: 'Perempuan', value: Gender.FEMALE },
+                ]}
+              />
 
-            <FormInput
-              control={control}
-              name="phoneNumber"
-              label="Nomor Telepon"
-              placeholder="Contoh: 081234567890"
-              type="tel"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-            />
-          </div>
+              <FormInput
+                control={control}
+                name="email"
+                label="Email"
+                placeholder="Contoh: email@gmail.com"
+                type="email"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside-top"
+              />
 
-          {/* Kolom Kanan: Data Kontak & Akademik */}
-          <div className="space-y-4">
-            <FormInput
-              control={control}
-              name="nim"
-              label="Nomor Induk Mahasiswa"
-              placeholder="Masukkan NIM"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-            />
+              <FormInput
+                control={control}
+                name="phoneNumber"
+                label="Nomor Telepon"
+                placeholder="Contoh: 081234567890"
+                type="tel"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+              />
+            </div>
 
-            <FormInput
-              control={control}
-              name="faculty"
-              label="Fakultas"
-              placeholder="Masukkan fakultas"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-            />
+            {/* Kolom Kanan: Data Kontak & Akademik */}
+            <div className="flex flex-col gap-4">
+              <FormInput
+                control={control}
+                name="nim"
+                label="Nomor Induk Mahasiswa"
+                placeholder="Masukkan NIM"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+              />
 
-            <FormInput
-              control={control}
-              name="major"
-              label="Program Studi"
-              placeholder="Masukkan program studi"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-            />
+              <FormInput
+                control={control}
+                name="faculty"
+                label="Fakultas"
+                placeholder="Masukkan fakultas"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+              />
 
-            <FormInput
-              control={control}
-              name="paymentDate"
-              label="Tanggal Pembayaran"
-              type="date"
-              isRequired
-              variant="bordered"
-              labelPlacement="outside"
-            />
-          </div>
+              <FormInput
+                control={control}
+                name="major"
+                label="Program Studi"
+                placeholder="Masukkan program studi"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+              />
 
-          {/* Full Width: Upload Bukti Pembayaran */}
-          <div className="flex flex-col col-span-1 md:col-span-2 pt-2">
-            <label className="text-default-700 text-sm font-medium">
-              Bukti Pembayaran
-              <span className="text-danger-500">*</span>
-            </label>
-            <div
-              onClick={handleFilePickerAction}
-              className={cn(
-                'border-default-200 hover:border-primary mt-2 flex cursor-pointer justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors',
-                { 'border-danger-500': !!errors.file }
-              )}
-            >
-              <div className="text-center">
-                {paymentReceipt ? (
-                  <LuFileCheck
-                    className="text-success-500 mx-auto h-12 w-12"
-                    strokeWidth={1.5}
-                  />
-                ) : (
-                  <LuCloudUpload
-                    className="text-default-400 mx-auto h-12 w-12"
-                    strokeWidth={1.5}
-                  />
+              <FormInput
+                control={control}
+                name="paymentDate"
+                label="Tanggal Pembayaran"
+                type="date"
+                isRequired
+                variant="bordered"
+                labelPlacement="outside"
+              />
+            </div>
+
+            {/* Full Width: Upload Bukti Pembayaran */}
+            <div className="col-span-1 flex flex-col pt-2 md:col-span-2">
+              <label className="text-default-700 text-sm font-medium">
+                Bukti Pembayaran
+                <span className="text-danger-500">*</span>
+              </label>
+              <div
+                onClick={handleFilePickerAction}
+                className={cn(
+                  'mt-2 flex cursor-pointer justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors',
+                  !!errors.paymentProof
+                    ? 'border-danger bg-danger-50'
+                    : 'border-default-200 hover:border-primary hover:bg-default-50'
                 )}
-                <div className="text-default-600 mt-4 flex text-sm leading-6">
-                  <p className="pl-1">
-                    {paymentReceipt
-                      ? 'File terpilih:'
-                      : 'Unggah file atau seret dan lepas'}
+              >
+                <div className="text-center">
+                  {paymentReceipt ? (
+                    <LuFileCheck
+                      className="text-success-500 mx-auto h-12 w-12"
+                      strokeWidth={1.5}
+                    />
+                  ) : (
+                    <LuCloudUpload
+                      className={cn(
+                        'mx-auto h-12 w-12 transition-colors',
+                        !!errors.paymentProof
+                          ? 'text-danger'
+                          : 'text-default-400'
+                      )}
+                      strokeWidth={1.5}
+                    />
+                  )}
+                  <div className="text-default-600 mt-4 flex text-sm leading-6">
+                    <p
+                      className={cn(
+                        'pl-1',
+                        !!errors.paymentProof
+                          ? 'text-danger'
+                          : 'text-default-600'
+                      )}
+                    >
+                      {paymentReceipt
+                        ? 'File terpilih:'
+                        : 'Unggah file atau seret dan lepas'}
+                    </p>
+                  </div>
+                  <p
+                    className={cn(
+                      'text-xs leading-5',
+                      !!errors.paymentProof ? 'text-danger' : 'text-default-500'
+                    )}
+                  >
+                    {paymentReceipt?.name || 'PNG, JPG, PDF hingga 10MB'}
                   </p>
                 </div>
-                <p className="text-default-500 text-xs leading-5">
-                  {paymentReceipt?.name || 'PNG, JPG, PDF hingga 10MB'}
-                </p>
               </div>
+              {errors.paymentProof && (
+                <p className="text-danger mt-2 px-1 text-sm font-medium">
+                  {errors.paymentProof?.message}
+                </p>
+              )}
+              <input
+                type="file"
+                ref={(node) => {
+                  fileInputRef.current = node;
+                }}
+                onChange={handleFileChangeAction}
+                className="hidden"
+                accept="image/png, image/jpeg, application/pdf"
+              />
             </div>
-            {errors.file && (
-              <p className="text-danger-500 mt-1 text-xs">
-                {errors.file?.message}
-              </p>
-            )}
-            <input
-              type="file"
-              ref={(node) => {
-                fileInputRef.current = node;
-              }}
-              onChange={handleFileChangeAction}
-              className="hidden"
-              accept="image/png, image/jpeg, application/pdf"
-            />
           </div>
-        </div>
 
-          <div className="flex justify-end gap-4 pt-4">
-          <Button
-            data-hover="false"
-            radius="full"
-            onPress={handleGoBackAction}
-            className="border-warning text-warning hover:bg-warning border-2 bg-transparent font-bold transition-all delay-75 duration-100 hover:-translate-y-1 hover:text-white active:translate-y-0.5"
-          >
-            Kembali
-          </Button>
-          <Button
-            data-hover="false"
-            radius="full"
-            color="primary"
-            type="submit"
-            isLoading={isLoading}
-            className="bg-primary-800 font-semibold text-white transition-all delay-75 duration-100 hover:-translate-y-1 active:translate-y-0.5"
-          >
-            {isLoading ? 'Mendaftar...' : 'Daftar Sekarang'}
-          </Button>
-        </div>
+          <div className="flex w-full justify-end">
+            <Button
+              radius="full"
+              color="primary"
+              type="submit"
+              size="lg"
+              isLoading={isLoading}
+              className="px-6 font-semibold text-white"
+            >
+              {isLoading ? 'Mendaftar...' : 'Daftar Sekarang'}
+            </Button>
+          </div>
         </Form>
       </CardBody>
     </Card>

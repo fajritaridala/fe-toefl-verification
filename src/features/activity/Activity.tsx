@@ -10,6 +10,7 @@ import {
 } from '@heroui/react';
 import { type Variants, motion } from 'framer-motion';
 import {
+  ArrowLeft,
   Calendar,
   CheckCircle,
   ChevronRight,
@@ -62,14 +63,28 @@ export default function Activity() {
   };
 
   return (
-    <div className="bg-bg-light min-h-screen pt-24 pb-12">
-      <main className="container mx-auto max-w-7xl px-4">
+    <div className="bg-bg-light pt-24 pb-12">
+      <main className="container mx-auto max-w-6xl px-4">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
           className="mb-10"
         >
+          <Button
+            variant="light"
+            data-hover={false}
+            onPress={() => router.back()}
+            className="text-secondary hover:text-secondary/60 group mb-2 -ml-3 w-fit p-0"
+            startContent={
+              <ArrowLeft
+                size={18}
+                className="transform duration-300 group-hover:-translate-x-1"
+              />
+            }
+          >
+            Kembali
+          </Button>
           <h1 className="text-text text-3xl font-extrabold tracking-tight">
             Aktivitas Saya
           </h1>
@@ -149,7 +164,7 @@ export default function Activity() {
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
-            className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-sm"
+            className="shadow-neo flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center"
           >
             <div className="bg-primary/10 text-primary mb-6 flex h-20 w-20 items-center justify-center rounded-full">
               <History className="h-10 w-10" />
@@ -162,7 +177,13 @@ export default function Activity() {
               className="bg-primary font-bold text-white"
               size="lg"
               radius="full"
-              endContent={<ChevronRight className="h-4 w-4" />}
+              onPress={() => router.push('/service')}
+              endContent={
+                <ChevronRight
+                  size={20}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              }
             >
               Lihat Layanan
             </Button>

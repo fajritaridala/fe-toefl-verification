@@ -1,7 +1,12 @@
-import instance from "@/lib/axios/instance";
-import endpoints from "@/constants/endpoints";
-import buildQueryString from "@/utils/helpers/queryString";
-import { EnrollmentStatus, SchedulePayload, ScheduleRegister, ScheduleStatus, ServiceItem } from "@features/admin/types/admin.types";
+import {
+  EnrollmentStatus,
+  SchedulePayload,
+  ScheduleRegister,
+  ScheduleStatus,
+} from '@features/admin/types/admin.types';
+import endpoints from '@/constants/endpoints';
+import instance from '@/lib/axios/instance';
+import buildQueryString from '@/utils/helpers/queryString';
 
 type GetServicesQuery = {
   page?: number;
@@ -76,13 +81,16 @@ export const schedulesService = {
   createSchedule: (payload: SchedulePayload) => {
     const { serviceId, ...rest } = payload;
     if (!serviceId) {
-      throw new Error("serviceId is required to create schedule");
+      throw new Error('serviceId is required to create schedule');
     }
     const queryString = buildQueryString({ serviceId });
     return instance.post(`${endpoints.SCHEDULES}?${queryString}`, rest);
   },
   updateSchedule: (scheduleId: string, payload: Partial<SchedulePayload>) => {
-    return instance.patch(`${endpoints.SCHEDULES}/${scheduleId}/update`, payload);
+    return instance.patch(
+      `${endpoints.SCHEDULES}/${scheduleId}/update`,
+      payload
+    );
   },
   // Soft delete - menggunakan PATCH bukan DELETE
   removeSchedule: (scheduleId: string) => {
@@ -122,8 +130,8 @@ export const enrollmentsService = {
   register: (scheduleId: string, payload: ScheduleRegister) => {
     const formData = new FormData();
     Object.entries(payload).forEach(([key, value]) => {
-      if (key === "file" && value instanceof File) {
-        formData.append("file", value);
+      if (key === 'paymentProof' && value instanceof File) {
+        formData.append('file', value);
       } else if (value !== undefined && value !== null) {
         formData.append(key, value as string);
       }
@@ -131,11 +139,11 @@ export const enrollmentsService = {
 
     return instance.post(`${endpoints.ENROLLMENTS}/${scheduleId}`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
   },
-  approve: (enrollId: string, status: "disetujui" | "ditolak") => {
+  approve: (enrollId: string, status: 'disetujui' | 'ditolak') => {
     return instance.patch(`${endpoints.ENROLLMENTS}/${enrollId}/approval`, {
       status,
     });
@@ -150,7 +158,11 @@ export const enrollmentsService = {
       scores
     );
   },
-  blockchainSuccess: (enrollId: string, participantId: string, hash: string) => {
+  blockchainSuccess: (
+    enrollId: string,
+    participantId: string,
+    hash: string
+  ) => {
     return instance.patch(
       `${endpoints.ENROLLMENTS}/${enrollId}/${participantId}/blockchain-success`,
       { hash }

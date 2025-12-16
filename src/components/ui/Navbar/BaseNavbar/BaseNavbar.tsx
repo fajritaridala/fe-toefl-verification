@@ -55,7 +55,7 @@ const BaseNavbar = (props: Props) => {
           }
         )}
         classNames={{
-          wrapper: ['p-0 max-w-7xl'],
+          wrapper: ['p-0 max-w-6xl'],
         }}
       >
         {/* left start */}
