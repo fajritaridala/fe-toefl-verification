@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import {
+  Alert,
   Button,
   Input,
   Modal,
@@ -9,8 +10,9 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  cn,
 } from '@heroui/react';
-import { Award, Save, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 type ScoreData = {
   listening: string;
@@ -41,7 +43,14 @@ type ScoreInputModalProps = {
     scores: { listening: number; structure: number; reading: number }
   ) => void;
   isSubmitting?: boolean;
-  blockchainStatus?: 'idle' | 'submitting' | 'uploading-ipfs' | 'storing-blockchain' | 'updating-status' | 'success' | 'error';
+  blockchainStatus?:
+    | 'idle'
+    | 'submitting'
+    | 'uploading-ipfs'
+    | 'storing-blockchain'
+    | 'updating-status'
+    | 'success'
+    | 'error';
   statusMessage?: string;
   onRetry?: () => void;
 };
@@ -78,10 +87,18 @@ export default function ScoreInputModal({
 
   if (!participant) return null;
 
-  const validateScore = (value: string): boolean => {
+  // Field-specific max values
+  const maxScores: Record<keyof ScoreData, number> = {
+    listening: 50,
+    reading: 50,
+    structure: 40,
+  };
+
+  const validateScore = (field: keyof ScoreData, value: string): boolean => {
     if (value === '') return false;
     const num = Number(value);
-    return !isNaN(num) && num >= 0 && num <= 100 && Number.isInteger(num);
+    const maxValue = maxScores[field];
+    return !isNaN(num) && num >= 0 && num <= maxValue && Number.isInteger(num);
   };
 
   const handleScoreChange = (field: keyof ScoreData, value: string) => {
@@ -90,7 +107,7 @@ export default function ScoreInputModal({
       setScores((prev) => ({ ...prev, [field]: value }));
 
       // Clear error if valid - remove the key entirely
-      if (value === '' || validateScore(value)) {
+      if (value === '' || validateScore(field, value)) {
         setErrors((prev) => {
           const newErrors = { ...prev };
           delete newErrors[field];
@@ -102,45 +119,44 @@ export default function ScoreInputModal({
 
   const handleBlur = (field: keyof ScoreData) => {
     const value = scores[field];
-    if (value !== '' && !validateScore(value)) {
+    const maxValue = maxScores[field];
+    if (value !== '' && !validateScore(field, value)) {
       setErrors((prev) => ({
         ...prev,
-        [field]: 'Nilai harus antara 0-100 (bilangan bulat)',
+        [field]: `Nilai harus antara 0-${maxValue} (bilangan bulat)`,
       }));
     }
   };
 
   const isFormValid = (): boolean => {
     // Check all scores are filled
-    const allScoresFilled = 
+    const allScoresFilled =
       scores.listening !== '' &&
       scores.structure !== '' &&
       scores.reading !== '';
-    
-    // Check all scores are valid
+
+    // Check all scores are valid with field-specific limits
     const allScoresValid =
-      validateScore(scores.listening) &&
-      validateScore(scores.structure) &&
-      validateScore(scores.reading);
-    
+      validateScore('listening', scores.listening) &&
+      validateScore('structure', scores.structure) &&
+      validateScore('reading', scores.reading);
+
     // Check no errors exist (filter out undefined values)
-    const hasNoErrors = Object.values(errors).every(error => error === undefined);
-    
+    const hasNoErrors = Object.values(errors).every(
+      (error) => error === undefined
+    );
+
     return allScoresFilled && allScoresValid && hasNoErrors;
   };
 
   const handleSubmit = () => {
     if (!isFormValid()) return;
 
-    onSubmit(
-      participant.enrollId,
-      participant.participantId,
-      {
-        listening: Number(scores.listening),
-        structure: Number(scores.structure),
-        reading: Number(scores.reading),
-      }
-    );
+    onSubmit(participant.enrollId, participant.participantId, {
+      listening: Number(scores.listening),
+      structure: Number(scores.structure),
+      reading: Number(scores.reading),
+    });
   };
 
   return (
@@ -159,10 +175,10 @@ export default function ScoreInputModal({
       }}
     >
       <ModalContent>
-        <ModalHeader className="flex items-center justify-between">
+        <ModalHeader className="flex items-center justify-between border py-6">
           <div className="flex items-center gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-bold text-black">
                 Input Nilai Peserta
               </h2>
               <p className="text-sm font-normal text-gray-500">
@@ -186,109 +202,72 @@ export default function ScoreInputModal({
           <div className="space-y-5">
             {/* Blockchain Status Progress */}
             {blockchainStatus !== 'idle' && (
-              <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                <div className="flex items-center gap-3">
-                  {blockchainStatus === 'submitting' && (
-                    <>
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          Mengirim nilai ke server...
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Menghitung total nilai dan upload ke IPFS
-                        </p>
-                      </div>
-                    </>
-                  )}
+              <div className="space-y-3">
+                {blockchainStatus === 'submitting' && (
+                  <Alert
+                    color="primary"
+                    variant="flat"
+                    title="Mengirim nilai ke server..."
+                    description="Menghitung total nilai dan upload ke IPFS"
+                    startContent={
+                      <div className="border-primary h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
+                    }
+                  />
+                )}
 
-                  {blockchainStatus === 'storing-blockchain' && (
-                    <>
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          Menyimpan ke blockchain...
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Tunggu konfirmasi transaksi dari MetaMask
-                        </p>
-                      </div>
-                    </>
-                  )}
+                {blockchainStatus === 'storing-blockchain' && (
+                  <Alert
+                    color="primary"
+                    variant="flat"
+                    title="Menyimpan ke blockchain..."
+                    description="Tunggu konfirmasi transaksi dari MetaMask"
+                    startContent={
+                      <div className="border-primary h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
+                    }
+                  />
+                )}
 
-                  {blockchainStatus === 'updating-status' && (
-                    <>
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-green-600 border-t-transparent" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          Memperbarui status peserta...
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Menyimpan hash ke database dan mengubah status
-                        </p>
-                      </div>
-                    </>
-                  )}
+                {blockchainStatus === 'updating-status' && (
+                  <Alert
+                    color="success"
+                    variant="flat"
+                    title="Memperbarui status peserta..."
+                    description="Menyimpan hash ke database dan mengubah status"
+                    startContent={
+                      <div className="border-success h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
+                    }
+                  />
+                )}
 
-                  {blockchainStatus === 'success' && (
-                    <>
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100">
-                        <svg
-                          className="h-3 w-3 text-green-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-green-900">
-                          Sertifikat berhasil disimpan!
-                        </p>
-                        <p className="text-xs text-green-600">{statusMessage}</p>
-                      </div>
-                    </>
-                  )}
+                {blockchainStatus === 'success' && (
+                  <Alert
+                    color="success"
+                    variant="flat"
+                    title="Sertifikat berhasil disimpan!"
+                    description={statusMessage}
+                  />
+                )}
 
-                  {blockchainStatus === 'error' && (
-                    <>
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-red-100">
-                        <svg
-                          className="h-3 w-3 text-red-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-red-900">
-                          Terjadi kesalahan
-                        </p>
-                        <p className="text-xs text-red-600">{statusMessage}</p>
-                      </div>
-                      {onRetry && (
+                {blockchainStatus === 'error' && (
+                  <Alert
+                    color="danger"
+                    variant="flat"
+                    title="Terjadi kesalahan"
+                    description={statusMessage}
+                    endContent={
+                      onRetry && (
                         <Button
                           size="sm"
-                          color="primary"
-                          variant="flat"
+                          color="danger"
+                          variant="solid"
                           onPress={onRetry}
-                          className="ml-auto"
                         >
                           Coba Lagi
                         </Button>
-                      )}
-                    </>
-                  )}
-                </div>
+                      )
+                    }
+                  />
+                )}
               </div>
             )}
 
@@ -349,27 +328,33 @@ export default function ScoreInputModal({
           </div>
         </ModalBody>
 
-      <ModalFooter className="flex w-full justify-center gap-3">
+        <ModalFooter className="flex w-full justify-end-safe gap-3 py-6">
           <Button
             variant="flat"
-            color="danger"
+            size="lg"
+            color="default"
+            radius="full"
             onPress={onClose}
             isDisabled={isSubmitting}
-            className="w-1/3 font-semibold"
+            className="w-2/3 font-semibold"
           >
             Batal
           </Button>
 
           <Button
             color="primary"
+            size="lg"
+            radius="full"
             onPress={handleSubmit}
             isDisabled={!isFormValid() || isSubmitting}
             isLoading={isSubmitting}
-            className="w-1/3 font-semibold text-white"
+            className={cn('w-2/3 font-semibold text-white', {
+              'cursor-not-allowed': !isFormValid(),
+            })}
           >
             {isSubmitting ? 'Menyimpan...' : 'Simpan Nilai'}
           </Button>
-      </ModalFooter>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );

@@ -1,88 +1,112 @@
-import { Card, CardBody, CardFooter, Skeleton, Button } from '@heroui/react';
-import { Download } from 'lucide-react';
-import { motion, type Variants } from 'framer-motion';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Skeleton,
+  cn,
+} from '@heroui/react';
+import { type Variants, motion } from 'framer-motion';
+import { ArrowLeft, Download } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useCertificate } from './useCertificate';
 
 const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: 'easeOut' },
+    transition: { duration: 0.6, ease: 'easeOut' },
   },
 };
 
 const Certificate = () => {
-  const { 
-    isLoading, 
-    error, 
-    pdfBlobUrl, 
-    handleDownload 
-  } = useCertificate();
+  const router = useRouter();
+  const { isLoading, error, pdfBlobUrl, handleDownload } = useCertificate();
 
   const showSkeleton = isLoading || error || !pdfBlobUrl;
 
   return (
-    <div className="min-h-screen bg-bg-light pt-24 pb-12">
-      <main className="container mx-auto px-4 max-w-7xl">
-        <motion.div 
+    <div className="bg-bg-light min-h-screen pt-24 pb-12">
+      <main className="container mx-auto max-w-6xl px-4">
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
-          className="mb-10 text-left"
+          className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-8"
         >
-          <h1 className="text-3xl font-extrabold text-text tracking-tight">
-            Sertifikat Hasil Tes
-          </h1>
-          <p className="mt-2 text-lg text-text-muted">
-             {showSkeleton 
-            ? "Memproses pratinjau dokumen..." 
-            : "Pratinjau dokumen resmi (PDF)."}
-          </p>
-        </motion.div>
+          {/* Left Column: Header & Description */}
+          <div className="flex flex-col items-start lg:w-1/3">
+            <Button
+              variant="light"
+              className="text-secondary hover:text-secondary/80 group -ml-3 h-auto p-2 font-medium data-[hover=true]:bg-transparent"
+              startContent={
+                <ArrowLeft className="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1" />
+              }
+              onPress={() => router.back()}
+              disableRipple
+            >
+              Kembali
+            </Button>
 
-        <motion.div
-           initial="hidden"
-           animate="visible"
-           variants={fadeInUp}
-           transition={{ delay: 0.2 }}
-        >
-          <Card className="w-full max-w-4xl shadow-lg" radius="lg">
-            {/* Tambahkan padding (p-6) dan ubah background jadi putih (bg-white) */}
-            <CardBody className="p-6 overflow-hidden bg-white">
-              
-              <div className="w-full">
-                 {/* Aspect Ratio A4 Landscape */}
-                 <div className="relative mx-auto w-full" style={{ aspectRatio: '1.414/1', minHeight: '400px' }}>
+            <div>
+              <h1 className="text-2xl font-extrabold tracking-tight text-black">
+                Sertifikat Hasil Tes
+              </h1>
+              <p className="text-text-muted">
+                {showSkeleton
+                  ? 'Sedang memproses dokumen sertifikat Anda...'
+                  : 'Berikut adalah pratinjau sertifikat resmi SIMPEKA Anda. Silakan unduh file PDF untuk keperluan administratif.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Right Column: Certificate Card */}
+          <div className="w-full lg:w-2/3 lg:pt-8">
+            <Card
+              className="shadow-neo w-full border border-gray-200"
+              radius="lg"
+            >
+              <CardBody className="overflow-hidden bg-white p-0">
+                <div className="w-full">
+                  {/* Aspect Ratio A4 Landscape */}
+                  <div
+                    className="relative mx-auto w-full bg-gray-50"
+                    style={{ aspectRatio: '1.414/1' }}
+                  >
                     {showSkeleton ? (
-                       <Skeleton className="w-full h-full" />
+                      <Skeleton className="h-full w-full" />
                     ) : (
-                       <iframe 
-                         src={`${pdfBlobUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                         className="w-full h-full border-0"
-                         title="Certificate Preview"
-                       />
+                      <iframe
+                        src={`${pdfBlobUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                        className="h-full w-full border-0"
+                        title="Certificate Preview"
+                      />
                     )}
-                 </div>
-              </div>
+                  </div>
+                </div>
+              </CardBody>
 
-            </CardBody>
-
-            <CardFooter className="justify-end gap-3 bg-white p-4 border-t border-gray-100">
-              {showSkeleton ? (
-                 <Skeleton className="h-10 w-32 rounded-lg"><div className="bg-default-300 h-full"></div></Skeleton>
-              ) : (
-                <Button 
-                  color="primary" 
-                  className="font-semibold shadow-md"
-                  startContent={<Download className="h-4 w-4" />}
-                  onPress={handleDownload}
-                >
-                  Unduh File PDF
-                </Button>
-              )}
-            </CardFooter>
-          </Card>
+              <CardFooter className="border-border justify-end gap-3 border-t bg-white p-6">
+                {showSkeleton ? (
+                  <div className="flex gap-2">
+                    <Skeleton className="h-10 w-32 rounded-lg" />
+                  </div>
+                ) : (
+                  <Button
+                    color="primary"
+                    size="lg"
+                    radius="full"
+                    className="font-semibold shadow-md"
+                    startContent={<Download size={20} />}
+                    onPress={handleDownload}
+                  >
+                    Unduh PDF
+                  </Button>
+                )}
+              </CardFooter>
+            </Card>
+          </div>
         </motion.div>
       </main>
     </div>

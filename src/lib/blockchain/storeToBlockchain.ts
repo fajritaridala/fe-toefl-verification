@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 import ToeflRecordABI from '@/abi/ToeflRecord.json';
-import metamask from '@/lib/metamask/metamask';
 import { CONTRACT_ADDRESS, RPC_URL } from '@/utils/config/env';
 
 // Conditional logger - only logs in development
@@ -54,7 +53,10 @@ export async function storeToBlockchain({
 
     log('Contract Address:', CONTRACT_ADDRESS);
 
-    // 2. Connect MetaMask and get signer
+    // 2. Dynamic import MetaMask (only loaded when this function is called)
+    const { default: metamask } = await import('@/lib/metamask/metamask');
+
+    // 3. Connect MetaMask and get signer
     const { signer } = await metamask.connectAndSign();
     const address = await signer.getAddress();
     log('Connected wallet:', address);

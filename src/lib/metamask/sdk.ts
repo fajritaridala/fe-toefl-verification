@@ -11,6 +11,7 @@ if (typeof window !== 'undefined') {
       checkInstallationImmediately: true,
     });
   } catch (error) {
+    console.log(error);
     console.error('Failed to initialize MetaMask SDK:', error);
   }
 }
