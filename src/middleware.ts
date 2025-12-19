@@ -1,7 +1,7 @@
 import { getToken } from 'next-auth/jwt';
 import { type NextRequest, NextResponse } from 'next/server';
+import { JwtExt } from '@/types/auth.types';
 import { AUTH_SECRET } from './utils/config/env';
-import { JwtExt } from '@features/auth';
 
 const AUTH_PAGES = ['/auth/login', '/auth/register'];
 const ADMIN = '/admin';
@@ -47,7 +47,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // middleware pendaftaran jadwal: wajib login saat akses register
-  if (pathname.startsWith(SCHEDULE) && pathname.includes('/register') && !token) {
+  if (
+    pathname.startsWith(SCHEDULE) &&
+    pathname.includes('/register') &&
+    !token
+  ) {
     const url = new URL(AUTH_PAGES[0], request.url);
     url.searchParams.set('callbackUrl', encodeURI(request.url));
     return NextResponse.redirect(url);

@@ -1,10 +1,10 @@
 import { ChangeEvent, RefObject } from 'react';
 import { Control, FieldErrors } from 'react-hook-form';
 import { LuCloudUpload, LuFileCheck } from 'react-icons/lu';
-import { Gender, ScheduleRegister } from '@features/admin';
 import { Button, Card, CardBody, Form, cn } from '@heroui/react';
 import { FormInput } from '@/components/ui/Form/FormInput';
 import { FormSelect } from '@/components/ui/Form/FormSelect';
+import { Gender, ScheduleRegister } from '@/types/admin.types';
 
 type Props = {
   handleSubmitAction: (

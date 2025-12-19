@@ -1,6 +1,6 @@
 import { Select, SelectItem } from '@heroui/react';
 import { Filter } from 'lucide-react';
-import { EnrollmentStatus } from '@/features/admin/types/admin.types';
+import { EnrollmentStatus } from '@/types/admin.types';
 
 type Option = {
   label: string;

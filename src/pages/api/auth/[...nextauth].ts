@@ -1,7 +1,7 @@
-import authServices from '@features/auth/services/auth.service';
-import { SessionExt, UserExt } from '@features/auth/types/auth.types';
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import authServices from '@/services/auth.service';
+import { SessionExt, UserExt } from '@/types/auth.types';
 import { AUTH_SECRET } from '@/utils/config/env';
 
 const authOptions: NextAuthOptions = {

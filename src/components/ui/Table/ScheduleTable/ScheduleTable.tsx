@@ -1,8 +1,4 @@
 import {
-  ALL_MONTH_OPTION_VALUE,
-  ALL_SERVICE_OPTION_VALUE,
-} from '@features/admin/schedules/Schedules.constants';
-import {
   Button,
   Pagination,
   Select,
@@ -21,6 +17,9 @@ import { Filter, Plus, RefreshCw } from 'lucide-react';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { ScheduleTableProps } from './ScheduleTable.types';
 import { createRenderCell, handleSelectionChange } from './ScheduleTable.utils';
+
+export const ALL_MONTH_OPTION_VALUE = 'all';
+export const ALL_SERVICE_OPTION_VALUE = 'all';
 
 const ScheduleTable = (props: ScheduleTableProps) => {
   const {

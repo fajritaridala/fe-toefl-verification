@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@heroui/react';
 import { Search } from 'lucide-react';
-import { EnrollmentItem } from '@/features/admin/types/admin.types';
+import { EnrollmentItem } from '@/types/admin.types';
 import { useDebounce } from '@/hooks/useDebounce';
 
 export interface ColumnConfig {

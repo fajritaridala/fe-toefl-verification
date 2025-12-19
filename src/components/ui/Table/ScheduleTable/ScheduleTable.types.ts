@@ -1,10 +1,10 @@
 import { Key, ReactNode } from 'react';
-import { ScheduleItem } from '@features/admin';
-import {
-  MonthOption,
-  ScheduleTableColumn,
-  ServiceOption,
-} from '@features/admin/schedules/Schedules.constants';
+import { ScheduleItem } from '@/types/admin.types';
+
+// ============ LOCAL TYPE DEFINITIONS ============
+export type MonthOption = { label: string; value: string };
+export type ServiceOption = { label: string; value: string };
+export type ScheduleTableColumn = { key: string; label: string };
 
 // Extended type with __rowKey added by useSchedules
 export type ScheduleItemWithRowKey = ScheduleItem & { __rowKey?: string };
@@ -32,4 +32,7 @@ export type ScheduleTableProps = {
   onViewParticipants: (schedule: ScheduleItem) => void;
 };
 
-export type RenderCellFn = (schedule: ScheduleItem, columnKey: Key) => ReactNode;
+export type RenderCellFn = (
+  schedule: ScheduleItem,
+  columnKey: Key
+) => ReactNode;

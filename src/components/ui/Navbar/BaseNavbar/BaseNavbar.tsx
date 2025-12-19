@@ -2,7 +2,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import { LuChevronDown, LuUser } from 'react-icons/lu';
-import { SessionExt } from '@features/auth';
 import {
   Button,
   Divider,
@@ -18,6 +17,7 @@ import {
 } from '@heroui/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { SessionExt } from '@/types/auth.types';
 import { NAVBAR_DROPDOWN_ITEMS, NAVBAR_ITEMS } from './BaseNavbarConstants';
 import useBaseNavbar from './useBaseNavbar';
 

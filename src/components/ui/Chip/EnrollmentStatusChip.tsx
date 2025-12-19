@@ -1,6 +1,6 @@
 'use client';
 
-import { EnrollmentStatus } from '@/features/admin/types/admin.types';
+import { EnrollmentStatus } from '@/types/admin.types';
 
 interface EnrollmentStatusChipProps {
   status: EnrollmentStatus | string; // Allow string for flexibility or legacy

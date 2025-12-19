@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import {
@@ -14,7 +14,18 @@ import {
   Spinner,
 } from '@heroui/react';
 import { useRouter } from 'next/navigation';
-import { ToeflRegister } from '@features/verification';
+
+// ============ LOCAL TYPE DEFINITION ============
+export type ToeflRegister = {
+  nama_lengkap: string;
+  jenis_kelamin: string;
+  tanggal_lahir: string;
+  nomor_induk_mahasiswa: string;
+  fakultas: string;
+  program_studi: string;
+  sesi_tes: string;
+  schedule_id: string;
+};
 
 type Props = {
   handleSubmit: (
@@ -34,7 +45,7 @@ export default function TOEFLRegisterCard(props: Props) {
     props;
 
   return (
-    <Card className="w-full rounded-lg border border-gray-200 p-4 shadow-box">
+    <Card className="shadow-box w-full rounded-lg border border-gray-200 p-4">
       <CardHeader>
         <div className="w-full">
           <h1 className="text-primary mb-2 text-2xl font-bold">
@@ -197,9 +208,7 @@ export default function TOEFLRegisterCard(props: Props) {
             <Controller
               name="schedule_id"
               control={control}
-              render={({ field }) => (
-                <input type="hidden" {...field} />
-              )}
+              render={({ field }) => <input type="hidden" {...field} />}
             />
           </div>
           <Divider className="my-2" />

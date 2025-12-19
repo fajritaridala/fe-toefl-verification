@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { servicesService, ServiceListResponse } from '@features/admin';
-import type { ServiceOption, UseServiceOptionsReturn } from './useServiceOptions.types';
+import { servicesService } from '@/services/admin.service';
+import { ServiceListResponse } from '@/types/admin.types';
+import type {
+  ServiceOption,
+  UseServiceOptionsReturn,
+} from './useServiceOptions.types';
 
 /**
  * Shared hook for fetching service dropdown options.

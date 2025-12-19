@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
@@ -6,7 +6,7 @@ import Header from '@/components/common/Header';
 import BaseFooter from '@/components/ui/Footer/Base';
 import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
 import useUserSession from '@/hooks/useUserSession';
-import { SessionExt } from '@features/auth';
+import { SessionExt } from '@/types/auth.types';
 
 type Props = {
   children: ReactNode;

@@ -1,4 +1,4 @@
-import { EnrollmentStatus } from '@/features/admin/types/admin.types';
+import { EnrollmentStatus } from '@/types/admin.types';
 
 const FILTER_OPTIONS = [
   { name: 'Menunggu', uid: EnrollmentStatus.PENDING },

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
+import { SessionExt } from '@/types/auth.types';
 import { API_URL } from '@/utils/config/env';
-import { SessionExt } from '@features/auth';
 
 const headers = {
   'Content-Type': 'application/json',

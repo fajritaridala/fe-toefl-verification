@@ -1,6 +1,4 @@
 import { Key, ReactNode } from 'react';
-import { ScheduleItem } from '@features/admin';
-import { ALL_SERVICE_OPTION_VALUE } from '@features/admin/schedules/Schedules.constants';
 import {
   Button,
   Chip,
@@ -10,9 +8,18 @@ import {
   DropdownTrigger,
   Progress,
 } from '@heroui/react';
-import { Calendar, PenLine, Trash2, Users, EllipsisVertical } from 'lucide-react';
-import moment from 'moment';
 import type { Selection } from '@heroui/react';
+import {
+  Calendar,
+  EllipsisVertical,
+  PenLine,
+  Trash2,
+  Users,
+} from 'lucide-react';
+import moment from 'moment';
+import { ScheduleItem } from '@/types/admin.types';
+
+export const ALL_SERVICE_OPTION_VALUE = 'all';
 
 export const formatDateTimeRange = (
   date?: string | Date,
@@ -114,7 +121,7 @@ export function createRenderCell(params: RenderCellParams) {
             <Chip
               size="sm"
               variant="flat"
-               color={
+              color={
                 schedule.status === 'tidak aktif'
                   ? 'default' // Changed warning to default for "inactive" (usually gray/neutral is better for inactive)
                   : isFull
@@ -189,8 +196,7 @@ export const handleSelectionChange = (
     callback(allValue === ALL_SERVICE_OPTION_VALUE ? '' : allValue);
     return;
   }
-  const firstKey =
-    keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
+  const firstKey = keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
   const nextValue = firstKey ?? allValue;
   callback(nextValue === allValue ? '' : nextValue);
 };

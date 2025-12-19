@@ -1,6 +1,4 @@
 import { Key, ReactNode } from 'react';
-import { ServiceItem } from '@features/admin';
-import { ServiceTableColumn } from '@features/admin/services/Services.constants';
 import {
   Button,
   Dropdown,
@@ -27,7 +25,13 @@ import {
   Trash2,
 } from 'lucide-react';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
+import { ServiceItem } from '@/types/admin.types';
 import toRupiah from '@/utils/toRupiah';
+
+export type ServiceTableColumn = {
+  key: string;
+  label: string;
+};
 
 // Extended type with __rowKey added by useServices
 type ServiceItemWithRowKey = ServiceItem & { __rowKey?: string };
