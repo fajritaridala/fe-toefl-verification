@@ -18,10 +18,29 @@ const Register = () => {
     paymentReceipt,
     handleFileChange,
     handleFilePicker,
+    alert,
+    setAlert,
   } = useScheduleRegister();
 
   return (
     <section className="flex min-h-screen justify-center bg-white py-10">
+      {alert?.isOpen && (
+        <div className="fixed top-18 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
+          <Alert
+            color={alert.type}
+            title={alert.type === 'success' ? 'Berhasil' : 'Pendaftaran Gagal'}
+            description={alert.message}
+            isClosable
+            onClose={() => setAlert(null)}
+            variant="faded"
+            className={`shadow-box rounded-xl border bg-white/90 backdrop-blur-sm ${
+              alert.type === 'success'
+                ? 'border-success-200'
+                : 'border-danger-200'
+            }`}
+          />
+        </div>
+      )}
       <div className="animate-fade-bottom my-10 flex w-full flex-col gap-6 px-6 lg:max-w-6xl lg:flex-row">
         {/* Header */}
         <div className="w-full space-y-2 lg:w-1/3">

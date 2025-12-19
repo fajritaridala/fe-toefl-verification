@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
-// Fix: Use Pages Router
 import * as Yup from 'yup';
 import metamask from '@/lib/metamask/metamask';
 import randomize from '@/utils/config/randomize';

@@ -104,11 +104,28 @@ export function useScheduleRegister() {
         router.push('/?success_registration=true');
       }, 2000);
     },
-    onError: (error) => {
+    onError: (
+      error: Error & { response?: { data?: { meta?: { message?: string } } } }
+    ) => {
+      console.log(error);
       setIsLoading(false);
+
+      // Check if error is due to duplicate schedule registration
+      const errorMessage =
+        error.response?.data?.meta?.message || error.message || '';
+      console.log(errorMessage);
+
+      const isDuplicateRegistration =
+        errorMessage.toLowerCase().includes('already registered') ||
+        errorMessage.toLowerCase().includes('sudah terdaftar') ||
+        errorMessage.toLowerCase().includes('schedule') ||
+        errorMessage.toLowerCase().includes('duplicate');
+
       setAlert({
         isOpen: true,
-        message: error.message || 'Pendaftaran gagal. Silakan coba lagi.',
+        message: isDuplicateRegistration
+          ? 'Anda telah terdaftar pada jadwal ini sebelumnya.'
+          : errorMessage || 'Pendaftaran gagal. Silakan coba lagi.',
         type: 'danger',
       });
     },
@@ -122,11 +139,6 @@ export function useScheduleRegister() {
 
   const onError = (errors: FieldErrors<ScheduleRegister>) => {
     console.error('Form Errors:', errors);
-    setAlert({
-      isOpen: true,
-      message: 'Silakan periksa kembali data yang Anda masukkan.',
-      type: 'danger',
-    });
   };
 
   return {
