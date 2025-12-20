@@ -1,18 +1,17 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { motion, type Variants } from 'framer-motion';
 import { ScheduleItem } from '@features/admin';
+import { useQueryClient } from '@tanstack/react-query';
+import { type Variants, motion } from 'framer-motion';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';
+import AddScheduleModal from './AddScheduleModal';
+import DeleteScheduleModal from './DeleteScheduleModal';
 import {
   MONTH_FILTER_OPTIONS,
   SCHEDULE_TABLE_COLUMNS,
 } from './Schedules.constants';
 import useSchedules from './useSchedules';
-import AddScheduleModal from './AddScheduleModal';
-import DeleteScheduleModal from './DeleteScheduleModal';
-import ScheduleParticipantsModal from './ScheduleParticipantsModal';
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -55,9 +54,6 @@ const AdminSchedulesPage = () => {
   );
   const [deleteTarget, setDeleteTarget] = useState<ScheduleItem | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [participantsSchedule, setParticipantsSchedule] =
-    useState<ScheduleItem | null>(null);
-  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
 
   useEffect(() => {
     setSelectedService(currentService);
@@ -102,21 +98,11 @@ const AdminSchedulesPage = () => {
     setIsDeleteModalOpen(false);
     setTimeout(() => {
       setDeleteTarget(null);
-    }, 400); 
-  };
-
-  const openParticipantsModal = (schedule: ScheduleItem) => {
-    setParticipantsSchedule(schedule);
-    setIsParticipantsOpen(true);
-  };
-
-  const closeParticipantsModal = () => {
-    setParticipantsSchedule(null);
-    setIsParticipantsOpen(false);
+    }, 400);
   };
 
   return (
-    <motion.section 
+    <motion.section
       initial="hidden"
       animate="visible"
       variants={fadeInUp}
@@ -142,7 +128,6 @@ const AdminSchedulesPage = () => {
         onAdd={openCreateModal}
         onEdit={openEditModal}
         onDelete={openDeleteModal}
-        onViewParticipants={openParticipantsModal}
       />
 
       <AddScheduleModal
@@ -157,12 +142,6 @@ const AdminSchedulesPage = () => {
         isOpen={isDeleteModalOpen}
         schedule={deleteTarget}
         onClose={closeDeleteModal}
-      />
-
-      <ScheduleParticipantsModal
-        isOpen={isParticipantsOpen}
-        schedule={participantsSchedule}
-        onClose={closeParticipantsModal}
       />
     </motion.section>
   );

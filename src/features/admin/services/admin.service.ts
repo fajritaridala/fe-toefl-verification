@@ -107,18 +107,13 @@ type EnrollmentQuery = {
   scheduleId?: string;
 };
 
-type ScorePayload = {
-  listening: number;
-  reading: number;
-  structure: number;
-};
-
 export const enrollmentsService = {
   getEnrollments: (query?: EnrollmentQuery) => {
     const queryString = buildQueryString(query);
     const url = queryString
       ? `${endpoints.ENROLLMENTS}?${queryString}`
       : endpoints.ENROLLMENTS;
+    console.log(url);
     return instance.get(url);
   },
   getScheduleEnrollments: (scheduleId: string, query?: EnrollmentQuery) => {

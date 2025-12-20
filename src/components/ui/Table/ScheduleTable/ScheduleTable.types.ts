@@ -29,7 +29,9 @@ export type ScheduleTableProps = {
   onAdd: () => void;
   onEdit: (schedule: ScheduleItem) => void;
   onDelete: (schedule: ScheduleItem) => void;
-  onViewParticipants: (schedule: ScheduleItem) => void;
 };
 
-export type RenderCellFn = (schedule: ScheduleItem, columnKey: Key) => ReactNode;
+export type RenderCellFn = (
+  schedule: ScheduleItem,
+  columnKey: Key
+) => ReactNode;

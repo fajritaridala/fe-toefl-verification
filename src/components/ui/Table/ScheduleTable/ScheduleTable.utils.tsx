@@ -10,9 +10,9 @@ import {
   DropdownTrigger,
   Progress,
 } from '@heroui/react';
-import { Calendar, PenLine, Trash2, Users, EllipsisVertical } from 'lucide-react';
-import moment from 'moment';
 import type { Selection } from '@heroui/react';
+import { Calendar, EllipsisVertical, PenLine, Trash2 } from 'lucide-react';
+import moment from 'moment';
 
 export const formatDateTimeRange = (
   date?: string | Date,
@@ -30,11 +30,10 @@ export const formatDateTimeRange = (
 type RenderCellParams = {
   onEdit: (schedule: ScheduleItem) => void;
   onDelete: (schedule: ScheduleItem) => void;
-  onViewParticipants: (schedule: ScheduleItem) => void;
 };
 
 export function createRenderCell(params: RenderCellParams) {
-  const { onEdit, onDelete, onViewParticipants } = params;
+  const { onEdit, onDelete } = params;
 
   const renderCell = (schedule: ScheduleItem, columnKey: Key): ReactNode => {
     const registrants =
@@ -114,7 +113,7 @@ export function createRenderCell(params: RenderCellParams) {
             <Chip
               size="sm"
               variant="flat"
-               color={
+              color={
                 schedule.status === 'tidak aktif'
                   ? 'default' // Changed warning to default for "inactive" (usually gray/neutral is better for inactive)
                   : isFull
@@ -146,13 +145,6 @@ export function createRenderCell(params: RenderCellParams) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Aksi jadwal">
-                <DropdownItem
-                  key="view-participants"
-                  startContent={<Users size={16} />}
-                  onPress={() => onViewParticipants(schedule)}
-                >
-                  Daftar Pendaftar
-                </DropdownItem>
                 <DropdownItem
                   key="edit-schedule"
                   startContent={<PenLine size={16} />}
@@ -189,8 +181,7 @@ export const handleSelectionChange = (
     callback(allValue === ALL_SERVICE_OPTION_VALUE ? '' : allValue);
     return;
   }
-  const firstKey =
-    keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
+  const firstKey = keys.size > 0 ? Array.from(keys)[0]?.toString() : undefined;
   const nextValue = firstKey ?? allValue;
   callback(nextValue === allValue ? '' : nextValue);
 };

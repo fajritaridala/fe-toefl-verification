@@ -43,7 +43,6 @@ const ScheduleTable = (props: ScheduleTableProps) => {
     onAdd,
     onEdit,
     onDelete,
-    onViewParticipants,
   } = props;
 
   const combineOptions = [
@@ -53,7 +52,7 @@ const ScheduleTable = (props: ScheduleTableProps) => {
   const monthSelectionValue = selectedMonth || ALL_MONTH_OPTION_VALUE;
   const serviceSelectionValue = selectedService || ALL_SERVICE_OPTION_VALUE;
 
-  const renderCell = createRenderCell({ onEdit, onDelete, onViewParticipants });
+  const renderCell = createRenderCell({ onEdit, onDelete });
 
   const handleMonthSelection = (keys: Selection) => {
     handleSelectionChange(keys, ALL_MONTH_OPTION_VALUE, (val) =>

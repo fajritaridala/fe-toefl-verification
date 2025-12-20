@@ -56,6 +56,8 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     enabled: !!currentPage && !!currentLimit,
   });
 
+  console.log(dataEnrollments)
+
   const handleChangeStatus = useCallback((status: string) => {
     if (fixedStatus) return;
     setParams({
