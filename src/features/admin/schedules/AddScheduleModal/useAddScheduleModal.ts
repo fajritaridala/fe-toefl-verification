@@ -14,6 +14,7 @@ const scheduleSchema: yup.ObjectSchema<SchedulePayload> = yup.object({
   endTime: yup.string().required('Waktu selesai wajib diisi'),
   capacity: yup
     .number()
+
     .typeError('Kuota harus berupa angka')
     .positive('Kuota harus lebih dari 0')
     .integer('Kuota harus berupa angka bulat')
@@ -45,13 +46,14 @@ const useAddScheduleModal = ({
     formState: { errors },
   } = useForm<ScheduleFormValues>({
     resolver: yupResolver(scheduleSchema),
+    mode: 'onTouched',
     defaultValues: {
       serviceId: schedule?.serviceId || '',
       scheduleDate: schedule?.scheduleDate
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
         : '',
-      startTime: schedule?.startTime || '',
-      endTime: schedule?.endTime || '',
+      startTime: schedule?.startTime || '09:00',
+      endTime: schedule?.endTime || '11:00',
       capacity: schedule?.quota ?? undefined,
     },
   });
@@ -63,8 +65,8 @@ const useAddScheduleModal = ({
       scheduleDate: schedule?.scheduleDate
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
         : '',
-      startTime: schedule?.startTime || '',
-      endTime: schedule?.endTime || '',
+      startTime: schedule?.startTime || '09:00',
+      endTime: schedule?.endTime || '11:00',
       capacity: schedule?.quota ?? undefined,
     });
   }, [reset, isOpen, schedule, mode]);

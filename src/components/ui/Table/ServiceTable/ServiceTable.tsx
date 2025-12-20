@@ -210,7 +210,8 @@ const ServiceTable = (props: Props) => {
                     Tidak ada data layanan
                   </p>
                   <p className="mt-1 text-sm text-gray-500">
-                    Klik tombol 'Tambah Layanan' untuk membuat layanan baru
+                    Klik tombol &apos;Tambah Layanan&apos; untuk membuat layanan
+                    baru
                   </p>
                 </div>
               }

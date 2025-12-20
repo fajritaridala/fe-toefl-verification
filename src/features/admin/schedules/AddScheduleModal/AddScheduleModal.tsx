@@ -2,7 +2,6 @@ import { Controller } from 'react-hook-form';
 import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 import {
   Button,
-  Form,
   Input,
   Modal,
   ModalBody,
@@ -52,7 +51,7 @@ const AddScheduleModal = ({
     >
       <ModalContent>
         {() => (
-          <Form onSubmit={handleSubmit} className="space-y-0">
+          <form onSubmit={handleSubmit} className="space-y-0" noValidate>
             <ModalHeader className="flex flex-col gap-1">
               <h1 className="text-text text-2xl font-bold">{title}</h1>
               <p className="text-text-muted text-sm">
@@ -210,7 +209,7 @@ const AddScheduleModal = ({
                 Simpan
               </Button>
             </ModalFooter>
-          </Form>
+          </form>
         )}
       </ModalContent>
     </Modal>

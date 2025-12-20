@@ -44,6 +44,7 @@ const useAddServiceModal = ({
     formState: { errors },
   } = useForm<ServiceFormValues>({
     resolver: yupResolver(serviceSchema),
+    mode: 'onTouched',
     defaultValues: {
       name: service?.name || '',
       description: service?.description || '',

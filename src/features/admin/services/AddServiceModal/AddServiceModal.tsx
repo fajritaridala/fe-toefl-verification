@@ -2,7 +2,6 @@ import { Controller } from 'react-hook-form';
 import { ServiceItem } from '@features/admin/services/service.types';
 import {
   Button,
-  Form,
   Input,
   Modal,
   ModalBody,
@@ -42,7 +41,7 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
     >
       <ModalContent>
         {() => (
-          <Form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <ModalHeader className="flex flex-col gap-1">
               <h1 className="text-text text-2xl font-bold">{title}</h1>
               <p className="text-text-muted text-sm">
@@ -141,7 +140,7 @@ const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
                 Simpan
               </Button>
             </ModalFooter>
-          </Form>
+          </form>
         )}
       </ModalContent>
     </Modal>
