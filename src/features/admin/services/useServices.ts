@@ -11,31 +11,23 @@ import usePagination from '@/hooks/usePagination';
  * Refactored to use shared usePagination hook for DRY compliance.
  */
 const useServices = () => {
-  const {
-    currentPage,
-    currentLimit,
-    currentSearch,
-    handleChangePage,
-    handleChangeLimit,
-    handleSearch,
-    handleClearSearch,
-  } = usePagination();
+  const { currentPage, handleChangePage } = usePagination();
 
   const {
     data: servicesResponse,
     isLoading: isLoadingServices,
     isRefetching: isRefetchingServices,
   } = useQuery({
-    queryKey: ['services', 'admin', currentPage, currentLimit, currentSearch],
+    queryKey: ['services', 'admin', currentPage],
     queryFn: async () => {
       const response = await servicesService.getServices({
         page: Number(currentPage),
-        limit: Number(currentLimit),
-        search: currentSearch,
+
+        limit: 10,
       });
       return response.data as ServiceListResponse;
     },
-    enabled: !!currentPage && !!currentLimit,
+    enabled: !!currentPage,
   });
 
   const services = useMemo(() => {
@@ -56,13 +48,8 @@ const useServices = () => {
     pagination,
     isLoadingServices,
     isRefetchingServices,
-    currentLimit,
     currentPage,
-    currentSearch,
     handleChangePage,
-    handleChangeLimit,
-    handleSearch,
-    handleClearSearch,
   };
 };
 

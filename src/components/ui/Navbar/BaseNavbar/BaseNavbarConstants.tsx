@@ -1,4 +1,4 @@
-import { FileCheck, User, Bookmark, LogOut } from 'lucide-react';
+import { Bookmark, LogOut, User } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
 type RouterLike = {
@@ -28,11 +28,10 @@ const NAVBAR_DROPDOWN_ITEMS = (router: RouterLike) => [
       router.push('/activity');
     },
   },
-
   {
     key: 'logout',
     label: 'Logout',
-    icon: <LogOut strokeWidth={2} className='h-4 w-4' />,
+    icon: <LogOut size={16} className="text-danger" />,
     onPress: () => {
       signOut({ callbackUrl: '/auth/login' });
     },

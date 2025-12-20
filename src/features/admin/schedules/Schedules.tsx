@@ -7,7 +7,6 @@ import { type Variants, motion } from 'framer-motion';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';
 import AddScheduleModal from './AddScheduleModal';
 import DeleteScheduleModal from './DeleteScheduleModal';
-import EditScheduleModal from './EditScheduleModal';
 import {
   MONTH_FILTER_OPTIONS,
   SCHEDULE_TABLE_COLUMNS,
@@ -49,7 +48,7 @@ const AdminSchedulesPage = () => {
   const [selectedService, setSelectedService] = useState(currentService);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleItem | null>(
     null
   );
@@ -75,6 +74,8 @@ const AdminSchedulesPage = () => {
   };
 
   const openCreateModal = () => {
+    setFormMode('create');
+    setSelectedSchedule(null);
     setIsAddModalOpen(true);
   };
 
@@ -83,15 +84,9 @@ const AdminSchedulesPage = () => {
   };
 
   const openEditModal = (schedule: ScheduleItem) => {
+    setFormMode('edit');
     setSelectedSchedule(schedule);
-    setIsEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setIsEditModalOpen(false);
-    setTimeout(() => {
-      setSelectedSchedule(null);
-    }, 400);
+    setIsAddModalOpen(true);
   };
 
   const openDeleteModal = (schedule: ScheduleItem) => {
@@ -137,15 +132,10 @@ const AdminSchedulesPage = () => {
 
       <AddScheduleModal
         isOpen={isAddModalOpen}
-        serviceOptions={serviceOptions}
-        onClose={closeCreateModal}
-      />
-
-      <EditScheduleModal
-        isOpen={isEditModalOpen}
+        mode={formMode}
         schedule={selectedSchedule}
         serviceOptions={serviceOptions}
-        onClose={closeEditModal}
+        onClose={closeCreateModal}
       />
 
       <DeleteScheduleModal

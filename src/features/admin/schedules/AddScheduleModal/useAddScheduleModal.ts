@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as yup from 'yup';
 import { schedulesService } from '@/domain/schedule.services';
+import { ScheduleItem } from '../schedule.types';
 
 const scheduleSchema: yup.ObjectSchema<SchedulePayload> = yup.object({
   serviceId: yup.string().required('Layanan wajib dipilih'),
@@ -23,12 +24,16 @@ type ScheduleFormValues = SchedulePayload;
 
 type UseAddScheduleModalProps = {
   isOpen: boolean;
+  mode: 'create' | 'edit';
+  schedule?: ScheduleItem | null;
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 };
 
 const useAddScheduleModal = ({
   isOpen,
+  mode,
+  schedule,
   onSuccess,
   onError,
 }: UseAddScheduleModalProps) => {
@@ -41,22 +46,28 @@ const useAddScheduleModal = ({
   } = useForm<ScheduleFormValues>({
     resolver: yupResolver(scheduleSchema),
     defaultValues: {
-      serviceId: '',
-      scheduleDate: '',
-      startTime: '',
-      endTime: '',
+      serviceId: schedule?.serviceId || '',
+      scheduleDate: schedule?.scheduleDate
+        ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
+        : '',
+      startTime: schedule?.startTime || '',
+      endTime: schedule?.endTime || '',
+      capacity: schedule?.quota ?? undefined,
     },
   });
 
   useEffect(() => {
     if (!isOpen) return;
     reset({
-      serviceId: '',
-      scheduleDate: '',
-      startTime: '',
-      endTime: '',
+      serviceId: schedule?.serviceId || '',
+      scheduleDate: schedule?.scheduleDate
+        ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
+        : '',
+      startTime: schedule?.startTime || '',
+      endTime: schedule?.endTime || '',
+      capacity: schedule?.quota ?? undefined,
     });
-  }, [reset, isOpen]);
+  }, [reset, isOpen, schedule, mode]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: ScheduleFormValues) => {
@@ -68,6 +79,9 @@ const useAddScheduleModal = ({
             : undefined,
       };
 
+      if (mode === 'edit' && schedule?.scheduleId) {
+        return schedulesService.updateSchedule(schedule.scheduleId, payload);
+      }
       return schedulesService.createSchedule(payload);
     },
     onSuccess: () => {

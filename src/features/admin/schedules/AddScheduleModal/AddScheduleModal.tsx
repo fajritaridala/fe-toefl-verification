@@ -1,4 +1,5 @@
 import { Controller } from 'react-hook-form';
+import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 import {
   Button,
   Form,
@@ -17,17 +18,27 @@ import useAddScheduleModal from './useAddScheduleModal';
 
 type Props = {
   isOpen: boolean;
+  mode: 'create' | 'edit';
+  schedule?: ScheduleItem | null;
   serviceOptions: ServiceOption[];
   onClose: () => void;
 };
 
-const AddScheduleModal = ({ isOpen, serviceOptions, onClose }: Props) => {
+const AddScheduleModal = ({
+  isOpen,
+  mode,
+  schedule,
+  serviceOptions,
+  onClose,
+}: Props) => {
   const { control, errors, handleSubmit, isSubmitting } = useAddScheduleModal({
     isOpen,
+    mode,
+    schedule,
     onSuccess: onClose,
   });
 
-  const title = 'Tambah Jadwal';
+  const title = mode === 'create' ? 'Tambah Jadwal' : 'Ubah Jadwal';
   const hasServiceOptions = serviceOptions.length > 0;
 
   return (

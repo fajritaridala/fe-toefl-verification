@@ -7,7 +7,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input,
   Pagination,
   Spinner,
   Table,
@@ -23,10 +22,8 @@ import {
   PenLine,
   Plus,
   RefreshCw,
-  Search,
   Trash2,
 } from 'lucide-react';
-import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import toRupiah from '@/utils/toRupiah';
 
 // Extended type with __rowKey added by useServices
@@ -39,12 +36,7 @@ type Props = {
   isRefetching: boolean;
   currentPage: number;
   totalPages: number;
-  currentSearch: string;
-  currentLimit: number | string;
   onChangePage: (page: number) => void;
-  onChangeLimit: (limit: number) => void;
-  onSearch: (value: string) => void;
-  onClearSearch: () => void;
   onRefresh: () => void;
   onAdd: () => void;
   onEdit: (service: ServiceItem) => void;
@@ -59,12 +51,7 @@ const ServiceTable = (props: Props) => {
     isRefetching,
     currentPage,
     totalPages,
-    currentSearch,
-    currentLimit,
     onChangePage,
-    onChangeLimit,
-    onSearch,
-    onClearSearch,
     onRefresh,
     onAdd,
     onEdit,
@@ -133,26 +120,8 @@ const ServiceTable = (props: Props) => {
         {/* Filters Section */}
         <div className="bg-transparent px-6 py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            {/* Search Input */}
-            <div className="flex flex-1 gap-2">
-              <Input
-                isClearable
-                radius="full"
-                placeholder="Cari layanan..."
-                value={currentSearch}
-                onValueChange={onSearch}
-                onClear={onClearSearch}
-                startContent={<Search className="h-4 w-4 text-gray-400" />}
-                classNames={{
-                  base: 'max-w-md',
-                  inputWrapper: 'bg-gray-50 drop-shadow-sm',
-                }}
-              />
-              <LimitFilter
-                value={String(currentLimit)}
-                onChange={(val) => onChangeLimit(Number(val))}
-              />
-            </div>
+            {/* Search Input - Removed */}
+            <div className="flex flex-1 gap-2"></div>
 
             {/* Added Service & Refresh */}
             <div className="flex items-center gap-2">
@@ -241,9 +210,7 @@ const ServiceTable = (props: Props) => {
                     Tidak ada data layanan
                   </p>
                   <p className="mt-1 text-sm text-gray-500">
-                    {currentSearch
-                      ? 'Coba ubah pencarian atau lakukan pencarian lain'
-                      : "Klik tombol 'Tambah Layanan' untuk membuat layanan baru"}
+                    Klik tombol 'Tambah Layanan' untuk membuat layanan baru
                   </p>
                 </div>
               }

@@ -128,7 +128,7 @@ export default function GenericEnrollmentTable({
   return (
     <div className="rounded-2xl border border-gray-100 bg-white shadow-md shadow-gray-100/50">
       {/* Header: Filters & Search */}
-      <div className="flex flex-col items-center justify-between gap-4 rounded-t-xl border-b border-gray-50 bg-transparent px-6 py-4 sm:flex-row">
+      <div className="flex flex-col items-center justify-between gap-4 rounded-t-xl border-b border-gray-100 bg-transparent px-6 py-4 sm:flex-row">
         <Input
           isClearable
           type="search"
@@ -139,13 +139,13 @@ export default function GenericEnrollmentTable({
           onClear={handleClearSearch}
           onValueChange={setSearchInput}
           classNames={{
-            base: 'w-full sm:max-w-md',
+            base: 'w-1/3 sm:max-w-md',
             inputWrapper: 'h-9 bg-gray-50 border border-gray-200 shadow-sm',
             input: 'text-sm',
           }}
         />
 
-        <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
+        <div className="flex w-2/3 flex-wrap items-center justify-end gap-2 sm:w-auto">
           {filterContent}
         </div>
       </div>

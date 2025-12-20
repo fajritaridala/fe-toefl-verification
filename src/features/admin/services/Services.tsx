@@ -28,12 +28,8 @@ const AdminServicesPage = () => {
     isLoadingServices,
     isRefetchingServices,
     currentPage,
-    currentSearch,
-    currentLimit,
+
     handleChangePage,
-    handleChangeLimit,
-    handleSearch,
-    handleClearSearch,
   } = useServices();
 
   const handleRefresh = () => {
@@ -90,12 +86,7 @@ const AdminServicesPage = () => {
         isRefetching={isRefetchingServices}
         currentPage={Number(currentPage)}
         totalPages={pagination?.totalPages || 1}
-        currentSearch={currentSearch}
-        currentLimit={currentLimit}
-        onChangeLimit={(val) => handleChangeLimit(String(val))}
         onChangePage={handleChangePage}
-        onSearch={handleSearch}
-        onClearSearch={handleClearSearch}
         onRefresh={handleRefresh}
         onAdd={openCreateModal}
         onEdit={openEditModal}
