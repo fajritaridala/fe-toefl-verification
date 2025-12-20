@@ -5,7 +5,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import { Eye } from 'lucide-react';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
-import { ScheduleFilter } from '@/components/ui/Button/Filter/ScheduleFilter';
 import { ServiceFilter } from '@/components/ui/Button/Filter/ServiceFilter';
 import { StatusFilter } from '@/components/ui/Button/Filter/StatusFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
@@ -14,10 +13,7 @@ import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
 import GenericEnrollmentTable, {
   ColumnConfig,
 } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
-import {
-  EnrollmentItem,
-  EnrollmentStatus,
-} from '@/features/admin/types/admin.types';
+import { EnrollmentItem } from '@/features/admin/types/admin.types';
 import { formatDate } from '@/utils/common';
 import { useParticipants } from './useParticipants';
 
@@ -53,10 +49,6 @@ export default function Participants() {
     currentServiceId,
     serviceOptions,
     handleChangeService,
-    // Schedule Filter
-    currentScheduleId,
-    scheduleOptions,
-    handleChangeSchedule,
   } = useParticipants();
 
   const queryClient = useQueryClient();
@@ -109,6 +101,8 @@ export default function Participants() {
     },
   ];
 
+  console.log(tableItems);
+
   return (
     <motion.section
       initial="hidden"
@@ -132,11 +126,6 @@ export default function Participants() {
               value={currentServiceId}
               onChange={handleChangeService}
               options={serviceOptions}
-            />
-            <ScheduleFilter
-              value={currentScheduleId}
-              onChange={handleChangeSchedule}
-              options={scheduleOptions}
             />
             <StatusFilter
               value={statusFilter}

@@ -100,8 +100,7 @@ export interface EnrollmentItem {
   major?: string;
   registerAt?: string;
   // Optional fields that might be populated by backend
-  serviceName?: string;
-  scheduleName?: string;
+  serviceName: string;
   scheduleDate?: string;
   paymentDate?: string;
   gender?: Gender;

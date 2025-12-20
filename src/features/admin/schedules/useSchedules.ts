@@ -40,7 +40,7 @@ const useSchedules = () => {
       currentService,
     ],
     queryFn: async () => {
-      const response = await schedulesService.getSchedules({
+      const response = await schedulesService.getAdminSchedules({
         page: Number(currentPage),
         limit: Number(currentLimit),
         month:

@@ -66,7 +66,6 @@ export const useParticipants = () => {
 
       return {
         ...participant,
-        __rowKey: baseKey || `row-${idx}`,
       };
     });
   }, [filteredParticipants]);
@@ -137,7 +136,7 @@ export const useParticipants = () => {
       const response = await schedulesService.getAdminSchedules(query);
       return response.data;
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
   const scheduleOptions = useMemo(() => {
