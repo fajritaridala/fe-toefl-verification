@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { ServiceItem, ServicePayload } from '@features/admin';
+import {
+  ServiceItem,
+  ServicePayload,
+} from '@features/admin/services/service.types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as yup from 'yup';

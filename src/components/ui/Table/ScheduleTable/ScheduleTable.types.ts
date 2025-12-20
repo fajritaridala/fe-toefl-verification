@@ -1,10 +1,10 @@
 import { Key, ReactNode } from 'react';
-import { ScheduleItem } from '@features/admin';
 import {
   MonthOption,
   ScheduleTableColumn,
   ServiceOption,
 } from '@features/admin/schedules/Schedules.constants';
+import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 
 // Extended type with __rowKey added by useSchedules
 export type ScheduleItemWithRowKey = ScheduleItem & { __rowKey?: string };

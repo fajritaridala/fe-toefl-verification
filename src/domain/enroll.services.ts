@@ -1,4 +1,4 @@
-import { EnrollmentStatus } from '@features/admin/types/admin.types';
+import { EnrollmentStatus } from '@features/admin/enrollments/enrollment.types';
 import endpoints from '@/constants/endpoints';
 import instance from '@/lib/axios/instance';
 import { ScheduleRegister } from '@/types/registration.types';

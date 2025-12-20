@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { EnrollmentItem } from '@features/admin';
+import { EnrollmentItem } from '@features/admin/enrollments/enrollment.types';
 import { useQuery } from '@tanstack/react-query';
 import { FILTER_OPTIONS } from '@/constants/list.constants';
 import { enrollmentsService } from '@/domain/enroll.services';

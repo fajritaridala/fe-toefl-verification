@@ -13,8 +13,8 @@ import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
 import GenericEnrollmentTable, {
   ColumnConfig,
 } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
-import { EnrollmentItem } from '@/features/admin/types/admin.types';
 import { formatDate } from '@/utils/common';
+import { EnrollmentItem } from '../enrollment.types';
 import { useParticipants } from './useParticipants';
 
 const fadeInUp: Variants = {

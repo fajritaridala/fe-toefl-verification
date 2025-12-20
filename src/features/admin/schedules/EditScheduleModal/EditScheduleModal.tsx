@@ -1,5 +1,5 @@
 import { Controller } from 'react-hook-form';
-import { ScheduleItem } from '@features/admin';
+import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 import {
   Button,
   Form,

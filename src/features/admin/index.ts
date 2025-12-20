@@ -1,7 +1,5 @@
 // Shared services and types
 
-export * from './types/admin.types';
-
 // Dashboard
 export * from './dashboard';
 

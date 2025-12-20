@@ -1,6 +1,6 @@
 'use client';
 
-import { ServiceItem } from '@features/admin';
+import { ServiceItem } from '@features/admin/services/service.types';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { servicesService } from '@/domain/service.services';

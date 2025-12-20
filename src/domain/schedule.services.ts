@@ -1,7 +1,7 @@
 import {
   SchedulePayload,
   ScheduleStatus,
-} from '@features/admin/types/admin.types';
+} from '@features/admin/schedules/schedule.types';
 import endpoints from '@/constants/endpoints';
 import instance from '@/lib/axios/instance';
 import buildQueryString from '@/utils/helpers/queryString';

@@ -22,8 +22,8 @@ import {
   XCircle,
 } from 'lucide-react';
 import Image from 'next/image';
+import { EnrollmentItem } from '@/features/admin/enrollments/enrollment.types';
 import { formatDate } from '@/utils/common';
-import { EnrollmentItem } from '@/features/admin/types/admin.types';
 
 // Extend EnrollmentItem or create a compatible type that covers all fields from both previous modals
 // EnrollmentItem usually has: enrollId, fullName, nim, email, phoneNumber, serviceName, scheduleDate, etc.
@@ -94,7 +94,7 @@ export default function EnrollmentDetailModal({
             scale: 1,
             transition: {
               duration: 0.4,
-              ease: "easeOut",
+              ease: 'easeOut',
             },
           },
           exit: {
@@ -103,7 +103,7 @@ export default function EnrollmentDetailModal({
             scale: 0.95,
             transition: {
               duration: 0.3,
-              ease: "easeIn",
+              ease: 'easeIn',
             },
           },
         },
@@ -130,7 +130,7 @@ export default function EnrollmentDetailModal({
             {/* Data Pribadi */}
             <div className="space-y-3">
               <div className="mb-3 flex items-center gap-2">
-                <User className="h-5 w-5 text-primary" />
+                <User className="text-primary h-5 w-5" />
                 <h3 className="text-base font-semibold text-gray-900">
                   Data Pribadi
                 </h3>
@@ -196,7 +196,7 @@ export default function EnrollmentDetailModal({
             {/* Data Pendaftaran */}
             <div className="space-y-3 border-t border-gray-100 pt-4">
               <div className="mb-3 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
+                <FileText className="text-primary h-5 w-5" />
                 <h3 className="text-base font-semibold text-gray-900">
                   Data Pendaftaran
                 </h3>
@@ -253,7 +253,7 @@ export default function EnrollmentDetailModal({
             {/* Bukti Pembayaran */}
             <div className="space-y-3 border-t border-gray-100 pt-4">
               <div className="mb-3 flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-primary" />
+                <CreditCard className="text-primary h-5 w-5" />
                 <h3 className="text-base font-semibold text-gray-900">
                   Bukti Pembayaran
                 </h3>
@@ -280,7 +280,7 @@ export default function EnrollmentDetailModal({
                     href={participant.paymentProof}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-600"
+                    className="text-primary hover:text-primary-600 mt-3 inline-flex items-center gap-2 text-sm font-medium"
                   >
                     Buka di tab baru →
                   </a>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ServiceItem } from '@features/admin';
+import { ServiceItem } from '@features/admin/services/service.types';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import ServiceTable from '@/components/ui/Table/ServiceTable';

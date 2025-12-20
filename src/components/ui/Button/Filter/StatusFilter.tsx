@@ -1,6 +1,6 @@
 import { Select, SelectItem } from '@heroui/react';
 import { Filter } from 'lucide-react';
-import { EnrollmentStatus } from '@/features/admin/types/admin.types';
+import { EnrollmentStatus } from '@/features/admin/enrollments/enrollment.types';
 
 type Option = {
   label: string;
@@ -21,7 +21,11 @@ const DEFAULT_OPTIONS = [
   { label: 'Ditolak', value: EnrollmentStatus.REJECTED },
 ];
 
-export function StatusFilter({ value, onChange, options = DEFAULT_OPTIONS }: StatusFilterProps) {
+export function StatusFilter({
+  value,
+  onChange,
+  options = DEFAULT_OPTIONS,
+}: StatusFilterProps) {
   return (
     <div className="flex items-center gap-2">
       <Select
@@ -32,20 +36,21 @@ export function StatusFilter({ value, onChange, options = DEFAULT_OPTIONS }: Sta
         startContent={<Filter size={18} className="text-text-muted" />}
         selectedKeys={value === 'all' ? new Set([]) : new Set([value])}
         onSelectionChange={(keys) => {
-            if (keys === 'all') {
-                onChange('all');
-                return;
-            }
-            if ((keys as Set<string>).size === 0) {
-               onChange('all');
-               return;
-            }
-            const selectedValue = Array.from(keys)[0] as string;
-            onChange(selectedValue);
+          if (keys === 'all') {
+            onChange('all');
+            return;
+          }
+          if ((keys as Set<string>).size === 0) {
+            onChange('all');
+            return;
+          }
+          const selectedValue = Array.from(keys)[0] as string;
+          onChange(selectedValue);
         }}
         classNames={{
           base: 'w-32', // Slightly wider for ease
-          trigger: 'h-9 bg-white border border-gray-200 shadow-sm hover:border-gray-300',
+          trigger:
+            'h-9 bg-white border border-gray-200 shadow-sm hover:border-gray-300',
           value: 'text-small text-center font-medium text-gray-700',
           listbox: 'w-full',
           popoverContent: 'w-34',

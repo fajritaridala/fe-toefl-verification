@@ -2,9 +2,12 @@ import { useMemo } from 'react';
 import {
   EnrollmentItem,
   EnrollmentStatus,
+} from '@features/admin/enrollments/enrollment.types';
+import {
   ScheduleItem,
   ScheduleStatus,
-} from '@features/admin';
+} from '@features/admin/schedules/schedule.types';
+import { ServiceItem } from '@features/admin/services/service.types';
 import { useQuery } from '@tanstack/react-query';
 import { enrollmentsService } from '@/domain/enroll.services';
 import { schedulesService } from '@/domain/schedule.services';

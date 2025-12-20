@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ScheduleItem } from '@features/admin';
+import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';

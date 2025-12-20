@@ -1,5 +1,5 @@
 import { Controller } from 'react-hook-form';
-import { ServiceItem } from '@features/admin';
+import { ServiceItem } from '@features/admin/services/service.types';
 import {
   Button,
   Form,

@@ -1,6 +1,6 @@
 import { Key, ReactNode } from 'react';
-import { ScheduleItem } from '@features/admin';
 import { ALL_SERVICE_OPTION_VALUE } from '@features/admin/schedules/Schedules.constants';
+import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 import {
   Button,
   Chip,

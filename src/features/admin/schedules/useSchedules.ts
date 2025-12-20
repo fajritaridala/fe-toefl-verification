@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { ScheduleListResponse } from '@features/admin';
+import { ScheduleListResponse } from '@features/admin/schedules/schedule.types';
 import { useQuery } from '@tanstack/react-query';
 import { schedulesService } from '@/domain/schedule.services';
 import usePagination from '@/hooks/usePagination';

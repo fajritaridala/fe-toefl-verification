@@ -1,3 +1,4 @@
+import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 import {
   Button,
   Modal,
@@ -5,10 +6,9 @@ import {
   ModalContent,
   ModalFooter,
 } from '@heroui/react';
-import moment from 'moment';
-import { ScheduleItem } from '@features/admin';
-import useDeleteScheduleModal from './useDeleteScheduleModal';
 import { Trash2 } from 'lucide-react';
+import moment from 'moment';
+import useDeleteScheduleModal from './useDeleteScheduleModal';
 
 type Props = {
   isOpen: boolean;
@@ -45,7 +45,7 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
             scale: 1,
             transition: {
               duration: 0.4,
-              ease: "easeOut",
+              ease: 'easeOut',
             },
           },
           exit: {
@@ -54,7 +54,7 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
             scale: 0.95,
             transition: {
               duration: 0.3,
-              ease: "easeIn",
+              ease: 'easeIn',
             },
           },
         },
@@ -62,7 +62,7 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
     >
       <ModalContent>
         <ModalBody className="flex flex-col items-center justify-center py-8">
-          <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-danger-50 text-danger shadow-sm ring-8 ring-danger-50/50">
+          <div className="bg-danger-50 text-danger ring-danger-50/50 mb-4 flex h-20 w-20 items-center justify-center rounded-full shadow-sm ring-8">
             <Trash2 size={32} strokeWidth={2.5} />
           </div>
 
@@ -73,11 +73,12 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
           <p className="max-w-[85%] text-center text-sm text-gray-500">
             Anda akan menghapus jadwal{' '}
             <span className="font-bold text-gray-900">{serviceName}</span> pada
-            tanggal <span className="font-bold text-gray-900">{scheduleDate}</span>.
+            tanggal{' '}
+            <span className="font-bold text-gray-900">{scheduleDate}</span>.
             Tindakan ini tidak dapat dibatalkan.
           </p>
         </ModalBody>
-        <ModalFooter className="flex w-full justify-center gap-3 pb-8 pt-0">
+        <ModalFooter className="flex w-full justify-center gap-3 pt-0 pb-8">
           <Button
             variant="flat"
             onPress={onClose}
@@ -87,7 +88,7 @@ const DeleteScheduleModal = ({ isOpen, schedule, onClose }: Props) => {
           </Button>
           <Button
             color="danger"
-            className="w-1/3 font-semibold shadow-md shadow-danger/20"
+            className="shadow-danger/20 w-1/3 font-semibold shadow-md"
             isLoading={isDeleting}
             onPress={handleDelete}
           >

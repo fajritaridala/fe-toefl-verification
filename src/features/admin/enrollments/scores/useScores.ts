@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { type EnrollmentItem, EnrollmentStatus } from '@features/admin';
+import {
+  type EnrollmentItem,
+  EnrollmentStatus,
+} from '@features/admin/enrollments/enrollment.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { enrollmentsService } from '@/domain/enroll.services';
 import { storeToBlockchain } from '@/lib/blockchain/storeToBlockchain';

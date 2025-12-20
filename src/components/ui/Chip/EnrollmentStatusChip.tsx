@@ -1,6 +1,6 @@
 'use client';
 
-import { EnrollmentStatus } from '@/features/admin/types/admin.types';
+import { EnrollmentStatus } from '@/features/admin/enrollments/enrollment.types';
 
 interface EnrollmentStatusChipProps {
   status: EnrollmentStatus | string; // Allow string for flexibility or legacy
@@ -49,7 +49,7 @@ const statusConfig: Record<
 export function EnrollmentStatusChip({ status }: EnrollmentStatusChipProps) {
   // Normalize status case just in case
   const normalizedStatus = status as string; // or status.toLowerCase() if needed
-  
+
   const style = statusConfig[normalizedStatus] || {
     bgColor: 'bg-gray-50',
     borderColor: 'border-gray-200',

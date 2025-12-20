@@ -1,3 +1,4 @@
+import { ServiceItem } from '@features/admin/services/service.types';
 import {
   Button,
   Modal,
@@ -5,9 +6,8 @@ import {
   ModalContent,
   ModalFooter,
 } from '@heroui/react';
-import { ServiceItem } from '@features/admin';
-import useDeleteServiceModal from './useDeleteServiceModal';
 import { Trash2 } from 'lucide-react';
+import useDeleteServiceModal from './useDeleteServiceModal';
 
 type Props = {
   isOpen: boolean;
@@ -39,7 +39,7 @@ const DeleteServiceModal = ({ isOpen, service, onClose }: Props) => {
             scale: 1,
             transition: {
               duration: 0.4,
-              ease: "easeOut",
+              ease: 'easeOut',
             },
           },
           exit: {
@@ -48,7 +48,7 @@ const DeleteServiceModal = ({ isOpen, service, onClose }: Props) => {
             scale: 0.95,
             transition: {
               duration: 0.3,
-              ease: "easeIn",
+              ease: 'easeIn',
             },
           },
         },
@@ -56,7 +56,7 @@ const DeleteServiceModal = ({ isOpen, service, onClose }: Props) => {
     >
       <ModalContent>
         <ModalBody className="flex flex-col items-center justify-center py-8">
-          <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-danger-50 text-danger shadow-sm ring-8 ring-danger-50/50">
+          <div className="bg-danger-50 text-danger ring-danger-50/50 mb-4 flex h-20 w-20 items-center justify-center rounded-full shadow-sm ring-8">
             <Trash2 size={32} strokeWidth={2.5} />
           </div>
 
@@ -72,7 +72,7 @@ const DeleteServiceModal = ({ isOpen, service, onClose }: Props) => {
             . Data yang sudah dihapus tidak dapat dikembalikan lagi.
           </p>
         </ModalBody>
-        <ModalFooter className="flex w-full justify-center gap-3 pb-8 pt-0">
+        <ModalFooter className="flex w-full justify-center gap-3 pt-0 pb-8">
           <Button
             variant="flat"
             onPress={onClose}
@@ -82,7 +82,7 @@ const DeleteServiceModal = ({ isOpen, service, onClose }: Props) => {
           </Button>
           <Button
             color="danger"
-            className="w-1/3 font-semibold shadow-md shadow-danger/20"
+            className="shadow-danger/20 w-1/3 font-semibold shadow-md"
             isLoading={isDeleting}
             onPress={handleDelete}
           >

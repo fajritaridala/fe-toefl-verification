@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ServiceListResponse } from '@features/admin';
+import { ServiceListResponse } from '@features/admin/services/service.types';
 import { useQuery } from '@tanstack/react-query';
 import { servicesService } from '@/domain/service.services';
 import type {

@@ -1,6 +1,6 @@
 import { Key, ReactNode } from 'react';
-import { ServiceItem } from '@features/admin';
 import { ServiceTableColumn } from '@features/admin/services/Services.constants';
+import { ServiceItem } from '@features/admin/services/service.types';
 import {
   Button,
   Dropdown,

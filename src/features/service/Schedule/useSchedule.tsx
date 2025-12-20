@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScheduleItem } from '@features/admin';
+import { ScheduleItem } from '@features/admin/schedules/schedule.types';
 import { useQuery } from '@tanstack/react-query';
 import { schedulesService } from '@/domain/schedule.services';
 import { ScheduleData } from '@/hooks/useCalendar';
