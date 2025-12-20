@@ -1,5 +1,5 @@
+import { schedulesService } from '@/domain/schedule.services';
 import useDeleteMutation from '@/hooks/useDeleteMutation';
-import { schedulesService } from '@features/admin';
 
 type UseDeleteScheduleModalProps = {
   onSuccess?: () => void;
@@ -15,7 +15,8 @@ const useDeleteScheduleModal = ({
   onError,
 }: UseDeleteScheduleModalProps = {}) => {
   const { deleteMutate, isDeleting } = useDeleteMutation({
-    mutationFn: (scheduleId: string) => schedulesService.removeSchedule(scheduleId),
+    mutationFn: (scheduleId: string) =>
+      schedulesService.removeSchedule(scheduleId),
     queryKey: ['schedules'],
     onSuccess,
     onError,

@@ -1,4 +1,5 @@
 import { Controller } from 'react-hook-form';
+import { ScheduleItem } from '@features/admin';
 import {
   Button,
   Form,
@@ -13,21 +14,27 @@ import {
   SelectItem,
 } from '@heroui/react';
 import { ServiceOption } from '../Schedules.constants';
-import useAddScheduleModal from './useAddScheduleModal';
+import useEditScheduleModal from './useEditScheduleModal';
 
 type Props = {
   isOpen: boolean;
+  schedule: ScheduleItem | null;
   serviceOptions: ServiceOption[];
   onClose: () => void;
 };
 
-const AddScheduleModal = ({ isOpen, serviceOptions, onClose }: Props) => {
-  const { control, errors, handleSubmit, isSubmitting } = useAddScheduleModal({
+const EditScheduleModal = ({
+  isOpen,
+  schedule,
+  serviceOptions,
+  onClose,
+}: Props) => {
+  const { control, errors, handleSubmit, isSubmitting } = useEditScheduleModal({
+    schedule,
     isOpen,
     onSuccess: onClose,
   });
 
-  const title = 'Tambah Jadwal';
   const hasServiceOptions = serviceOptions.length > 0;
 
   return (
@@ -43,9 +50,9 @@ const AddScheduleModal = ({ isOpen, serviceOptions, onClose }: Props) => {
         {() => (
           <Form onSubmit={handleSubmit} className="space-y-0">
             <ModalHeader className="flex flex-col gap-1">
-              <h1 className="text-text text-2xl font-bold">{title}</h1>
+              <h1 className="text-text text-2xl font-bold">Ubah Jadwal</h1>
               <p className="text-text-muted text-sm">
-                Tentukan layanan, tanggal, serta kuota untuk jadwal TOEFL.
+                Perbarui layanan, tanggal, serta kuota untuk jadwal TOEFL.
               </p>
             </ModalHeader>
             <ModalBody className="w-full space-y-4">
@@ -196,7 +203,7 @@ const AddScheduleModal = ({ isOpen, serviceOptions, onClose }: Props) => {
                 isLoading={isSubmitting}
                 isDisabled={!hasServiceOptions}
               >
-                Simpan
+                Simpan Perubahan
               </Button>
             </ModalFooter>
           </Form>
@@ -206,4 +213,4 @@ const AddScheduleModal = ({ isOpen, serviceOptions, onClose }: Props) => {
   );
 };
 
-export default AddScheduleModal;
+export default EditScheduleModal;

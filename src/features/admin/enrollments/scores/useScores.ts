@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { EnrollmentStatus, type EnrollmentItem, enrollmentsService } from '@features/admin';
+import { type EnrollmentItem, EnrollmentStatus } from '@features/admin';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { enrollmentsService } from '@/domain/enroll.services';
 import { storeToBlockchain } from '@/lib/blockchain/storeToBlockchain';
 import useEnrollments from '../shared/useEnrollments';
 
@@ -32,7 +33,7 @@ export const useScores = () => {
   } | null>(null);
   const [scoreModalOpen, setScoreModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
-  const [blockchainStatus, setBlockchainStatus] = useState< 
+  const [blockchainStatus, setBlockchainStatus] = useState<
     | 'idle'
     | 'submitting'
     | 'uploading-ipfs'
@@ -139,16 +140,16 @@ export const useScores = () => {
             hash
           );
         } catch (backendError) {
-          const err = backendError as Error & { 
-            response?: { data?: { message?: string } } 
+          const err = backendError as Error & {
+            response?: { data?: { message?: string } };
           };
-          
+
           console.error('Backend status update error:', err);
-          
+
           alert(
             `⚠️ Blockchain berhasil, tapi update database gagal!\n\n` +
-            `Error: ${err.response?.data?.message || err.message}\n` +
-            `Sertifikat sudah ada di blockchain. Silakan hubungi administrator.`
+              `Error: ${err.response?.data?.message || err.message}\n` +
+              `Sertifikat sudah ada di blockchain. Silakan hubungi administrator.`
           );
         }
 
@@ -159,7 +160,9 @@ export const useScores = () => {
         queryClient.invalidateQueries({ queryKey: ['enrollments'] });
 
         // Show success notification
-        alert(`🎉 Sertifikat berhasil disimpan dan diverifikasi di blockchain!`);
+        alert(
+          `🎉 Sertifikat berhasil disimpan dan diverifikasi di blockchain!`
+        );
 
         // Close modal after short delay
         setTimeout(() => {
@@ -168,7 +171,6 @@ export const useScores = () => {
           setBlockchainStatus('idle');
           setStatusMessage('');
         }, 1500);
-
       } catch (blockchainError) {
         const err = blockchainError as Error;
         setBlockchainStatus('error');
@@ -257,7 +259,11 @@ export const useScores = () => {
       setStatusMessage('Memperbarui status peserta...');
 
       try {
-        await enrollmentsService.blockchainSuccess(enrollId, participantId, hash);
+        await enrollmentsService.blockchainSuccess(
+          enrollId,
+          participantId,
+          hash
+        );
       } catch (backendError) {
         const err = backendError as Error & {
           response?: { data?: { message?: string } };

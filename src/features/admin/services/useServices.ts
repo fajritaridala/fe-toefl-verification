@@ -1,9 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
+import { ServiceListResponse } from '@features/admin';
 import { useQuery } from '@tanstack/react-query';
+import { servicesService } from '@/domain/service.services';
 import usePagination from '@/hooks/usePagination';
-import { servicesService, ServiceListResponse } from '@features/admin';
 
 /**
  * Hook for managing services list with pagination, search, and filtering.
@@ -45,7 +46,10 @@ const useServices = () => {
     }));
   }, [servicesResponse]);
 
-  const pagination = useMemo(() => servicesResponse?.pagination, [servicesResponse]);
+  const pagination = useMemo(
+    () => servicesResponse?.pagination,
+    [servicesResponse]
+  );
 
   return {
     services,

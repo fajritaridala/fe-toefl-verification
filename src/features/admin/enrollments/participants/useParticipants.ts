@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  EnrollmentItem,
-  schedulesService,
-  servicesService,
-} from '@features/admin';
+import { EnrollmentItem } from '@features/admin';
 import { useQuery } from '@tanstack/react-query';
 import { FILTER_OPTIONS } from '@/constants/list.constants';
+import { enrollmentsService } from '@/domain/enroll.services';
+import { schedulesService } from '@/domain/schedule.services';
+import { servicesService } from '@/domain/service.services';
 import { formatDate } from '@/utils/common';
 import useEnrollments from '../shared/useEnrollments';
 

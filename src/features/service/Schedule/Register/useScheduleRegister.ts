@@ -2,12 +2,12 @@
 
 import { ChangeEvent, useRef, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
-import { enrollmentsService } from '@features/admin';
-import { Gender, ScheduleRegister } from '@features/admin';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import * as yup from 'yup';
+import { enrollmentsService } from '@/domain/enroll.services';
+import { Gender, ScheduleRegister } from '@/types/registration.types';
 
 const scheduleRegisterSchema = yup.object().shape({
   fullName: yup.string().required('Nama lengkap wajib diisi'),

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { EnrollmentStatus, type EnrollmentItem, enrollmentsService } from '@features/admin';
+import { type EnrollmentItem, EnrollmentStatus } from '@features/admin';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { enrollmentsService } from '@/domain/enroll.services';
 import useEnrollments from '../shared/useEnrollments';
 
 export const useValidation = () => {

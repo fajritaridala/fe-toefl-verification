@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { schedulesService } from '@features/admin';
 import { ScheduleItem } from '@features/admin';
+import { useQuery } from '@tanstack/react-query';
+import { schedulesService } from '@/domain/schedule.services';
 import { ScheduleData } from '@/hooks/useCalendar';
 
 const useSchedule = (serviceId: string) => {
@@ -11,20 +11,17 @@ const useSchedule = (serviceId: string) => {
     enabled: !!serviceId,
   });
 
-  const scheduleData: ScheduleData[] = useMemo(
-    () => {
-      const schedules = (data?.data.data as ScheduleItem[]) || [];
-      return schedules.map((item) => ({
-        _id: item.scheduleId,
-        scheduleDate: item.scheduleDate,
-        serviceName: item.serviceName,
-        quota: item.quota || 0,
-        registrants: item.registrants || 0,
-        status: item.status,
-      }));
-    },
-    [data]
-  );
+  const scheduleData: ScheduleData[] = useMemo(() => {
+    const schedules = (data?.data.data as ScheduleItem[]) || [];
+    return schedules.map((item) => ({
+      _id: item.scheduleId,
+      scheduleDate: item.scheduleDate,
+      serviceName: item.serviceName,
+      quota: item.quota || 0,
+      registrants: item.registrants || 0,
+      status: item.status,
+    }));
+  }, [data]);
 
   return { scheduleData };
 };

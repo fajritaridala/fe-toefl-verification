@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { ServiceItem, ServicePayload } from '@features/admin';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { servicesService } from '@features/admin';
-import { ServiceItem, ServicePayload } from '@features/admin';
+import { servicesService } from '@/domain/service.services';
 
 const serviceSchema: yup.ObjectSchema<ServicePayload> = yup.object({
   name: yup.string().required('Nama layanan wajib diisi'),

@@ -1,11 +1,16 @@
 'use client';
 
 import { useMemo } from 'react';
+import { ScheduleListResponse } from '@features/admin';
 import { useQuery } from '@tanstack/react-query';
+import { schedulesService } from '@/domain/schedule.services';
 import usePagination from '@/hooks/usePagination';
 import useServiceOptions from '@/hooks/useServiceOptions';
-import { schedulesService, ScheduleListResponse } from '@features/admin';
-import { ALL_MONTH_OPTION_VALUE, ALL_SERVICE_OPTION_VALUE } from './Schedules.constants';
+// Keep ScheduleListResponse if it's still needed and not available from the new path
+import {
+  ALL_MONTH_OPTION_VALUE,
+  ALL_SERVICE_OPTION_VALUE,
+} from './Schedules.constants';
 
 /**
  * Hook for managing schedules list with pagination and filtering.

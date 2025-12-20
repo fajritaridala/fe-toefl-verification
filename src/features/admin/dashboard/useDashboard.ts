@@ -1,14 +1,14 @@
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import {
   EnrollmentItem,
   EnrollmentStatus,
   ScheduleItem,
   ScheduleStatus,
-  enrollmentsService,
-  schedulesService,
-  servicesService,
 } from '@features/admin';
+import { useQuery } from '@tanstack/react-query';
+import { enrollmentsService } from '@/domain/enroll.services';
+import { schedulesService } from '@/domain/schedule.services';
+import { servicesService } from '@/domain/service.services';
 
 export const useDashboard = () => {
   // 1. Fetch Services (Need total count)
@@ -33,8 +33,8 @@ export const useDashboard = () => {
   });
 
   // 3. Fetch Recent Enrollments (for List & Stats calculation)
-  // We fetch a larger limit to calculate stats client-side accurately enough for now, 
-  // or ideally backend provides a stats endpoint. 
+  // We fetch a larger limit to calculate stats client-side accurately enough for now,
+  // or ideally backend provides a stats endpoint.
   // For this refactor, we stick to client-side calc based on recent data or fetch separate counts if needed.
   // To match previous logic behaving as "Summary", let's fetch enough data.
   const enrollmentsQuery = useQuery({
@@ -50,23 +50,33 @@ export const useDashboard = () => {
   // Calculate Stats
   const summary = useMemo(() => {
     const totalServices = servicesQuery.data?.pagination?.total ?? 0;
-    
+
     // Total Schedules from pagination or array length
-    const totalSchedules = schedulesQuery.data?.pagination?.total ?? schedulesQuery.data?.data.length ?? 0;
-    
+    const totalSchedules =
+      schedulesQuery.data?.pagination?.total ??
+      schedulesQuery.data?.data.length ??
+      0;
+
     const enrollments = (enrollmentsQuery.data?.data as EnrollmentItem[]) || [];
-    const totalParticipants = enrollmentsQuery.data?.pagination?.total ?? enrollments.length;
+    const totalParticipants =
+      enrollmentsQuery.data?.pagination?.total ?? enrollments.length;
 
     // Count status from fetched enrollments (Note: This might be inaccurate if limit < total)
     // But reusing the previous logic which seemed to rely on separate queries or simple counts.
-    // The previous implementation fired 3 separate queries for stats. 
-    // To be strictly correct matching previous behavior, we SHOULD fetch counts. 
+    // The previous implementation fired 3 separate queries for stats.
+    // To be strictly correct matching previous behavior, we SHOULD fetch counts.
     // But for optimization, let's derive from the list if acceptable.
     // However, user asked for clean code.
-    
-    const pending = enrollments.filter(e => e.status === EnrollmentStatus.PENDING).length;
-    const approved = enrollments.filter(e => e.status === EnrollmentStatus.APPROVED).length;
-    const rejected = enrollments.filter(e => e.status === EnrollmentStatus.REJECTED).length;
+
+    const pending = enrollments.filter(
+      (e) => e.status === EnrollmentStatus.PENDING
+    ).length;
+    const approved = enrollments.filter(
+      (e) => e.status === EnrollmentStatus.APPROVED
+    ).length;
+    const rejected = enrollments.filter(
+      (e) => e.status === EnrollmentStatus.REJECTED
+    ).length;
 
     return {
       totalServices,
@@ -82,7 +92,11 @@ export const useDashboard = () => {
   const upcomingSchedules = useMemo(() => {
     const schedules = (schedulesQuery.data?.data as ScheduleItem[]) || [];
     return schedules
-      .sort((a, b) => new Date(a.scheduleDate).getTime() - new Date(b.scheduleDate).getTime())
+      .sort(
+        (a, b) =>
+          new Date(a.scheduleDate).getTime() -
+          new Date(b.scheduleDate).getTime()
+      )
       .slice(0, 5);
   }, [schedulesQuery.data]);
 
@@ -95,7 +109,10 @@ export const useDashboard = () => {
     summary,
     upcomingSchedules,
     recentParticipants,
-    isLoadingSummary: servicesQuery.isLoading || schedulesQuery.isLoading || enrollmentsQuery.isLoading,
+    isLoadingSummary:
+      servicesQuery.isLoading ||
+      schedulesQuery.isLoading ||
+      enrollmentsQuery.isLoading,
     isLoadingSchedules: schedulesQuery.isLoading,
     isLoadingParticipants: enrollmentsQuery.isLoading,
     refetch: () => {

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { SchedulePayload } from '@features/admin';
+import { ScheduleItem, SchedulePayload } from '@features/admin';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as yup from 'yup';
@@ -21,17 +21,39 @@ const scheduleSchema: yup.ObjectSchema<SchedulePayload> = yup.object({
 
 type ScheduleFormValues = SchedulePayload;
 
-type UseAddScheduleModalProps = {
+type UseEditScheduleModalProps = {
+  schedule: ScheduleItem | null;
   isOpen: boolean;
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 };
 
-const useAddScheduleModal = ({
+const formatDateValue = (date?: string) => {
+  if (!date) return '';
+  if (date.includes('T')) {
+    return date.split('T')[0] ?? '';
+  }
+  return date;
+};
+
+const formatTimeValue = (date?: string) => {
+  if (!date) return '';
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) {
+    if (date.includes('T')) {
+      return date.split('T')[1]?.slice(0, 5) ?? '';
+    }
+    return date;
+  }
+  return parsed.toISOString().slice(11, 16);
+};
+
+const useEditScheduleModal = ({
+  schedule,
   isOpen,
   onSuccess,
   onError,
-}: UseAddScheduleModalProps) => {
+}: UseEditScheduleModalProps) => {
   const queryClient = useQueryClient();
   const {
     control,
@@ -41,22 +63,24 @@ const useAddScheduleModal = ({
   } = useForm<ScheduleFormValues>({
     resolver: yupResolver(scheduleSchema),
     defaultValues: {
-      serviceId: '',
-      scheduleDate: '',
-      startTime: '',
-      endTime: '',
+      serviceId: schedule?.serviceId || '',
+      scheduleDate: formatDateValue(schedule?.scheduleDate),
+      startTime: formatTimeValue(schedule?.startTime),
+      endTime: formatTimeValue(schedule?.endTime),
+      capacity: schedule?.quota ?? undefined,
     },
   });
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !schedule) return;
     reset({
-      serviceId: '',
-      scheduleDate: '',
-      startTime: '',
-      endTime: '',
+      serviceId: schedule.serviceId || '',
+      scheduleDate: formatDateValue(schedule.scheduleDate),
+      startTime: formatTimeValue(schedule.startTime),
+      endTime: formatTimeValue(schedule.endTime),
+      capacity: schedule.quota ?? undefined,
     });
-  }, [reset, isOpen]);
+  }, [schedule, reset, isOpen]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: ScheduleFormValues) => {
@@ -68,7 +92,10 @@ const useAddScheduleModal = ({
             : undefined,
       };
 
-      return schedulesService.createSchedule(payload);
+      if (schedule?.scheduleId) {
+        return schedulesService.updateSchedule(schedule.scheduleId, payload);
+      }
+      return Promise.reject(new Error('Schedule ID is missing'));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['schedules'] });
@@ -91,4 +118,4 @@ const useAddScheduleModal = ({
   };
 };
 
-export default useAddScheduleModal;
+export default useEditScheduleModal;

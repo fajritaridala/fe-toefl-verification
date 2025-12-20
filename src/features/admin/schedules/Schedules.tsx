@@ -7,6 +7,7 @@ import { type Variants, motion } from 'framer-motion';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';
 import AddScheduleModal from './AddScheduleModal';
 import DeleteScheduleModal from './DeleteScheduleModal';
+import EditScheduleModal from './EditScheduleModal';
 import {
   MONTH_FILTER_OPTIONS,
   SCHEDULE_TABLE_COLUMNS,
@@ -47,8 +48,8 @@ const AdminSchedulesPage = () => {
 
   const [selectedService, setSelectedService] = useState(currentService);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleItem | null>(
     null
   );
@@ -74,19 +75,23 @@ const AdminSchedulesPage = () => {
   };
 
   const openCreateModal = () => {
-    setFormMode('create');
-    setSelectedSchedule(null);
-    setIsFormOpen(true);
+    setIsAddModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsAddModalOpen(false);
   };
 
   const openEditModal = (schedule: ScheduleItem) => {
-    setFormMode('edit');
     setSelectedSchedule(schedule);
-    setIsFormOpen(true);
+    setIsEditModalOpen(true);
   };
 
-  const closeFormModal = () => {
-    setIsFormOpen(false);
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setTimeout(() => {
+      setSelectedSchedule(null);
+    }, 400);
   };
 
   const openDeleteModal = (schedule: ScheduleItem) => {
@@ -131,11 +136,16 @@ const AdminSchedulesPage = () => {
       />
 
       <AddScheduleModal
-        isOpen={isFormOpen}
-        mode={formMode}
+        isOpen={isAddModalOpen}
+        serviceOptions={serviceOptions}
+        onClose={closeCreateModal}
+      />
+
+      <EditScheduleModal
+        isOpen={isEditModalOpen}
         schedule={selectedSchedule}
         serviceOptions={serviceOptions}
-        onClose={closeFormModal}
+        onClose={closeEditModal}
       />
 
       <DeleteScheduleModal

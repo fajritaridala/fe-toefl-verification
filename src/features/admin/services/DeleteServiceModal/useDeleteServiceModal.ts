@@ -1,5 +1,5 @@
+import { servicesService } from '@/domain/service.services';
 import useDeleteMutation from '@/hooks/useDeleteMutation';
-import { servicesService } from '@features/admin';
 
 type UseDeleteServiceModalProps = {
   onSuccess?: () => void;

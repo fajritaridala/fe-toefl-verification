@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
+import { ServiceItem } from '@features/admin';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { servicesService } from '@features/admin';
-import { ServiceItem } from '@features/admin';
+import { servicesService } from '@/domain/service.services';
 
 const useService = () => {
   const router = useRouter();

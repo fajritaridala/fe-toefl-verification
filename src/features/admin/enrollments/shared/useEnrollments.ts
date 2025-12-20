@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback } from 'react';
+import { EnrollmentItem, EnrollmentListResponse } from '@features/admin';
 import { useQuery } from '@tanstack/react-query';
+import { enrollmentsService } from '@/domain/enroll.services';
 import usePagination from '@/hooks/usePagination';
-import { enrollmentsService, EnrollmentItem, EnrollmentListResponse } from '@features/admin';
 
 export type UseEnrollmentsOptions = {
   fixedStatus?: EnrollmentItem['status'];
@@ -30,18 +31,31 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
   const currentStatus = fixedStatus ?? (getParam('status') || 'all');
   const currentServiceId = getParam('serviceId') || 'all';
   const currentScheduleId = getParam('scheduleId') || 'all';
-  
+
   const normalizedStatus =
-    fixedStatus ?? (currentStatus !== 'all' ? (currentStatus as EnrollmentItem['status']) : undefined);
-  const normalizedServiceId = currentServiceId !== 'all' ? currentServiceId : undefined;
-  const normalizedScheduleId = currentScheduleId !== 'all' ? currentScheduleId : undefined;
+    fixedStatus ??
+    (currentStatus !== 'all'
+      ? (currentStatus as EnrollmentItem['status'])
+      : undefined);
+  const normalizedServiceId =
+    currentServiceId !== 'all' ? currentServiceId : undefined;
+  const normalizedScheduleId =
+    currentScheduleId !== 'all' ? currentScheduleId : undefined;
 
   const {
     data: dataEnrollments,
     isLoading: isLoadingEnrollments,
     isRefetching: isRefetchingEnrollments,
   } = useQuery({
-    queryKey: ['enrollments', currentPage, currentLimit, currentSearch, normalizedStatus, normalizedServiceId, normalizedScheduleId],
+    queryKey: [
+      'enrollments',
+      currentPage,
+      currentLimit,
+      currentSearch,
+      normalizedStatus,
+      normalizedServiceId,
+      normalizedScheduleId,
+    ],
     queryFn: async () => {
       const response = await enrollmentsService.getEnrollments({
         page: Number(currentPage),
@@ -56,29 +70,38 @@ function useEnrollments(options?: UseEnrollmentsOptions) {
     enabled: !!currentPage && !!currentLimit,
   });
 
-  console.log(dataEnrollments)
+  console.log(dataEnrollments);
 
-  const handleChangeStatus = useCallback((status: string) => {
-    if (fixedStatus) return;
-    setParams({
-      status: !status || status === 'all' ? null : status,
-      page: '1',
-    });
-  }, [setParams, fixedStatus]);
+  const handleChangeStatus = useCallback(
+    (status: string) => {
+      if (fixedStatus) return;
+      setParams({
+        status: !status || status === 'all' ? null : status,
+        page: '1',
+      });
+    },
+    [setParams, fixedStatus]
+  );
 
-  const handleChangeService = useCallback((serviceId: string) => {
-    setParams({
-      serviceId: !serviceId || serviceId === 'all' ? null : serviceId,
-      page: '1',
-    });
-  }, [setParams]);
+  const handleChangeService = useCallback(
+    (serviceId: string) => {
+      setParams({
+        serviceId: !serviceId || serviceId === 'all' ? null : serviceId,
+        page: '1',
+      });
+    },
+    [setParams]
+  );
 
-  const handleChangeSchedule = useCallback((scheduleId: string) => {
-    setParams({
-      scheduleId: !scheduleId || scheduleId === 'all' ? null : scheduleId,
-      page: '1',
-    });
-  }, [setParams]);
+  const handleChangeSchedule = useCallback(
+    (scheduleId: string) => {
+      setParams({
+        scheduleId: !scheduleId || scheduleId === 'all' ? null : scheduleId,
+        page: '1',
+      });
+    },
+    [setParams]
+  );
 
   return {
     dataEnrollments,

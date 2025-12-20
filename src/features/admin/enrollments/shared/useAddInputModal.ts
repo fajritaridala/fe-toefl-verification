@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import * as yup from 'yup';
-import { enrollmentsService } from '@features/admin';
+import { enrollmentsService } from '@/domain/enroll.services';
 
 const inputSchema = yup.object().shape({
   listening: yup.number().required('Nilai listening wajib diisi'),
@@ -25,7 +25,12 @@ type UseAddInputModalProps = {
   onError?: (error: Error) => void;
 };
 
-function useAddInputModal({ enrollId, participantId, onSuccess, onError }: UseAddInputModalProps) {
+function useAddInputModal({
+  enrollId,
+  participantId,
+  onSuccess,
+  onError,
+}: UseAddInputModalProps) {
   const {
     control,
     handleSubmit,
