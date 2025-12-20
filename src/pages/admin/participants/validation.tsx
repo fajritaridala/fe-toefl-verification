@@ -1,16 +1,15 @@
-'use client';
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import { Check, Eye, X } from 'lucide-react';
 import DashboardLayout from '@/components/layouts/Dashboard';
-import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
-import { RefreshButton } from '@/components/ui/Button/RefreshButton';
-import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
-import GenericEnrollmentTable, {
+import { LimitFilter } from '@/components/ui/Button/Filter';
+import { Refresh } from '@/components/ui/Button/Refresh';
+import { DetailModal } from '@/components/ui/Modal';
+import {
   ColumnConfig,
-} from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
+  GenericEnrollmentTable,
+} from '@/components/ui/Table/Enrollments';
 import usePagination from '@/hooks/usePagination';
 import { enrollmentsService } from '@/services/admin.service';
 import { EnrollmentItem, EnrollmentStatus } from '@/types/admin.types';
@@ -286,7 +285,7 @@ export default function AdminParticipantsValidation() {
                 value={String(currentLimit)}
                 onChange={handleChangeLimit}
               />
-              <RefreshButton
+              <Refresh
                 isRefetching={isRefetchingEnrollments}
                 onRefresh={handleRefresh}
               />
@@ -313,7 +312,7 @@ export default function AdminParticipantsValidation() {
         />
 
         {currentParticipant && (
-          <EnrollmentDetailModal
+          <DetailModal
             isOpen={previewModalOpen || detailModalOpen}
             onClose={() => {
               if (previewModalOpen) handleClosePreview();

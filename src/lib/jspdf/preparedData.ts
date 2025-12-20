@@ -1,38 +1,30 @@
 import moment from 'moment';
 import {
   CertificatePayload,
-  CertificatePdfRender
-} from '@/types/certificate.type';
+  CertificatePdfRender,
+} from '@/types/certificate.types';
 
 export function preparedData(data: CertificatePayload): CertificatePdfRender {
-  const {
-    scheduleDate,
-    birthDate,
-    listening,
-    reading,
-    structure,
-    totalScore,
-  } = data;
+  const { scheduleDate, birthDate, listening, reading, structure, totalScore } =
+    data;
 
   // Handle scheduleDate - bisa string atau Date
-  const scheduleDateParsed = scheduleDate instanceof Date 
-    ? scheduleDate 
-    : new Date(scheduleDate);
-  
+  const scheduleDateParsed =
+    scheduleDate instanceof Date ? scheduleDate : new Date(scheduleDate);
+
   // Handle birthDate - bisa string atau Date
-  const birthDateParsed = birthDate instanceof Date 
-    ? birthDate 
-    : new Date(birthDate);
+  const birthDateParsed =
+    birthDate instanceof Date ? birthDate : new Date(birthDate);
 
   const tanggal_valid = moment(scheduleDateParsed)
     .add(2, 'years')
     .locale('id')
     .format('D MMMM YYYY');
-    
+
   const _tanggal_tes = moment(scheduleDateParsed)
     .locale('id')
     .format('D MMMM YYYY');
-    
+
   const _tanggal_lahir = moment(birthDateParsed)
     .locale('id')
     .format('D MMMM YYYY');

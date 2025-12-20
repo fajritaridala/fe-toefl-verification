@@ -1,10 +1,10 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Header from '@/components/common/Header';
 import BaseFooter from '@/components/ui/Footer/Base';
-import BaseNavbar from '@/components/ui/Navbar/BaseNavbar';
+import { BaseNavbar } from '@/components/ui/Navbar/BaseNavbar';
 import useUserSession from '@/hooks/useUserSession';
 import { SessionExt } from '@/types/auth.types';
 
@@ -18,6 +18,7 @@ type Props = {
 
 const BaseLayout = (props: Props) => {
   const { children, title, isAuthenticated, user, pathname } = props;
+  const router = useRouter();
   const currentPathname = usePathname();
 
   // Use provided values or get from hooks
@@ -26,6 +27,10 @@ const BaseLayout = (props: Props) => {
   const finalAuth = isAuthenticated ?? sessionAuth;
   const finalPathname = pathname ?? currentPathname ?? '/';
 
+  // Navigation handlers
+  const handleLogin = () => router.push('/auth/login');
+  const handleNavigate = (path: string) => router.push(path);
+
   return (
     <>
       <Header title={title} />
@@ -33,6 +38,8 @@ const BaseLayout = (props: Props) => {
         isAuthenticated={finalAuth}
         user={finalUser}
         pathname={finalPathname}
+        onLogin={handleLogin}
+        onNavigate={handleNavigate}
       >
         {children}
         <BaseFooter />

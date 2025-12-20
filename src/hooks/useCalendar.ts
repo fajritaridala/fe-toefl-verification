@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // Export tipe data agar bisa dipakai di komponen UI
@@ -13,9 +13,17 @@ export type ScheduleData = {
   status: 'aktif' | 'penuh' | 'tidak aktif';
 };
 
+// Export tipe grid item
+export type CalendarGridItem = {
+  day: number;
+  schedule: ScheduleData | null;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+};
+
 export const useCalendar = (data: ScheduleData[]) => {
   const router = useRouter();
-  
+
   // Default ke bulan sekarang
   const [currentDate, setCurrentDate] = useState(() => new Date());
 
@@ -43,7 +51,7 @@ export const useCalendar = (data: ScheduleData[]) => {
     const daysInMonth = lastDayOfMonth.getDate();
     const startDayOfWeek = firstDayOfMonth.getDay(); // 0 = Minggu
 
-    const grid = [];
+    const grid: CalendarGridItem[] = [];
 
     // Filler hari kosong di awal bulan
     for (let i = 0; i < startDayOfWeek; i++) {

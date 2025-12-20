@@ -12,8 +12,8 @@ import { type Variants, motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
 import BaseLayout from '@/components/layouts/Base';
-import BaseCard from '@/components/ui/Card/Base';
-import TestimonyCard from '@/components/ui/Card/Testimony';
+import { BaseCard } from '@/components/ui/Card/Base';
+import { TestimonyCard } from '@/components/ui/Card/Testimony';
 import {
   CONTENT_HOW,
   CONTENT_TESTIMONY,

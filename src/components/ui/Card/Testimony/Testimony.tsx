@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { cn } from '@heroui/react';
 
@@ -9,15 +9,15 @@ type Props = {
   className?: string;
 };
 
-const TestimonyCard = (props: Props) => {
+export function TestimonyCard(props: Props) {
   const { testimony, name, job, className } = props;
 
   return (
     <div
       className={cn(
-        "bg-white rounded-2xl p-8 transition-all duration-200 hover:-translate-y-2",
+        'rounded-2xl bg-white p-8 transition-all duration-200 hover:-translate-y-2',
         // Shadow Neumorphism saat hover
-        "hover:shadow-[8px_8px_16px_rgba(209,217,230,0.4),_-8px_-8px_16px_rgba(255,255,255,0.7)]",
+        'hover:shadow-[8px_8px_16px_rgba(209,217,230,0.4),_-8px_-8px_16px_rgba(255,255,255,0.7)]',
         className
       )}
     >
@@ -26,6 +26,4 @@ const TestimonyCard = (props: Props) => {
       <h2 className="text-text-muted text-sm">{job}</h2>
     </div>
   );
-};
-
-export default TestimonyCard;
+}

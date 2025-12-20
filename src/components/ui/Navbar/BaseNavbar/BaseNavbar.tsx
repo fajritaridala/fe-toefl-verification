@@ -16,24 +16,32 @@ import {
   cn,
 } from '@heroui/react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { SessionExt } from '@/types/auth.types';
 import { NAVBAR_DROPDOWN_ITEMS, NAVBAR_ITEMS } from './BaseNavbarConstants';
-import useBaseNavbar from './useBaseNavbar';
+import { useBaseNavbar } from './useBaseNavbar';
 
 type Props = {
   isAuthenticated?: boolean;
   user?: SessionExt | null;
   children: ReactNode;
   pathname?: string;
+  onLogin: () => void;
+  onNavigate: (path: string) => void;
 };
 
-const BaseNavbar = (props: Props) => {
-  const { isAuthenticated = false, user, children, pathname } = props;
+export function BaseNavbar(props: Props) {
+  const {
+    isAuthenticated = false,
+    user,
+    children,
+    pathname,
+    onLogin,
+    onNavigate,
+  } = props;
   const [username, setUsername] = useState('User');
-  const router = useRouter();
   const currentPathname = usePathname();
-  const { isScrolled, handleLogin } = useBaseNavbar();
+  const { isScrolled } = useBaseNavbar();
 
   useEffect(() => {
     if (user?.user?.username) {
@@ -113,7 +121,7 @@ const BaseNavbar = (props: Props) => {
                 </DropdownTrigger>
               </NavbarItem>
               <DropdownMenu>
-                {NAVBAR_DROPDOWN_ITEMS(router).map((item) => (
+                {NAVBAR_DROPDOWN_ITEMS(onNavigate).map((item) => (
                   <DropdownItem
                     key={item.key}
                     onPress={item.onPress}
@@ -134,7 +142,7 @@ const BaseNavbar = (props: Props) => {
           ) : (
             <Button
               data-hover={false}
-              onPress={handleLogin}
+              onPress={onLogin}
               size="md"
               className="bg-primary hover:bg-primary/90 text-medium rounded-full px-8 font-semibold text-white transition-all delay-75 duration-200 active:translate-y-0.5"
             >
@@ -149,6 +157,4 @@ const BaseNavbar = (props: Props) => {
       <main>{children}</main>
     </div>
   );
-};
-
-export default BaseNavbar;
+}

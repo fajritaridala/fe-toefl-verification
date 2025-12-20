@@ -1,17 +1,13 @@
 import { Button, cn } from '@heroui/react';
 import { RefreshCw } from 'lucide-react';
 
-type RefreshButtonProps = {
+type RefreshProps = {
   isRefetching: boolean;
   onRefresh: () => void;
   className?: string;
 };
 
-export function RefreshButton({
-  isRefetching,
-  onRefresh,
-  className,
-}: RefreshButtonProps) {
+export function Refresh({ isRefetching, onRefresh, className }: RefreshProps) {
   return (
     <Button
       isIconOnly

@@ -17,7 +17,7 @@ type Props = {
   redirect?: () => void;
 };
 
-function Service(props: Props) {
+export function ServiceCard(props: Props) {
   const { redirect, title, description, price, notes } = props;
 
   return (
@@ -59,5 +59,3 @@ function Service(props: Props) {
     </Card>
   );
 }
-
-export default Service;

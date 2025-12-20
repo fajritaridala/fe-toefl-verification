@@ -17,7 +17,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import AuthLayout from '@/components/layouts/Auth';
-import AuthCard from '@/components/ui/Card/Auth';
+import { AuthCard } from '@/components/ui/Card/Auth';
 import metamask from '@/lib/metamask/metamask';
 import authServices from '@/services/auth.service';
 import { IRegister } from '@/types/auth.types';

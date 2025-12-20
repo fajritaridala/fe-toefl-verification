@@ -34,7 +34,7 @@ const formatDate = (dateString?: string): string => {
   return date.isValid() ? date.format('D MMMM YYYY') : dateString;
 };
 
-export default function VerificationCard(props: Props) {
+export function VerificationCard(props: Props) {
   const { isPeserta, isScorePeserta } = props;
 
   const biodataPeserta = [

@@ -1,9 +1,9 @@
 'use client';
 
-import { EnrollmentStatus } from '@/types/admin.types';
+import { EnrollmentStatus as EnrollmentStatusEnum } from '@/types/admin.types';
 
-interface EnrollmentStatusChipProps {
-  status: EnrollmentStatus | string; // Allow string for flexibility or legacy
+interface EnrollmentStatusProps {
+  status: EnrollmentStatusEnum | string;
 }
 
 const statusConfig: Record<
@@ -16,28 +16,28 @@ const statusConfig: Record<
     label: string;
   }
 > = {
-  [EnrollmentStatus.APPROVED]: {
+  [EnrollmentStatusEnum.APPROVED]: {
     bgColor: 'bg-transparent',
     borderColor: 'border-green-600',
     textColor: 'text-green-700',
     dotColor: 'bg-green-600',
     label: 'Disetujui',
   },
-  [EnrollmentStatus.REJECTED]: {
+  [EnrollmentStatusEnum.REJECTED]: {
     bgColor: 'bg-transparent',
     borderColor: 'border-red-600',
     textColor: 'text-red-700',
     dotColor: 'bg-red-600',
     label: 'Ditolak',
   },
-  [EnrollmentStatus.PENDING]: {
+  [EnrollmentStatusEnum.PENDING]: {
     bgColor: 'bg-transparent',
     borderColor: 'border-yellow-600',
     textColor: 'text-yellow-700',
     dotColor: 'bg-yellow-600',
     label: 'Menunggu',
   },
-  [EnrollmentStatus.COMPLETED]: {
+  [EnrollmentStatusEnum.COMPLETED]: {
     bgColor: 'bg-transparent',
     borderColor: 'border-green-600',
     textColor: 'text-green-700',
@@ -46,10 +46,9 @@ const statusConfig: Record<
   },
 };
 
-export function EnrollmentStatusChip({ status }: EnrollmentStatusChipProps) {
-  // Normalize status case just in case
-  const normalizedStatus = status as string; // or status.toLowerCase() if needed
-  
+export function EnrollmentStatus({ status }: EnrollmentStatusProps) {
+  const normalizedStatus = status as string;
+
   const style = statusConfig[normalizedStatus] || {
     bgColor: 'bg-gray-50',
     borderColor: 'border-gray-200',

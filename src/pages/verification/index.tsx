@@ -3,7 +3,7 @@ import { Button } from '@heroui/react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import BaseLayout from '@/components/layouts/Base';
-import UploaderCard from '@/components/ui/Card/Uploader';
+import { UploaderCard } from '@/components/ui/Card/Uploader';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import readCertificatePdf from '@/lib/pdfjs-dist/readCertificatePdf';
 

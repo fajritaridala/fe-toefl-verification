@@ -1,1 +1,1 @@
-export { default } from './ScheduleRegister';
+export { ScheduleRegisterForm } from './ScheduleRegister';

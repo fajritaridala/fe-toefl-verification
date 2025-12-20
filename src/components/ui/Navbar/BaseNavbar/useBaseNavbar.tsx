@@ -1,10 +1,8 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
-const useBaseNavbar = () => {
-  const router = useRouter();
+export const useBaseNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -15,11 +13,5 @@ const useBaseNavbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogin = () => {
-    router.push('/auth/login');
-  };
-
-  return { isScrolled, handleLogin };
+  return { isScrolled };
 };
-
-export default useBaseNavbar;

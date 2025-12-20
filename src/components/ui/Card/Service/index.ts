@@ -1,1 +1,1 @@
-export { default } from './Service';
+export { ServiceCard } from './Service';

@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import { CertificatePayload } from '@/types/certificate.type';
+import { CertificatePayload } from '@/types/certificate.types';
 import { preparedData } from './preparedData';
 
 export async function generateCertificate(
@@ -90,7 +90,9 @@ export async function generateCertificate(
 
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
-  doc.text(`${render.jenis_tes} - SCORE`, pageWidth / 2, 65, { align: 'center' });
+  doc.text(`${render.jenis_tes} - SCORE`, pageWidth / 2, 65, {
+    align: 'center',
+  });
 
   // Personal information section
   const leftColumnX = 15;

@@ -1,2 +1,6 @@
-export { default as ScoreInputModal } from './ScoreInputModal';
-export { default as EnrollmentDetailModal } from './EnrollmentDetailModal';
+export { AddModal } from './Add';
+export type { AddModalProps } from './Add';
+
+export { ParticipantsModal } from './Participants';
+export { DetailModal } from './Detail';
+export { InputModal } from './Input';

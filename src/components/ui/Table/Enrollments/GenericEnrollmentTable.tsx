@@ -13,8 +13,8 @@ import {
   TableRow,
 } from '@heroui/react';
 import { Search } from 'lucide-react';
-import { EnrollmentItem } from '@/types/admin.types';
 import { useDebounce } from '@/hooks/useDebounce';
+import { EnrollmentItem } from '@/types/admin.types';
 
 export interface ColumnConfig {
   uid: string;
@@ -54,7 +54,7 @@ interface GenericEnrollmentTableProps {
   };
 }
 
-export default function GenericEnrollmentTable({
+export function GenericEnrollmentTable({
   data,
   isLoading,
   isRefetching,
@@ -161,7 +161,9 @@ export default function GenericEnrollmentTable({
             td: 'px-6 py-4 text-sm text-gray-700 border-b border-gray-50',
             tr: 'hover:bg-gray-50/50 transition-colors',
             base: 'min-w-full',
-            table: isRefetching ? 'opacity-50 transition-opacity duration-200 pointer-events-none' : 'transition-opacity duration-200',
+            table: isRefetching
+              ? 'opacity-50 transition-opacity duration-200 pointer-events-none'
+              : 'transition-opacity duration-200',
           }}
         >
           <TableHeader columns={columns}>

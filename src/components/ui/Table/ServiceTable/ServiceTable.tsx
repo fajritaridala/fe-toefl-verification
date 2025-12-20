@@ -24,9 +24,9 @@ import {
   Search,
   Trash2,
 } from 'lucide-react';
-import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
+import { LimitFilter } from '@/components/ui/Button/Filter';
 import { ServiceItem } from '@/types/admin.types';
-import toRupiah from '@/utils/toRupiah';
+import toRupiah from '@/utils/formatters/currency';
 
 export type ServiceTableColumn = {
   key: string;
@@ -55,7 +55,7 @@ type Props = {
   onDelete: (service: ServiceItem) => void;
 };
 
-const ServiceTable = (props: Props) => {
+export function ServiceTable(props: Props) {
   const {
     columns,
     services,
@@ -154,7 +154,7 @@ const ServiceTable = (props: Props) => {
               />
               <LimitFilter
                 value={String(currentLimit)}
-                onChange={(val) => onChangeLimit(Number(val))}
+                onChange={(val: string) => onChangeLimit(Number(val))}
               />
             </div>
 
@@ -288,6 +288,4 @@ const ServiceTable = (props: Props) => {
       </div>
     </section>
   );
-};
-
-export default ServiceTable;
+}

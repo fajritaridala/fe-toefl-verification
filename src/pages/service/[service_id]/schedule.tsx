@@ -6,8 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Info } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import BaseLayout from '@/components/layouts/Base';
-import Calendar from '@/components/ui/Card/Calendar';
-import { ScheduleData } from '@/hooks/useCalendar';
+import { Calendar } from '@/components/ui/Card/Calendar';
+import { ScheduleData, useCalendar } from '@/hooks/useCalendar';
 import { schedulesService, servicesService } from '@/services/admin.service';
 import { ScheduleItem, ServiceItem } from '@/types/admin.types';
 
@@ -59,6 +59,9 @@ export default function SchedulePage() {
   const { services } = useService();
 
   const selectedService = services.find((s) => s._id === params?.service_id);
+
+  const { currentDate, calendarGrid, changeMonth, navigateToRegister } =
+    useCalendar(scheduleData);
 
   return (
     <BaseLayout title="Jadwal">
@@ -113,7 +116,12 @@ export default function SchedulePage() {
           </div>
 
           <div className="flex w-full justify-start pt-12">
-            <Calendar data={scheduleData} />
+            <Calendar
+              currentDate={currentDate}
+              grid={calendarGrid}
+              onChangeMonth={changeMonth}
+              onSelectSchedule={navigateToRegister}
+            />
           </div>
         </div>
       </section>

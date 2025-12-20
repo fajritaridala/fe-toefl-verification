@@ -8,8 +8,8 @@ import QRCode from 'qrcode';
 import BaseLayout from '@/components/layouts/Base';
 import { getRecordFromBlockchain } from '@/lib/blockchain/storeToBlockchain';
 import { generateCertificate } from '@/lib/jspdf/generateCertificate';
-import certificateApi from '@/services/certificate.api';
-import { CertificatePayload } from '@/types/certificate.type';
+import certificateService from '@/services/certificate.service';
+import { CertificatePayload } from '@/types/certificate.types';
 import { CERTIFICATE_LINK } from '@/utils/config/env';
 
 // ============ ANIMATION VARIANTS ============
@@ -49,7 +49,7 @@ const useCertificate = () => {
     error: ipfsError,
   } = useQuery({
     queryKey: ['certificateIpfs', cid],
-    queryFn: () => certificateApi.getDataFromIpfs(cid!),
+    queryFn: () => certificateService.getDataFromIpfs(cid!),
     enabled: !!cid,
     retry: 1,
   });

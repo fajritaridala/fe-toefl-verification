@@ -5,9 +5,9 @@ import { ArrowLeft, CheckCircle2, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Header from '@/components/common/Header';
-import VerificationCard from '@/components/ui/Card/Verification';
+import { VerificationCard } from '@/components/ui/Card/Verification';
 import { getRecordFromBlockchain } from '@/lib/blockchain/storeToBlockchain';
-import certificateApi from '@/services/certificate.api';
+import certificateService from '@/services/certificate.service';
 
 // ============ TYPES ============
 type ParticipantInfo = {
@@ -72,7 +72,7 @@ const useVerificationResult = () => {
         const cid = await getRecordFromBlockchain(hash);
 
         // 2. Get Data from IPFS
-        const ipfsResponse = await certificateApi.getDataFromIpfs(cid);
+        const ipfsResponse = await certificateService.getDataFromIpfs(cid);
         const payload = ipfsResponse.content;
         console.log(payload);
 

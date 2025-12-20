@@ -1,25 +1,24 @@
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
-import { Input, InputProps } from '@heroui/react';
+import { Input as HeroInput, InputProps } from '@heroui/react';
 
-interface FormInputProps<T extends FieldValues>
-  extends Omit<InputProps, 'name'> {
+interface InputProps_<T extends FieldValues> extends Omit<InputProps, 'name'> {
   name: Path<T>;
   control: Control<T>;
   label: string;
 }
 
-export const FormInput = <T extends FieldValues>({
+export const Input = <T extends FieldValues>({
   name,
   control,
   label,
   ...props
-}: FormInputProps<T>) => {
+}: InputProps_<T>) => {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <Input
+        <HeroInput
           {...field}
           {...props}
           label={label}

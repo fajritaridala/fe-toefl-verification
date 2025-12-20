@@ -21,7 +21,7 @@ import {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import BaseLayout from '@/components/layouts/Base';
-import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
+import { EnrollmentStatus } from '@/components/ui/Chip/EnrollmentStatus';
 import { ActivityItem, activityService } from '@/services/activity.service';
 import { formatDate } from '@/utils/common';
 
@@ -161,7 +161,7 @@ export default function ActivityPage() {
                       <div className="bg-primary/10 text-primary group-hover:bg-primary flex h-12 w-12 items-center justify-center rounded-2xl transition-colors group-hover:text-white">
                         <Trophy className="h-6 w-6" />
                       </div>
-                      <EnrollmentStatusChip status={item.status} />
+                      <EnrollmentStatus status={item.status} />
                     </CardHeader>
 
                     <CardBody className="px-6 py-4">

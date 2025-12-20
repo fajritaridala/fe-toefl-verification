@@ -2,8 +2,7 @@ import { ChangeEvent, RefObject } from 'react';
 import { Control, FieldErrors } from 'react-hook-form';
 import { LuCloudUpload, LuFileCheck } from 'react-icons/lu';
 import { Button, Card, CardBody, Form, cn } from '@heroui/react';
-import { FormInput } from '@/components/ui/Form/FormInput';
-import { FormSelect } from '@/components/ui/Form/FormSelect';
+import { Input, Select } from '@/components/ui/Form';
 import { Gender, ScheduleRegister } from '@/types/admin.types';
 
 type Props = {
@@ -22,7 +21,7 @@ type Props = {
   handleFilePickerAction: () => void;
 };
 
-export default function ScheduleRegisterForm(props: Props) {
+export function ScheduleRegisterForm(props: Props) {
   const {
     handleSubmitAction,
     handleRegisterAction,
@@ -47,7 +46,7 @@ export default function ScheduleRegisterForm(props: Props) {
           <div className="grid w-full grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
             {/* Kolom Kiri: Data Diri */}
             <div className="flex flex-col gap-4">
-              <FormInput
+              <Input
                 control={control}
                 name="fullName"
                 label="Nama Lengkap"
@@ -57,7 +56,7 @@ export default function ScheduleRegisterForm(props: Props) {
                 labelPlacement="outside"
               />
 
-              <FormInput
+              <Input
                 control={control}
                 name="birthDate"
                 label="Tanggal Lahir"
@@ -68,7 +67,7 @@ export default function ScheduleRegisterForm(props: Props) {
                 labelPlacement="outside"
               />
 
-              <FormSelect
+              <Select
                 control={control}
                 name="gender"
                 label="Jenis Kelamin"
@@ -82,7 +81,7 @@ export default function ScheduleRegisterForm(props: Props) {
                 ]}
               />
 
-              <FormInput
+              <Input
                 control={control}
                 name="email"
                 label="Email"
@@ -93,7 +92,7 @@ export default function ScheduleRegisterForm(props: Props) {
                 labelPlacement="outside-top"
               />
 
-              <FormInput
+              <Input
                 control={control}
                 name="phoneNumber"
                 label="Nomor Telepon"
@@ -107,7 +106,7 @@ export default function ScheduleRegisterForm(props: Props) {
 
             {/* Kolom Kanan: Data Kontak & Akademik */}
             <div className="flex flex-col gap-4">
-              <FormInput
+              <Input
                 control={control}
                 name="nim"
                 label="Nomor Induk Mahasiswa"
@@ -117,7 +116,7 @@ export default function ScheduleRegisterForm(props: Props) {
                 labelPlacement="outside"
               />
 
-              <FormInput
+              <Input
                 control={control}
                 name="faculty"
                 label="Fakultas"
@@ -127,7 +126,7 @@ export default function ScheduleRegisterForm(props: Props) {
                 labelPlacement="outside"
               />
 
-              <FormInput
+              <Input
                 control={control}
                 name="major"
                 label="Program Studi"
@@ -137,7 +136,7 @@ export default function ScheduleRegisterForm(props: Props) {
                 labelPlacement="outside"
               />
 
-              <FormInput
+              <Input
                 control={control}
                 name="paymentDate"
                 label="Tanggal Pembayaran"

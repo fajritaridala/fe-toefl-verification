@@ -1,1 +1,2 @@
-export { default } from './ScheduleTable';
+export { GenericScheduleTable } from './GenericScheduleTable';
+export type { ColumnConfig } from './GenericScheduleTable';

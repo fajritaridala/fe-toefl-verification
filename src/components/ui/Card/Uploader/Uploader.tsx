@@ -33,7 +33,7 @@ type Props = {
   dragHandlers?: DragHandlers;
 };
 
-export default function UploaderCard(props: Props) {
+export function UploaderCard(props: Props) {
   const {
     handleSubmit,
     isPreview,

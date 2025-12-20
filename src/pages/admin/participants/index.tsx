@@ -1,21 +1,22 @@
-'use client';
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button } from '@heroui/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import { Eye } from 'lucide-react';
 import DashboardLayout from '@/components/layouts/Dashboard';
-import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
-import { ScheduleFilter } from '@/components/ui/Button/Filter/ScheduleFilter';
-import { ServiceFilter } from '@/components/ui/Button/Filter/ServiceFilter';
-import { StatusFilter } from '@/components/ui/Button/Filter/StatusFilter';
-import { RefreshButton } from '@/components/ui/Button/RefreshButton';
-import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
-import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
-import GenericEnrollmentTable, {
+import {
+  LimitFilter,
+  ScheduleFilter,
+  ServiceFilter,
+  StatusFilter,
+} from '@/components/ui/Button/Filter';
+import { Refresh } from '@/components/ui/Button/Refresh';
+import { EnrollmentStatus } from '@/components/ui/Chip/EnrollmentStatus';
+import { DetailModal } from '@/components/ui/Modal';
+import {
   ColumnConfig,
-} from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
+  GenericEnrollmentTable,
+} from '@/components/ui/Table/Enrollments';
 import { FILTER_OPTIONS } from '@/constants/list.constants';
 import usePagination from '@/hooks/usePagination';
 import {
@@ -308,7 +309,7 @@ export default function AdminParticipants() {
       uid: 'status',
       name: 'Status',
       align: 'center',
-      render: (item) => <EnrollmentStatusChip status={item.status} />,
+      render: (item) => <EnrollmentStatus status={item.status} />,
     },
     {
       uid: 'actions',
@@ -374,7 +375,7 @@ export default function AdminParticipants() {
                 value={currentLimitValue}
                 onChange={handleChangeLimit}
               />
-              <RefreshButton
+              <Refresh
                 isRefetching={isRefetchingEnrollments}
                 onRefresh={handleRefresh}
               />
@@ -388,7 +389,7 @@ export default function AdminParticipants() {
         />
 
         {selectedParticipant && (
-          <EnrollmentDetailModal
+          <DetailModal
             isOpen={detailModalOpen}
             onClose={handleCloseDetail}
             participant={selectedParticipant}

@@ -6,10 +6,10 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import BaseLayout from '@/components/layouts/Base';
-import ServiceCard from '@/components/ui/Card/Service';
+import { ServiceCard } from '@/components/ui/Card/Service';
 import { servicesService } from '@/services/admin.service';
 import { ServiceItem } from '@/types/admin.types';
-import toRupiah from '@/utils/toRupiah';
+import toRupiah from '@/utils/formatters/currency';
 
 // ============ ANIMATION VARIANTS ============
 const fadeInUp: Variants = {

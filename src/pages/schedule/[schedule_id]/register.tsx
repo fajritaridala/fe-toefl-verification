@@ -10,7 +10,7 @@ import Head from 'next/head';
 import { useParams, useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import BaseLayout from '@/components/layouts/Base';
-import ScheduleRegisterCard from '@/components/ui/Card/ScheduleRegister';
+import { ScheduleRegisterForm } from '@/components/ui/Card/ScheduleRegister';
 import { enrollmentsService } from '@/services/admin.service';
 import { Gender, ScheduleRegister } from '@/types/admin.types';
 
@@ -235,7 +235,7 @@ export default function RegisterSchedulePage() {
             </div>
 
             <div className="w-full lg:w-2/3 lg:scale-95 lg:pt-8">
-              <ScheduleRegisterCard
+              <ScheduleRegisterForm
                 control={control}
                 errors={errors}
                 isLoading={isLoading}

@@ -1,17 +1,16 @@
-'use client';
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import { PenSquare } from 'lucide-react';
 import DashboardLayout from '@/components/layouts/Dashboard';
-import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
-import { RefreshButton } from '@/components/ui/Button/RefreshButton';
-import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
-import { ScoreInputModal } from '@/components/ui/Modal';
-import GenericEnrollmentTable, {
+import { LimitFilter } from '@/components/ui/Button/Filter';
+import { Refresh } from '@/components/ui/Button/Refresh';
+import { EnrollmentStatus as EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatus';
+import { InputModal } from '@/components/ui/Modal';
+import {
   ColumnConfig,
-} from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
+  GenericEnrollmentTable,
+} from '@/components/ui/Table/Enrollments';
 import usePagination from '@/hooks/usePagination';
 import { storeToBlockchain } from '@/lib/blockchain/storeToBlockchain';
 import { enrollmentsService } from '@/services/admin.service';
@@ -426,7 +425,7 @@ export default function AdminParticipantsInput() {
                 value={String(currentLimit)}
                 onChange={handleChangeLimit}
               />
-              <RefreshButton
+              <Refresh
                 isRefetching={isRefetchingEnrollments}
                 onRefresh={handleRefresh}
               />
@@ -452,7 +451,7 @@ export default function AdminParticipantsInput() {
           }
         />
 
-        <ScoreInputModal
+        <InputModal
           isOpen={scoreModalOpen}
           onClose={handleCloseModal}
           participant={selectedParticipant}

@@ -1,3 +1,2 @@
-import DashboardLayoutSidebar from './DashboardLayoutSidebar';
-
-export default DashboardLayoutSidebar;
+export { DashboardLayoutSidebar } from './DashboardLayoutSidebar';
+export type { SidebarItem } from './DashboardLayoutSidebar';

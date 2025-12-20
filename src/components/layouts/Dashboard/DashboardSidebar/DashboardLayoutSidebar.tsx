@@ -4,7 +4,7 @@ import { JSX, useCallback, useEffect, useState } from 'react';
 import { LuChevronDown, LuChevronLeft, LuDatabase } from 'react-icons/lu';
 import { Button, cn } from '@heroui/react';
 import { signOut } from 'next-auth/react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export interface SidebarItem {
   key: string;
@@ -21,11 +21,11 @@ export interface SidebarItem {
 type Props = {
   sidebarItems: SidebarItem[];
   isOpen: boolean;
+  onNavigate: (path: string) => void;
 };
 
-function DashboardLayoutSidebar(props: Props) {
-  const { sidebarItems, isOpen } = props;
-  const router = useRouter();
+export function DashboardLayoutSidebar(props: Props) {
+  const { sidebarItems, isOpen, onNavigate } = props;
   const currentPath = usePathname() ?? '/';
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
     {}
@@ -77,20 +77,20 @@ function DashboardLayoutSidebar(props: Props) {
             }
           )}
           data-active={isActive}
-          onClick={() => router.push(child.href)}
+          onClick={() => onNavigate(child.href)}
         >
           <span className="bg-border w-1.5 rounded-full" />
           {child.label}
         </button>
       );
     },
-    [currentPath, router]
+    [currentPath, onNavigate]
   );
 
   return (
     <section
       className={cn(
-        'max-w-sidebar-panel bg-white border-r border-gray-100 z-40 flex h-screen w-full flex-col justify-between px-4 transition-all duration-200 lg:relative lg:flex',
+        'max-w-sidebar-panel z-40 flex h-screen w-full flex-col justify-between border-r border-gray-100 bg-white px-4 transition-all duration-200 lg:relative lg:flex',
         {
           'hidden lg:flex': !isOpen,
         }
@@ -125,7 +125,7 @@ function DashboardLayoutSidebar(props: Props) {
                 return;
               }
               if (item.href) {
-                router.push(item.href);
+                onNavigate(item.href);
               }
             };
 
@@ -178,5 +178,3 @@ function DashboardLayoutSidebar(props: Props) {
     </section>
   );
 }
-
-export default DashboardLayoutSidebar;

@@ -40,7 +40,7 @@ type Props = {
   rowKeyField?: string;
 };
 
-function DataTable(props: Props) {
+export function DataTable(props: Props) {
   const {
     currentPage,
     columns,
@@ -236,5 +236,3 @@ function DataTable(props: Props) {
     </Table>
   );
 }
-
-export default DataTable;

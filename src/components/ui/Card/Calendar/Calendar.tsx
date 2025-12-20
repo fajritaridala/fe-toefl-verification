@@ -1,52 +1,58 @@
-"use client";
+'use client';
 
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { ScheduleData, useCalendar } from '@/hooks/useCalendar';
+import { CalendarGridItem } from '@/hooks/useCalendar';
 
 type CalendarCardProps = {
-  data: ScheduleData[];
+  currentDate: Date;
+  grid: CalendarGridItem[];
+  onChangeMonth: (offset: number) => void;
+  onSelectSchedule: (scheduleId: string) => void;
   className?: string;
 };
 
-const CELL_HEIGHT = "h-20";
+const CELL_HEIGHT = 'h-20';
 
-const Calendar = ({ data = [], className = '' }: CalendarCardProps) => {
-  const { currentDate, calendarGrid, changeMonth, navigateToRegister } =
-    useCalendar(data);
-
+export function Calendar({
+  currentDate,
+  grid,
+  onChangeMonth,
+  onSelectSchedule,
+  className = '',
+}: CalendarCardProps) {
   return (
     <div
-      className={`w-full max-w-3xl shadow-neo rounded-2xl border border-secondary bg-bg-light p-6 ${className}`}
+      className={`shadow-neo border-secondary bg-bg-light w-full max-w-3xl rounded-2xl border p-6 ${className}`}
     >
       {/* --- NAVIGASI BULAN --- */}
       <div className="mb-4 flex items-center justify-between px-1">
         <button
           type="button"
-          onClick={() => changeMonth(-1)}
-          className="rounded-full p-1.5 text-text-muted transition-colors hover:bg-bg hover:text-text"
+          onClick={() => onChangeMonth(-1)}
+          className="text-text-muted hover:bg-bg hover:text-text rounded-full p-1.5 transition-colors"
         >
           <FiChevronLeft size={20} />
         </button>
-        
+
         {/* Judul Bulan: Menggunakan Primary agar senada dengan aksen di dalam */}
-        <h2 className="text-lg font-bold text-primary">
+        <h2 className="text-primary text-lg font-bold">
           {currentDate.toLocaleDateString('id-ID', {
             month: 'long',
             year: 'numeric',
           })}
         </h2>
-        
+
         <button
           type="button"
-          onClick={() => changeMonth(1)}
-          className="rounded-full p-1.5 text-text-muted transition-colors hover:bg-bg hover:text-text"
+          onClick={() => onChangeMonth(1)}
+          className="text-text-muted hover:bg-bg hover:text-text rounded-full p-1.5 transition-colors"
         >
           <FiChevronRight size={20} />
         </button>
       </div>
 
       {/* --- HEADER HARI --- */}
-      <div className="mb-2 grid grid-cols-7 gap-1 text-center text-xs font-semibold text-text-muted">
+      <div className="text-text-muted mb-2 grid grid-cols-7 gap-1 text-center text-xs font-semibold">
         {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((day) => (
           <div key={day} className="py-1">
             {day}
@@ -56,7 +62,7 @@ const Calendar = ({ data = [], className = '' }: CalendarCardProps) => {
 
       {/* --- GRID TANGGAL --- */}
       <div className="grid grid-cols-7 gap-2">
-        {calendarGrid.map((item, index) => {
+        {grid.map((item, index) => {
           if (!item.isCurrentMonth) {
             return (
               <div
@@ -76,7 +82,7 @@ const Calendar = ({ data = [], className = '' }: CalendarCardProps) => {
 
           const baseStyles = `relative ${CELL_HEIGHT} rounded-lg flex flex-col items-center justify-start pt-1.5 px-1 text-sm border transition-all duration-200`;
 
-          let stateStyles = "";
+          let stateStyles = '';
 
           if (isInteractive) {
             // 1. AVAILABLE
@@ -107,23 +113,23 @@ const Calendar = ({ data = [], className = '' }: CalendarCardProps) => {
 
           // TODAY HIGHLIGHT
           // Ring tetap Primary agar fokus
-          const todayStyles = item.isToday 
-            ? "ring-1 ring-primary ring-offset-1" 
-            : "";
+          const todayStyles = item.isToday
+            ? 'ring-1 ring-primary ring-offset-1'
+            : '';
 
           return (
             <div
               key={`${item.day}-${index}`}
               className={`${baseStyles} ${stateStyles} ${todayStyles}`}
               onClick={() =>
-                isInteractive && item.schedule && navigateToRegister(item.schedule._id)
+                isInteractive &&
+                item.schedule &&
+                onSelectSchedule(item.schedule._id)
               }
             >
               <span
                 className={`mb-0.5 text-sm font-semibold ${
-                  item.isToday 
-                    ? "text-primary" 
-                    : "text-text"
+                  item.isToday ? 'text-primary' : 'text-text'
                 }`}
               >
                 {item.day}
@@ -132,20 +138,20 @@ const Calendar = ({ data = [], className = '' }: CalendarCardProps) => {
               {item.schedule && (
                 <div className="flex w-full flex-col items-center">
                   {!isActive ? (
-                    <span className="rounded-md bg-warning/20 px-1.5 py-0.5 text-[9px] font-bold text-warning">
+                    <span className="bg-warning/20 text-warning rounded-md px-1.5 py-0.5 text-[9px] font-bold">
                       TIDAK AKTIF
                     </span>
                   ) : isFull ? (
-                    <span className="rounded-md bg-danger px-1.5 py-0.5 text-[9px] font-bold text-highlight">
+                    <span className="bg-danger text-highlight rounded-md px-1.5 py-0.5 text-[9px] font-bold">
                       PENUH
                     </span>
                   ) : (
                     <>
-                      <span className="text-xs font-bold text-secondary">
+                      <span className="text-secondary text-xs font-bold">
                         {registrants}
                         {quota ? `/${quota}` : ''}
                       </span>
-                      <span className="text-[9px] leading-none text-text-muted">
+                      <span className="text-text-muted text-[9px] leading-none">
                         Terisi
                       </span>
                     </>
@@ -158,6 +164,4 @@ const Calendar = ({ data = [], className = '' }: CalendarCardProps) => {
       </div>
     </div>
   );
-};
-
-export default Calendar;
+}
