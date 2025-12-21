@@ -18,14 +18,24 @@ type Props = {
   mode: 'create' | 'edit';
   service?: ServiceItem | null;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-const AddServiceModal = ({ isOpen, mode, service, onClose }: Props) => {
+const AddServiceModal = ({
+  isOpen,
+  mode,
+  service,
+  onClose,
+  onSuccess,
+}: Props) => {
   const { control, errors, handleSubmit, isSubmitting } = useAddServiceModal({
     mode,
     service,
     isOpen,
-    onSuccess: onClose,
+    onSuccess: () => {
+      onSuccess?.();
+      onClose();
+    },
   });
 
   const title = mode === 'create' ? 'Tambah Layanan' : 'Ubah Layanan';

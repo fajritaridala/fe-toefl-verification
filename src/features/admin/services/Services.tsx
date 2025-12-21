@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ServiceItem } from '@features/admin/services/service.types';
+import { Alert } from '@heroui/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import ServiceTable from '@/components/ui/Table/ServiceTable';
@@ -43,6 +44,11 @@ const AdminServicesPage = () => {
   );
   const [deleteTarget, setDeleteTarget] = useState<ServiceItem | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [alert, setAlert] = useState<{
+    type: 'success' | 'danger';
+    message: string;
+    isOpen: boolean;
+  } | null>(null);
 
   const openCreateModal = () => {
     setFormMode('create');
@@ -72,6 +78,18 @@ const AdminServicesPage = () => {
     }, 400);
   };
 
+  const handleSuccess = () => {
+    setAlert({
+      type: 'success',
+      message:
+        formMode === 'create'
+          ? 'Layanan berhasil ditambahkan.'
+          : 'Layanan berhasil diperbarui.',
+      isOpen: true,
+    });
+    setTimeout(() => setAlert(null), 3000);
+  };
+
   return (
     <motion.section
       initial="hidden"
@@ -79,6 +97,24 @@ const AdminServicesPage = () => {
       variants={fadeInUp}
       className="space-y-6 pt-4"
     >
+      {alert?.isOpen && (
+        <div className="fixed top-24 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
+          <Alert
+            color={alert.type}
+            title={alert.type === 'success' ? 'Berhasil' : 'Gagal'}
+            description={alert.message}
+            isClosable
+            onClose={() => setAlert(null)}
+            variant="faded"
+            className={`shadow-box rounded-xl border bg-white/90 backdrop-blur-sm ${
+              alert.type === 'success'
+                ? 'border-success-200'
+                : 'border-danger-200'
+            }`}
+          />
+        </div>
+      )}
+
       <ServiceTable
         columns={SERVICE_TABLE_COLUMNS}
         services={services}
@@ -98,6 +134,7 @@ const AdminServicesPage = () => {
         mode={formMode}
         service={selectedService}
         onClose={closeFormModal}
+        onSuccess={handleSuccess}
       />
 
       <DeleteServiceModal

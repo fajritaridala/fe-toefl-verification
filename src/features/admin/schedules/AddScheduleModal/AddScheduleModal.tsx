@@ -21,6 +21,7 @@ type Props = {
   schedule?: ScheduleItem | null;
   serviceOptions: ServiceOption[];
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
 const AddScheduleModal = ({
@@ -29,12 +30,16 @@ const AddScheduleModal = ({
   schedule,
   serviceOptions,
   onClose,
+  onSuccess,
 }: Props) => {
   const { control, errors, handleSubmit, isSubmitting } = useAddScheduleModal({
     isOpen,
     mode,
     schedule,
-    onSuccess: onClose,
+    onSuccess: () => {
+      onSuccess?.();
+      onClose();
+    },
   });
 
   const title = mode === 'create' ? 'Tambah Jadwal' : 'Ubah Jadwal';
@@ -164,7 +169,7 @@ const AddScheduleModal = ({
                       hideStepper
                       min={0}
                       variant="bordered"
-                      label="Kuota (opsional)"
+                      label="Kapasitas (opsional)"
                       labelPlacement="outside"
                       placeholder="Masukkan jumlah kuota"
                       value={

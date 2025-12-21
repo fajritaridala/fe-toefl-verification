@@ -52,9 +52,9 @@ const useAddScheduleModal = ({
       scheduleDate: schedule?.scheduleDate
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
         : '',
-      startTime: schedule?.startTime || '09:00',
-      endTime: schedule?.endTime || '11:00',
-      capacity: schedule?.quota ?? undefined,
+      startTime: schedule?.startTime?.slice(0, 5) || '09:00',
+      endTime: schedule?.endTime?.slice(0, 5) || '11:00',
+      capacity: schedule?.capacity ?? undefined,
     },
   });
 
@@ -65,9 +65,9 @@ const useAddScheduleModal = ({
       scheduleDate: schedule?.scheduleDate
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
         : '',
-      startTime: schedule?.startTime || '09:00',
-      endTime: schedule?.endTime || '11:00',
-      capacity: schedule?.quota ?? undefined,
+      startTime: schedule?.startTime?.slice(0, 5) || '09:00',
+      endTime: schedule?.endTime?.slice(0, 5) || '11:00',
+      capacity: schedule?.capacity ?? undefined,
     });
   }, [reset, isOpen, schedule, mode]);
 
@@ -82,7 +82,12 @@ const useAddScheduleModal = ({
       };
 
       if (mode === 'edit' && schedule?.scheduleId) {
-        return schedulesService.updateSchedule(schedule.scheduleId, payload);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { serviceId, ...updatePayload } = payload;
+        return schedulesService.updateSchedule(
+          schedule.scheduleId,
+          updatePayload
+        );
       }
       return schedulesService.createSchedule(payload);
     },

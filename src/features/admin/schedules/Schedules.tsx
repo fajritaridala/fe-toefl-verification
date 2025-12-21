@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ScheduleItem } from '@features/admin/schedules/schedule.types';
+import { Alert } from '@heroui/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Variants, motion } from 'framer-motion';
 import ScheduleTable from '@/components/ui/Table/ScheduleTable';
@@ -54,6 +55,11 @@ const AdminSchedulesPage = () => {
   );
   const [deleteTarget, setDeleteTarget] = useState<ScheduleItem | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [alert, setAlert] = useState<{
+    type: 'success' | 'danger';
+    message: string;
+    isOpen: boolean;
+  } | null>(null);
 
   useEffect(() => {
     setSelectedService(currentService);
@@ -101,6 +107,18 @@ const AdminSchedulesPage = () => {
     }, 400);
   };
 
+  const handleSuccess = () => {
+    setAlert({
+      type: 'success',
+      message:
+        formMode === 'create'
+          ? 'Jadwal berhasil ditambahkan.'
+          : 'Jadwal berhasil diperbarui.',
+      isOpen: true,
+    });
+    setTimeout(() => setAlert(null), 3000);
+  };
+
   return (
     <motion.section
       initial="hidden"
@@ -108,6 +126,24 @@ const AdminSchedulesPage = () => {
       variants={fadeInUp}
       className="space-y-6 pt-4"
     >
+      {alert?.isOpen && (
+        <div className="fixed top-24 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
+          <Alert
+            color={alert.type}
+            title={alert.type === 'success' ? 'Berhasil' : 'Gagal'}
+            description={alert.message}
+            isClosable
+            onClose={() => setAlert(null)}
+            variant="faded"
+            className={`shadow-box rounded-xl border bg-white/90 backdrop-blur-sm ${
+              alert.type === 'success'
+                ? 'border-success-200'
+                : 'border-danger-200'
+            }`}
+          />
+        </div>
+      )}
+
       <ScheduleTable
         columns={SCHEDULE_TABLE_COLUMNS}
         schedules={schedules}
@@ -136,6 +172,7 @@ const AdminSchedulesPage = () => {
         schedule={selectedSchedule}
         serviceOptions={serviceOptions}
         onClose={closeCreateModal}
+        onSuccess={handleSuccess}
       />
 
       <DeleteScheduleModal
