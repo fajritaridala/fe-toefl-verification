@@ -101,27 +101,34 @@ export async function storeToBlockchain({
       success: true,
     };
   } catch (error) {
-    const err = error as Error;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const err = error as any;
+
     if (isDev) {
       console.error('❌ Blockchain transaction failed:', err);
     }
 
     // Handle specific errors with user-friendly messages
-    if (err.message.includes('user rejected')) {
-      throw new Error('Transaksi ditolak oleh user');
-    } else if (err.message.includes('insufficient funds')) {
+    // For user rejection, re-throw original error to let caller handle it (e.g. useScores.ts)
+    if (
+      err.code === 4001 ||
+      err.code === 'ACTION_REJECTED' ||
+      err.message?.toLowerCase().includes('user rejected')
+    ) {
+      throw err;
+    } else if (err.message?.toLowerCase().includes('insufficient funds')) {
       throw new Error('Saldo tidak cukup untuk membayar gas fee');
     } else if (
-      err.message.includes('already exists') ||
-      err.message.includes('Record already exists')
+      err.message?.includes('already exists') ||
+      err.message?.includes('Record already exists')
     ) {
       throw new Error('Sertifikat sudah tersimpan di blockchain');
-    } else if (err.message.includes('Contract address')) {
+    } else if (err.message?.includes('Contract address')) {
       throw new Error('Konfigurasi contract address tidak valid');
-    } else if (err.message.includes('timeout')) {
+    } else if (err.message?.includes('timeout')) {
       throw new Error(err.message); // Pass through timeout message
     } else {
-      throw new Error(`Blockchain error: ${err.message}`);
+      throw new Error(`Blockchain error: ${err.message || 'Unknown error'}`);
     }
   }
 }

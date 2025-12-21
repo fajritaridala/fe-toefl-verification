@@ -105,6 +105,7 @@ const ScoreInputModal = ({
               <div className="space-y-3">
                 {blockchainStatus === 'submitting' && (
                   <Alert
+                    hideIcon
                     color="primary"
                     variant="flat"
                     title="Mengirim nilai ke server..."
@@ -117,6 +118,7 @@ const ScoreInputModal = ({
 
                 {blockchainStatus === 'storing-blockchain' && (
                   <Alert
+                    hideIcon
                     color="primary"
                     variant="flat"
                     title="Menyimpan ke blockchain..."
@@ -129,6 +131,7 @@ const ScoreInputModal = ({
 
                 {blockchainStatus === 'updating-status' && (
                   <Alert
+                    hideIcon
                     color="success"
                     variant="flat"
                     title="Memperbarui status peserta..."
@@ -141,6 +144,7 @@ const ScoreInputModal = ({
 
                 {blockchainStatus === 'success' && (
                   <Alert
+                    hideIcon
                     color="success"
                     variant="flat"
                     title="Sertifikat berhasil disimpan!"
@@ -150,22 +154,11 @@ const ScoreInputModal = ({
 
                 {blockchainStatus === 'error' && (
                   <Alert
+                    hideIcon
                     color="danger"
                     variant="flat"
                     title="Terjadi kesalahan"
                     description={statusMessage}
-                    endContent={
-                      onRetry && (
-                        <Button
-                          size="sm"
-                          color="danger"
-                          variant="solid"
-                          onPress={onRetry}
-                        >
-                          Coba Lagi
-                        </Button>
-                      )
-                    }
                   />
                 )}
               </div>
@@ -177,6 +170,7 @@ const ScoreInputModal = ({
                 <Input
                   type="text"
                   label="Listening"
+                  labelPlacement="outside-top"
                   value={scores.listening}
                   onChange={(e) =>
                     handleScoreChange('listening', e.target.value)
@@ -195,6 +189,7 @@ const ScoreInputModal = ({
                 <Input
                   type="text"
                   label="Structure"
+                  labelPlacement="outside-top"
                   value={scores.structure}
                   onChange={(e) =>
                     handleScoreChange('structure', e.target.value)
@@ -213,6 +208,7 @@ const ScoreInputModal = ({
                 <Input
                   type="text"
                   label="Reading"
+                  labelPlacement="outside-top"
                   value={scores.reading}
                   onChange={(e) => handleScoreChange('reading', e.target.value)}
                   onBlur={() => handleBlur('reading')}

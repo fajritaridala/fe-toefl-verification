@@ -175,19 +175,41 @@ export const useScores = () => {
           setStatusMessage('');
         }, 1500);
       } catch (blockchainError) {
-        const err = blockchainError as Error;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const err = blockchainError as any;
+        console.error('Blockchain error details:', err);
+
         setBlockchainStatus('error');
-        setStatusMessage(`Error Blockchain: ${err.message}`);
+
+        // Handle User Rejected Action specifically
+        const isUserRejection =
+          err.code === 4001 ||
+          err.code === 'ACTION_REJECTED' ||
+          err.message?.toLowerCase().includes('user rejected') ||
+          err.info?.error?.code === 4001;
+
+        if (isUserRejection) {
+          setStatusMessage(
+            'Transaksi dibatalkan oleh pengguna (User Rejected).'
+          );
+        } else {
+          setStatusMessage(
+            `Error Blockchain: ${err.message || 'Unknown error'}`
+          );
+        }
 
         // Save data for retry
         setPendingBlockchainData({ hash, cid, enrollId, participantId });
 
-        alert(
-          `❌ Gagal menyimpan ke blockchain!\n\n` +
-            `Error: ${err.message}\n` +
-            `Nilai tersimpan di database, tapi gagal di blockchain.\n` +
-            `Gunakan tombol "Coba Lagi" untuk mencoba kembali.`
-        );
+        // Don't show alert for user rejection to avoid annoyance, just show in modal status
+        if (!isUserRejection) {
+          alert(
+            `❌ Gagal menyimpan ke blockchain!\n\n` +
+              `Error: ${err.message}\n` +
+              `Nilai tersimpan di database, tapi gagal di blockchain.\n` +
+              `Gunakan tombol "Coba Lagi" untuk mencoba kembali.`
+          );
+        }
       }
     },
     onError: (error: Error) => {

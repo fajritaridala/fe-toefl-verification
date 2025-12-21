@@ -27,8 +27,7 @@ const metamask = {
       const address = accounts[0];
       return { address };
     } catch (error) {
-      const err = error as Error;
-      throw new Error(err.message);
+      throw error;
     }
   },
 
@@ -50,8 +49,7 @@ const metamask = {
 
       return { signer, provider };
     } catch (error) {
-      const err = error as Error;
-      throw new Error(err.message);
+      throw error;
     }
   },
 
