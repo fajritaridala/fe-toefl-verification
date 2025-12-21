@@ -73,8 +73,16 @@ export const useScoreInputModal = ({
     if (value === '' || /^\d+$/.test(value)) {
       setScores((prev) => ({ ...prev, [field]: value }));
 
-      // Clear error if valid - remove the key entirely
-      if (value === '' || validateScore(field, value)) {
+      const num = Number(value);
+      const maxValue = maxScores[field];
+
+      if (value !== '' && num > maxValue) {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: `Maksimal ${field === 'structure' ? '40' : '50'}`,
+        }));
+      } else {
+        // Clear error if valid
         setErrors((prev) => {
           const newErrors = { ...prev };
           delete newErrors[field];

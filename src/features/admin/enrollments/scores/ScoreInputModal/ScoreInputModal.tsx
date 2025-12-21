@@ -7,9 +7,10 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Tooltip,
   cn,
 } from '@heroui/react';
-import { X } from 'lucide-react';
+import { Info, X } from 'lucide-react';
 import { ParticipantInfo, useScoreInputModal } from './useScoreInputModal';
 
 type ScoreInputModalProps = {
@@ -160,7 +161,14 @@ const ScoreInputModal = ({
               <div>
                 <Input
                   type="text"
-                  label="Listening"
+                  label={
+                    <div className="flex items-center gap-2">
+                      Listening
+                      <Tooltip placement="right" content="Rentang nilai 0 - 50">
+                        <Info className="text-default-400 h-4 w-4 cursor-pointer" />
+                      </Tooltip>
+                    </div>
+                  }
                   size="lg"
                   labelPlacement="outside-top"
                   value={scores.listening}
@@ -180,7 +188,14 @@ const ScoreInputModal = ({
               <div>
                 <Input
                   type="text"
-                  label="Structure"
+                  label={
+                    <div className="flex items-center gap-2">
+                      Structure
+                      <Tooltip placement="right" content="Rentang nilai 0 - 40">
+                        <Info className="text-default-400 h-4 w-4 cursor-pointer" />
+                      </Tooltip>
+                    </div>
+                  }
                   size="lg"
                   labelPlacement="outside-top"
                   value={scores.structure}
@@ -200,7 +215,14 @@ const ScoreInputModal = ({
               <div>
                 <Input
                   type="text"
-                  label="Reading"
+                  label={
+                    <div className="flex items-center gap-2">
+                      Reading
+                      <Tooltip placement="right" content="Rentang nilai 0 - 50">
+                        <Info className="text-default-400 h-4 w-4 cursor-pointer" />
+                      </Tooltip>
+                    </div>
+                  }
                   size="lg"
                   labelPlacement="outside-top"
                   value={scores.reading}
