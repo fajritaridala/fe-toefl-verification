@@ -22,6 +22,7 @@ type Props = {
   serviceOptions: ServiceOption[];
   onClose: () => void;
   onSuccess?: () => void;
+  onError?: (error: Error) => void;
 };
 
 const AddScheduleModal = ({
@@ -31,6 +32,7 @@ const AddScheduleModal = ({
   serviceOptions,
   onClose,
   onSuccess,
+  onError,
 }: Props) => {
   const { control, errors, handleSubmit, isSubmitting } = useAddScheduleModal({
     isOpen,
@@ -40,6 +42,7 @@ const AddScheduleModal = ({
       onSuccess?.();
       onClose();
     },
+    onError,
   });
 
   const title = mode === 'create' ? 'Tambah Jadwal' : 'Ubah Jadwal';

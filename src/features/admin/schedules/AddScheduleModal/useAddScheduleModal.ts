@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { SchedulePayload } from '@features/admin/schedules/schedule.types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import moment from 'moment';
 import * as yup from 'yup';
 import { schedulesService } from '@/domain/schedule.services';
 import { ScheduleItem } from '../schedule.types';
@@ -52,8 +53,12 @@ const useAddScheduleModal = ({
       scheduleDate: schedule?.scheduleDate
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
         : '',
-      startTime: schedule?.startTime?.slice(0, 5) || '09:00',
-      endTime: schedule?.endTime?.slice(0, 5) || '11:00',
+      startTime: schedule?.startTime
+        ? moment(schedule.startTime).format('HH:mm')
+        : '09:00',
+      endTime: schedule?.endTime
+        ? moment(schedule.endTime).format('HH:mm')
+        : '11:00',
       capacity: schedule?.capacity ?? undefined,
     },
   });
@@ -65,8 +70,8 @@ const useAddScheduleModal = ({
       scheduleDate: schedule?.scheduleDate
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
         : '',
-      startTime: schedule?.startTime?.slice(0, 5) || '09:00',
-      endTime: schedule?.endTime?.slice(0, 5) || '11:00',
+      startTime: moment(schedule?.startTime).format('HH:mm'),
+      endTime: moment(schedule?.endTime).format('HH:mm'),
       capacity: schedule?.capacity ?? undefined,
     });
   }, [reset, isOpen, schedule, mode]);

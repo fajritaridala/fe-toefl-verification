@@ -119,6 +119,15 @@ const AdminSchedulesPage = () => {
     setTimeout(() => setAlert(null), 3000);
   };
 
+  const handleError = (error: Error) => {
+    setAlert({
+      type: 'danger',
+      message: error.message || 'Terjadi kesalahan saat menyimpan jadwal.',
+      isOpen: true,
+    });
+    setTimeout(() => setAlert(null), 3000);
+  };
+
   return (
     <motion.section
       initial="hidden"
@@ -173,6 +182,7 @@ const AdminSchedulesPage = () => {
         serviceOptions={serviceOptions}
         onClose={closeCreateModal}
         onSuccess={handleSuccess}
+        onError={handleError}
       />
 
       <DeleteScheduleModal
