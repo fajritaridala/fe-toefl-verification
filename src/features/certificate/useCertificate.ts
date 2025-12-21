@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import QRCode from 'qrcode';
-import { getRecordFromBlockchain } from '@/lib/blockchain/storeToBlockchain';
+import blockchainService from '@/domain/blockchain.services';
 import { generateCertificate } from '@/lib/jspdf/generateCertificate';
 import { CertificatePayload } from '@/types/certificate.type';
 import { CERTIFICATE_LINK } from '@/utils/config/env';
@@ -25,7 +25,7 @@ export const useCertificate = () => {
     error: cidError,
   } = useQuery({
     queryKey: ['certificateCid', hash],
-    queryFn: () => getRecordFromBlockchain(hash!),
+    queryFn: () => blockchainService.get(hash!),
     enabled: !!hash,
     retry: 1,
   });
@@ -41,7 +41,7 @@ export const useCertificate = () => {
     enabled: !!cid,
     retry: 1,
   });
-  console.log(certificateData)
+  console.log(certificateData);
 
   const url = `${CERTIFICATE_LINK}?hash=${hash}`;
 

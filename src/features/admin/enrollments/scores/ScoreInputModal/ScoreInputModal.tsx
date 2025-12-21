@@ -65,6 +65,7 @@ const ScoreInputModal = ({
       onClose={onClose}
       size="xl"
       backdrop="blur"
+      radius="lg"
       isDismissable={!isSubmitting}
       hideCloseButton
       classNames={{
@@ -78,7 +79,7 @@ const ScoreInputModal = ({
         <ModalHeader className="flex items-center justify-between border py-6">
           <div className="flex items-center gap-3">
             <div>
-              <h2 className="text-lg font-bold text-black">
+              <h2 className="text-2xl font-bold text-black">
                 Input Nilai Peserta
               </h2>
               <p className="text-sm font-normal text-gray-500">
@@ -86,16 +87,6 @@ const ScoreInputModal = ({
               </p>
             </div>
           </div>
-
-          <Button
-            variant="light"
-            isIconOnly
-            onPress={onClose}
-            isDisabled={isSubmitting}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <X className="h-5 w-5" />
-          </Button>
         </ModalHeader>
 
         <ModalBody>
@@ -170,6 +161,7 @@ const ScoreInputModal = ({
                 <Input
                   type="text"
                   label="Listening"
+                  size="lg"
                   labelPlacement="outside-top"
                   value={scores.listening}
                   onChange={(e) =>
@@ -189,6 +181,7 @@ const ScoreInputModal = ({
                 <Input
                   type="text"
                   label="Structure"
+                  size="lg"
                   labelPlacement="outside-top"
                   value={scores.structure}
                   onChange={(e) =>
@@ -208,6 +201,7 @@ const ScoreInputModal = ({
                 <Input
                   type="text"
                   label="Reading"
+                  size="lg"
                   labelPlacement="outside-top"
                   value={scores.reading}
                   onChange={(e) => handleScoreChange('reading', e.target.value)}

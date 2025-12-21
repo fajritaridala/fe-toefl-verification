@@ -4,8 +4,8 @@ import {
   EnrollmentStatus,
 } from '@features/admin/enrollments/enrollment.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import blockchainService from '@/domain/blockchain.services';
 import { enrollmentsService } from '@/domain/enroll.services';
-import { storeToBlockchain } from '@/lib/blockchain/storeToBlockchain';
 import useEnrollments from '../shared/useEnrollments';
 
 // Backend response type
@@ -130,7 +130,7 @@ export const useScores = () => {
         setBlockchainStatus('storing-blockchain');
         setStatusMessage('Menyimpan ke blockchain...');
 
-        await storeToBlockchain({ hash, cid });
+        await blockchainService.store({ hash, cid });
 
         // Step 4: Notify backend about blockchain success
         setBlockchainStatus('updating-status');
@@ -277,7 +277,7 @@ export const useScores = () => {
       setBlockchainStatus('storing-blockchain');
       setStatusMessage('Mencoba ulang menyimpan ke blockchain...');
 
-      await storeToBlockchain({ hash, cid });
+      await blockchainService.store({ hash, cid });
 
       // Notify backend about blockchain success
       setBlockchainStatus('updating-status');

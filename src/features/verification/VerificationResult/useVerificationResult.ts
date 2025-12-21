@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/router";
-import { getRecordFromBlockchain } from "@/lib/blockchain/storeToBlockchain";
-import certificateApi from "@features/certificate/services/certificate.api";
+import { useEffect, useMemo, useState } from 'react';
+import certificateApi from '@features/certificate/services/certificate.api';
+import { useRouter } from 'next/router';
+import blockchainService from '@/domain/blockchain.services';
 
 type ParticipantInfo = {
   nama_lengkap?: string;
@@ -22,14 +22,14 @@ type ScoreInfo = {
 };
 
 const initialParticipant: ParticipantInfo = {
-  nama_lengkap: "-",
-  jenis_kelamin: "-",
-  tanggal_lahir: "-",
-  nomor_induk_mahasiswa: "-",
-  fakultas: "-",
-  program_studi: "-",
-  sesi_tes: "-",
-  tanggal_tes: "-",
+  nama_lengkap: '-',
+  jenis_kelamin: '-',
+  tanggal_lahir: '-',
+  nomor_induk_mahasiswa: '-',
+  fakultas: '-',
+  program_studi: '-',
+  sesi_tes: '-',
+  tanggal_tes: '-',
 };
 
 const initialScore: ScoreInfo = {
@@ -41,10 +41,11 @@ const initialScore: ScoreInfo = {
 
 const useVerificationResult = () => {
   const router = useRouter();
-  const [isPeserta, setIsPeserta] = useState<ParticipantInfo>(initialParticipant);
+  const [isPeserta, setIsPeserta] =
+    useState<ParticipantInfo>(initialParticipant);
   const [isScorePeserta, setIsScorePeserta] = useState<ScoreInfo>(initialScore);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState("");
+  const [isError, setIsError] = useState('');
   const [isVerified, setIsVerified] = useState(false);
 
   const { hash: queryHash } = router.query;
@@ -56,12 +57,12 @@ const useVerificationResult = () => {
 
       try {
         setIsLoading(true);
-        setIsError("");
+        setIsError('');
         setIsVerified(false);
 
         // 1. Get CID from Blockchain
-        const cid = await getRecordFromBlockchain(hash);
-        
+        const cid = await blockchainService.get(hash);
+
         // 2. Get Data from IPFS
         const ipfsResponse = await certificateApi.getDataFromIpfs(cid);
         const payload = ipfsResponse.content;
@@ -70,13 +71,13 @@ const useVerificationResult = () => {
         // 3. Map Data
         const biodataPeserta = {
           nama_lengkap: payload.fullName,
-          jenis_kelamin: payload.gender || "-",
-          tanggal_lahir: payload.birthDate || "-", // Add if available in payload, otherwise '-'
-          nomor_induk_mahasiswa: payload.nim || "-",
-          fakultas: payload.faculty || "-",
-          program_studi: payload.major || "-",
-          layanan: payload.serviceName || "-", // Not in current certificate payload, keep default or update if schema changes
-          tanggal_tes: payload.scheduleDate || "-",
+          jenis_kelamin: payload.gender || '-',
+          tanggal_lahir: payload.birthDate || '-', // Add if available in payload, otherwise '-'
+          nomor_induk_mahasiswa: payload.nim || '-',
+          fakultas: payload.faculty || '-',
+          program_studi: payload.major || '-',
+          layanan: payload.serviceName || '-', // Not in current certificate payload, keep default or update if schema changes
+          tanggal_tes: payload.scheduleDate || '-',
         };
 
         const scorePeserta = {
@@ -89,10 +90,9 @@ const useVerificationResult = () => {
         setIsPeserta(biodataPeserta);
         setIsScorePeserta(scorePeserta);
         setIsVerified(true);
-
       } catch (error) {
         const err = error as Error;
-        setIsError(err.message || "Gagal memverifikasi sertifikat.");
+        setIsError(err.message || 'Gagal memverifikasi sertifikat.');
         setIsVerified(false);
       } finally {
         setIsLoading(false);
@@ -100,7 +100,7 @@ const useVerificationResult = () => {
     };
 
     if (router.isReady) {
-       fetchData();
+      fetchData();
     }
   }, [hash, router.isReady]);
 
