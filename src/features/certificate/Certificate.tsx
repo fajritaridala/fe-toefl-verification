@@ -4,7 +4,6 @@ import {
   CardBody,
   CardFooter,
   Skeleton,
-  cn,
 } from '@heroui/react';
 import { type Variants, motion } from 'framer-motion';
 import { ArrowLeft, Download } from 'lucide-react';

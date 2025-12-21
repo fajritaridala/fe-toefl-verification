@@ -1,14 +1,16 @@
 'use client';
 
+import { type Variants, motion } from 'framer-motion';
 import { PenSquare } from 'lucide-react';
-import { motion, type Variants } from 'framer-motion';
-import { ScoreInputModal } from '@/components/ui/Modal';
-import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
-import { formatDate } from '@/utils/common';
-import { useScores } from './useScores';
-import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
+import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
+import GenericEnrollmentTable, {
+  ColumnConfig,
+} from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
+import { formatDate } from '@/utils/common';
+import ScoreInputModal from './ScoreInputModal';
+import { useScores } from './useScores';
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -48,38 +50,42 @@ export default function Scores() {
     { uid: 'fullName', name: 'Nama Lengkap', align: 'start' },
     { uid: 'nim', name: 'NIM', align: 'center' },
     { uid: 'serviceName', name: 'Layanan', align: 'center' },
-    { 
-        uid: 'scheduleDate', 
-        name: 'Jadwal', 
-        align: 'center',
-        render: (item) => <p className="text-center text-sm text-gray-700">{formatDate(item.scheduleDate)}</p>
+    {
+      uid: 'scheduleDate',
+      name: 'Jadwal',
+      align: 'center',
+      render: (item) => (
+        <p className="text-center text-sm text-gray-700">
+          {formatDate(item.scheduleDate)}
+        </p>
+      ),
     },
-    { 
-        uid: 'status', 
-        name: 'Status', 
-        align: 'center',
-        render: (item) => <EnrollmentStatusChip status={item.status} />
+    {
+      uid: 'status',
+      name: 'Status',
+      align: 'center',
+      render: (item) => <EnrollmentStatusChip status={item.status} />,
     },
-    { 
-        uid: 'actions', 
-        name: 'Actions', 
-        align: 'center',
-        render: (item) => (
-            <div className="text-center">
-              <button
-                onClick={() => handleOpenScoreModal(item)}
-                className="hover:shadow-box inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 transition-all hover:bg-blue-100"
-              >
-                <PenSquare className="h-3.5 w-3.5" />
-                Input Nilai
-              </button>
-            </div>
-        )
+    {
+      uid: 'actions',
+      name: 'Actions',
+      align: 'center',
+      render: (item) => (
+        <div className="text-center">
+          <button
+            onClick={() => handleOpenScoreModal(item)}
+            className="hover:shadow-box inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 transition-all hover:bg-blue-100"
+          >
+            <PenSquare className="h-3.5 w-3.5" />
+            Input Nilai
+          </button>
+        </div>
+      ),
     },
   ];
 
   return (
-    <motion.section 
+    <motion.section
       initial="hidden"
       animate="visible"
       variants={fadeInUp}
@@ -91,33 +97,39 @@ export default function Scores() {
         isRefetching={isRefetchingEnrollments}
         columns={columns}
         search={{
-            value: searchInput,
-            onChange: setSearchInput,
-            onClear: handleClearSearch
+          value: searchInput,
+          onChange: setSearchInput,
+          onClear: handleClearSearch,
         }}
         filterContent={
-            <>
-                <LimitFilter value={String(currentLimit)} onChange={handleChangeLimit} />
-                <RefreshButton isRefetching={isRefetchingEnrollments} onRefresh={handleRefresh} />
-            </>
+          <>
+            <LimitFilter
+              value={String(currentLimit)}
+              onChange={handleChangeLimit}
+            />
+            <RefreshButton
+              isRefetching={isRefetchingEnrollments}
+              onRefresh={handleRefresh}
+            />
+          </>
         }
         pagination={{
-            page: Number(currentPage),
-            total: totalPages,
-            onChange: handleChangePage
+          page: Number(currentPage),
+          total: totalPages,
+          onChange: handleChangePage,
         }}
         emptyContent={
-            <div className="flex flex-col items-center justify-center py-12">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                    <PenSquare className="h-8 w-8 text-gray-400" />
-                </div>
-                <p className="text-base font-medium text-gray-900">
-                    Tidak ada peserta yang disetujui
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
-                    Belum ada peserta untuk input nilai
-                </p>
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+              <PenSquare className="h-8 w-8 text-gray-400" />
             </div>
+            <p className="text-base font-medium text-gray-900">
+              Tidak ada peserta yang disetujui
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              Belum ada peserta untuk input nilai
+            </p>
+          </div>
         }
       />
 
