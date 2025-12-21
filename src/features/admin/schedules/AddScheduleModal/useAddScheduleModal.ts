@@ -15,7 +15,6 @@ const scheduleSchema: yup.ObjectSchema<SchedulePayload> = yup.object({
   endTime: yup.string().required('Waktu selesai wajib diisi'),
   capacity: yup
     .number()
-
     .typeError('Kuota harus berupa angka')
     .positive('Kuota harus lebih dari 0')
     .integer('Kuota harus berupa angka bulat')
@@ -51,7 +50,7 @@ const useAddScheduleModal = ({
     defaultValues: {
       serviceId: schedule?.serviceId || '',
       scheduleDate: schedule?.scheduleDate
-        ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
+        ? moment(schedule.scheduleDate).format('YYYY-MM-DD')
         : '',
       startTime: schedule?.startTime
         ? moment(schedule.startTime).format('HH:mm')
@@ -68,7 +67,7 @@ const useAddScheduleModal = ({
     reset({
       serviceId: schedule?.serviceId || '',
       scheduleDate: schedule?.scheduleDate
-        ? new Date(schedule.scheduleDate).toISOString().split('T')[0]
+        ? moment(schedule.scheduleDate).format('YYYY-MM-DD')
         : '',
       startTime: moment(schedule?.startTime).format('HH:mm'),
       endTime: moment(schedule?.endTime).format('HH:mm'),

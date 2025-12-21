@@ -38,9 +38,11 @@ export function createRenderCell(params: RenderCellParams) {
   const renderCell = (schedule: ScheduleItem, columnKey: Key): ReactNode => {
     const registrants =
       typeof schedule.registrants === 'number' ? schedule.registrants : 0;
-    const quota =
-      typeof schedule.quota === 'number' ? Number(schedule.quota) : undefined;
-    const isFull = quota ? registrants >= quota : false;
+    const capacity =
+      typeof schedule.capacity === 'number'
+        ? Number(schedule.capacity)
+        : undefined;
+    const isFull = capacity ? registrants >= capacity : false;
     const statusLabel =
       schedule.status === 'aktif'
         ? isFull
@@ -82,9 +84,11 @@ export function createRenderCell(params: RenderCellParams) {
           </div>
         );
       case 'quota': {
-        const ratioLabel = quota ? `${registrants}/${quota}` : `${registrants}`;
-        const progressValue = quota
-          ? Math.min((registrants / quota) * 100, 100)
+        const ratioLabel = capacity
+          ? `${registrants}/${capacity}`
+          : `${registrants}`;
+        const progressValue = capacity
+          ? Math.min((registrants / capacity) * 100, 100)
           : registrants > 0
             ? 100
             : 0;
