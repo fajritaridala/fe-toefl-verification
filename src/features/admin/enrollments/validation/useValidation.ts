@@ -8,15 +8,24 @@ import { enrollmentsService } from '@/domain/enroll.services';
 import { useDebounce } from '@/hooks/useDebounce';
 import useEnrollments from '../shared/useEnrollments';
 
+// Tipe status untuk aksi validasi
+type ValidationStatus = 'disetujui' | 'ditolak';
+
 export const useValidation = () => {
+  const queryClient = useQueryClient();
+
+  // --- State Lokal ---
+  // Mengatur visibilitas modal preview dan detail
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
+  
+  // State pencarian lokal
   const [searchInput, setSearchInput] = useState('');
 
-  const queryClient = useQueryClient();
-
-  // Use existing enrollments hook
+  // --- Data Fetching ---
+  // Menggunakan shared hook untuk mengambil daftar pendaftaran
+  // Hanya mengambil data dengan status 'PENDING' (menunggu validasi)
   const {
     dataEnrollments,
     isLoadingEnrollments,
@@ -29,18 +38,21 @@ export const useValidation = () => {
     handleClearSearch,
   } = useEnrollments({ fixedStatus: EnrollmentStatus.PENDING });
 
-  // Debounced search effect
+  // --- Logika Pencarian (Search) ---
+  // Menggunakan debounce (500ms) untuk mencegah request API berlebihan saat user mengetik
   const debouncedSearch = useDebounce(searchInput, 500);
 
   useEffect(() => {
     handleSearch(debouncedSearch);
-  }, [debouncedSearch]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, handleSearch]);
 
   const handleClearLocalSearch = useCallback(() => {
     setSearchInput('');
     handleClearSearch();
   }, [handleClearSearch]);
 
+  // --- Transformasi Data ---
+  // Menambahkan properti unik (__rowKey) untuk keperluan rendering list/tabel
   const participants = useMemo(() => {
     const items = (dataEnrollments?.data as EnrollmentItem[]) || [];
     return items.map((item, idx) => ({
@@ -50,113 +62,91 @@ export const useValidation = () => {
   }, [dataEnrollments]);
 
   const totalPages = dataEnrollments?.pagination?.totalPages || 1;
+  
+  // Mengambil data peserta yang sedang dipilih berdasarkan index
+  const currentParticipant = participants[currentPreviewIndex];
 
-  // Mutations
-  const { mutate: approveParticipant, isPending: isApproving } = useMutation({
-    mutationFn: async (id: string) => {
-      console.log('Approving participant:', id);
-      const response = await enrollmentsService.approve(id, 'disetujui');
-      console.log('Approve response:', response);
-      return response;
+  // --- Mutasi (Aksi Validasi) ---
+  // Menangani request API untuk menyetujui atau menolak peserta
+  const { mutate: processValidation, isPending: isProcessing } = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: ValidationStatus }) => {
+      return await enrollmentsService.approve(id, status);
     },
     onSuccess: () => {
-      console.log('Approve success!');
-      // Close modal to trigger exit animation
-      setPreviewModalOpen(false);
-      setDetailModalOpen(false); // Ensure both are closed
-
-      // Wait for animation to finish before refetching data
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['enrollments'] });
-        // Reset preview if needed, or let the list rebuild
-      }, 450);
-    },
-    onError: (
-      error: Error & { response?: { data?: { message?: string } } }
-    ) => {
-      console.error('Approve error:', error);
-      console.error('Error response:', error?.response?.data);
-      alert(
-        `Gagal menyetujui peserta: ${error?.response?.data?.message || error.message}`
-      );
-    },
-  });
-
-  const { mutate: rejectParticipant, isPending: isRejecting } = useMutation({
-    mutationFn: async (id: string) => {
-      console.log('Rejecting participant:', id);
-      const response = await enrollmentsService.approve(id, 'ditolak');
-      console.log('Reject response:', response);
-      return response;
-    },
-    onSuccess: () => {
-      console.log('Reject success!');
-      // Close modal to trigger exit animation
+      // 1. Tutup semua modal segera agar UI terasa responsif
       setPreviewModalOpen(false);
       setDetailModalOpen(false);
 
-      // Wait for animation to finish before refetching data
+      // 2. Beri jeda sedikit (450ms) sebelum refresh data
+      // Tujuannya agar animasi penutupan modal selesai dulu, mencegah glitch visual
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['enrollments'] });
       }, 450);
     },
-    onError: (
-      error: Error & { response?: { data?: { message?: string } } }
-    ) => {
-      console.error('Reject error:', error);
-      console.error('Error response:', error?.response?.data);
-      alert(
-        `Gagal menolak peserta: ${error?.response?.data?.message || error.message}`
-      );
+    onError: (error: any) => {
+      const msg = error?.response?.data?.message || error.message || 'Terjadi kesalahan';
+      alert(`Gagal memproses validasi: ${msg}`);
     },
   });
 
-  // Handlers
+  // Wrapper function untuk mempermudah pemanggilan di UI
+  const approveParticipant = (id: string) => processValidation({ id, status: 'disetujui' });
+  const rejectParticipant = (id: string) => processValidation({ id, status: 'ditolak' });
+
+  // --- Handlers (Navigasi Modal) ---
+  
+  // Membuka modal preview untuk peserta tertentu
   const handleOpenPreview = useCallback((index: number) => {
     setCurrentPreviewIndex(index);
     setPreviewModalOpen(true);
+  }, []);
+
+  const handleClosePreview = useCallback(() => {
+    setPreviewModalOpen(false);
+  }, []);
+
+  // Menutup detail dan kembali ke modal preview (tombol Back)
+  const handleCloseDetail = useCallback(() => {
+    setDetailModalOpen(false);
+    setPreviewModalOpen(true); 
   }, []);
 
   const handleRefresh = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['enrollments'] });
   }, [queryClient]);
 
-  const handleClosePreview = useCallback(() => {
-    setPreviewModalOpen(false);
-  }, []);
-
-  const handleCloseDetail = useCallback(() => {
-    setDetailModalOpen(false);
-    setPreviewModalOpen(true); // Go back to preview
-  }, []);
-
-  const isProcessing = isApproving || isRejecting;
-  const currentParticipant = participants[currentPreviewIndex];
-
   return {
-    // State
+    // State Data & UI
+    participants,
+    currentParticipant,
     previewModalOpen,
     detailModalOpen,
     currentPreviewIndex,
-    searchInput,
-    participants,
-    currentParticipant,
-    totalPages,
-    currentLimit,
-    currentPage,
+    
+    // Status Loading
     isLoadingEnrollments,
     isRefetchingEnrollments,
     isProcessing,
 
-    // Handlers
+    // Pagination Info
+    totalPages,
+    currentLimit,
+    currentPage,
+
+    // Input Search
+    searchInput,
+    
+    // Actions / Handlers
     setSearchInput,
+    handleClearSearch: handleClearLocalSearch,
     handleOpenPreview,
-    handleRefresh,
     handleClosePreview,
     handleCloseDetail,
+    handleRefresh,
     handleChangeLimit,
     handleChangePage,
-    handleClearSearch: handleClearLocalSearch,
+    
+    // Core Actions (Validation)
     approveParticipant,
     rejectParticipant,
   };

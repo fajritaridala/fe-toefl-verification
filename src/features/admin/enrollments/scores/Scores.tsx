@@ -1,15 +1,10 @@
-'use client';
-
 import { useMemo } from 'react';
 import { type Variants, motion } from 'framer-motion';
 import { PenSquare } from 'lucide-react';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
 import GenericEnrollmentTable from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
-import {
-  EnrollmentItem,
-  EnrollmentStatus,
-} from '@/features/admin/enrollments/enrollment.types';
+import { EnrollmentItem } from '@/features/admin/enrollments/enrollment.types';
 import { getScoreColumns } from './ScoreConstant';
 import ScoreInputModal from './ScoreInputModal';
 import { useScores } from './useScores';

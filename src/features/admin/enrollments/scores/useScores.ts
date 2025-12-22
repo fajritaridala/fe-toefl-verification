@@ -43,8 +43,7 @@ type BlockchainStatus =
   | 'success'
   | 'error';
 
-// --- Helper Functions ---
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Memisahkan logika pengecekan error spesifik agar hook lebih bersih
 const isUserRejectionError = (err: any): boolean => {
   return (
     err?.code === 4001 ||
@@ -70,7 +69,7 @@ export const useScores = () => {
   const [pendingBlockchainData, setPendingBlockchainData] =
     useState<BlockchainData | null>(null);
 
-  // --- Data Fetching (UseEnrollments Composed) ---
+  // --- Data Fetching ---
   const {
     dataEnrollments,
     isLoadingEnrollments,
@@ -83,21 +82,19 @@ export const useScores = () => {
     handleClearSearch,
   } = useEnrollments({ fixedStatus: EnrollmentStatus.APPROVED });
 
-  // --- Search Logic (Integrated) ---
+  // --- Search Logic ---
   const debouncedSearch = useDebounce(searchInput, 500);
 
   useEffect(() => {
     handleSearch(debouncedSearch);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, handleSearch]);
 
-  // No need for separate handleClearSearch, useEnrollments provides it or we wrap it
   const onClearSearch = useCallback(() => {
     setSearchInput('');
     handleClearSearch();
   }, [handleClearSearch]);
 
-  // --- Core Logic: Blockchain Transaction Flow ---
-  // Fungsi ini digunakan ulang oleh submitScore dan handleRetryBlockchain
+  // Fungsi ini menyatukan logika penyimpanan blockchain, update backend, dan error handling
   const processBlockchainTransaction = useCallback(
     async (data: BlockchainData) => {
       const { hash, cid, enrollId, participantId } = data;
@@ -122,18 +119,17 @@ export const useScores = () => {
             hash
           );
         } catch (backendError) {
+          // Silent fail untuk update backend karena data blockchain sudah aman
           console.error(
             'Backend status update error (silent fail):',
             backendError
           );
-          // Kita tidak throw error di sini karena data sudah masuk blockchain,
-          // user tetap dianggap sukses secara teknis blockchain.
         }
 
         // 3. Success State
         setBlockchainStatus('success');
         setStatusMessage('Sertifikat berhasil disimpan!');
-        setPendingBlockchainData(null); // Clear pending data
+        setPendingBlockchainData(null); // Hapus data pending karena sukses
         queryClient.invalidateQueries({ queryKey: ['enrollments'] });
 
         // 4. Cleanup & Close Modal
@@ -143,19 +139,20 @@ export const useScores = () => {
           setBlockchainStatus('idle');
           setStatusMessage('');
         }, 1500);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Blockchain transaction error:', error);
         setBlockchainStatus('error');
 
+        // Gunakan helper function untuk pesan error
         if (isUserRejectionError(error)) {
           setStatusMessage('Transaksi dibatalkan oleh pengguna.');
         } else {
           setStatusMessage(
-            `Error Blockchain: ${(error as any).message || 'Unknown error'}`
+            `Error Blockchain: ${error.message || 'Unknown error'}`
           );
         }
 
-        // Simpan data agar bisa di-retry
+        // Simpan data ke state agar user bisa mencoba lagi (Retry)
         setPendingBlockchainData(data);
       }
     },
@@ -191,7 +188,7 @@ export const useScores = () => {
         return;
       }
 
-      // Lanjutkan ke proses blockchain
+      // Langsung panggil fungsi sentral untuk proses blockchain
       processBlockchainTransaction({
         hash: data.hash,
         cid: data.cid,
@@ -228,11 +225,7 @@ export const useScores = () => {
   }, []);
 
   const handleSubmitScore = useCallback(
-    (
-      enrollId: string,
-      participantId: string,
-      scores: { listening: number; structure: number; reading: number }
-    ) => {
+    (enrollId: string, participantId: string, scores: any) => {
       submitScore({ enrollId, participantId, scores });
     },
     [submitScore]
@@ -252,7 +245,6 @@ export const useScores = () => {
     // State
     selectedParticipant,
     scoreModalOpen,
-
     isSubmittingScore,
     blockchainStatus,
     statusMessage,
@@ -264,7 +256,8 @@ export const useScores = () => {
     handleSubmitScore,
     handleRetryBlockchain,
     handleRefresh,
-    // List Data & Handlers (Pass-through from useEnrollments)
+
+    // List Data & Handlers (Pass-through)
     dataEnrollments,
     isLoadingEnrollments,
     isRefetchingEnrollments,
