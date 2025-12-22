@@ -1,6 +1,7 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { LuArrowRight } from 'react-icons/lu';
-// Menghapus ikon-ikon kecil yang tidak lagi digunakan
 import {
   Button,
   Modal,

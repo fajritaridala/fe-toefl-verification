@@ -18,12 +18,6 @@ interface SubmitScoreResponse {
     cid: string;
     participantId: string;
     enrollId: string;
-    scores: {
-      listening: number;
-      structure: number;
-      reading: number;
-      total: number;
-    };
   };
 }
 

@@ -1,7 +1,7 @@
+import { JwtExt } from '@features/auth';
 import { getToken } from 'next-auth/jwt';
 import { type NextRequest, NextResponse } from 'next/server';
 import { AUTH_SECRET } from './utils/config/env';
-import { JwtExt } from '@features/auth';
 
 const AUTH_PAGES = ['/auth/login', '/auth/register'];
 const ADMIN = '/admin';
@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
 
   // Menolak akses jika token tidak ada dan halaman yang diakses adalah halaman auth
   if (AUTH_PAGES.includes(pathname) && token)
-    NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/', request.url));
 
   // middleware admin
   if (pathname.startsWith(ADMIN)) {
@@ -29,15 +29,19 @@ export async function middleware(request: NextRequest) {
     }
 
     // tolak akses jika role bukan admin
-    if (token?.role !== 'admin')
-      NextResponse.redirect(new URL('/', request.url));
+    if (token?.user?.role !== 'admin')
+      return NextResponse.redirect(new URL('/', request.url));
 
     // mengarahkan ke dashboard jika path adalah /admin
     if (pathname === ADMIN) {
       return NextResponse.redirect(new URL(`${ADMIN}/dashboard`, request.url));
     }
+
     return NextResponse.next();
   }
+
+  if (pathname === '/' && token?.user?.role === 'admin')
+    return NextResponse.redirect(new URL(`${ADMIN}/dashboard`, request.url));
 
   // middleware peserta
   if (pathname.startsWith(PESERTA) && !token) {
@@ -47,18 +51,23 @@ export async function middleware(request: NextRequest) {
   }
 
   // middleware pendaftaran jadwal: wajib login saat akses register
-  if (pathname.startsWith(SCHEDULE) && pathname.includes('/register') && !token) {
+  if (
+    pathname.startsWith(SCHEDULE) &&
+    pathname.includes('/register') &&
+    !token
+  ) {
     const url = new URL(AUTH_PAGES[0], request.url);
     url.searchParams.set('callbackUrl', encodeURI(request.url));
     return NextResponse.redirect(url);
   }
 
   // mengarahkan ke dashboard jika path adalah /peserta
-  if (pathname === PESERTA) NextResponse.redirect(new URL('/', request.url));
+  if (pathname === PESERTA)
+    return NextResponse.redirect(new URL('/', request.url));
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/auth/:path*', '/admin/:path*', '/schedule/:path*'],
+  matcher: ['/auth/:path*', '/admin/:path*', '/schedule/:path*', '/'],
 };

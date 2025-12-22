@@ -15,6 +15,7 @@ export interface UserExt extends User {
   address?: string;
   accessToken?: string;
   needsRegistration?: boolean;
+  role?: string;
 }
 
 export interface SessionExt extends Session {
@@ -30,5 +31,4 @@ export interface SessionExt extends Session {
 
 export interface JwtExt extends JWT {
   user?: UserExt;
-  role?: string;
 }
