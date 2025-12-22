@@ -1,4 +1,4 @@
-import { Button } from '@heroui/react';
+import { Alert, Button } from '@heroui/react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import UploaderCard from '@/components/ui/Card/Uploader';
@@ -8,6 +8,7 @@ const Verification = () => {
   const router = useRouter();
   const {
     isPreview,
+    verificationError,
     handleClick,
     handleFile,
     handleSubmit,
@@ -48,6 +49,13 @@ const Verification = () => {
         </div>
 
         <div className="w-full lg:w-2/3 lg:pt-8">
+          {verificationError && (
+            <div className="mb-4">
+              <Alert color="danger" title="Verifikasi Gagal">
+                {verificationError}
+              </Alert>
+            </div>
+          )}
           <UploaderCard
             handleSubmit={handleSubmit}
             fileInputRef={fileInputRef}
