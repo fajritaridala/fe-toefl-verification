@@ -80,21 +80,26 @@ export const useScores = () => {
     handleChangePage,
     handleSearch,
     handleClearSearch,
+    currentSearch,
   } = useEnrollments({ fixedStatus: EnrollmentStatus.APPROVED });
 
   // --- Search Logic ---
   const debouncedSearch = useDebounce(searchInput, 500);
 
   useEffect(() => {
-    handleSearch(debouncedSearch);
-  }, [debouncedSearch, handleSearch]);
+    // Prevent infinite loop by checking if value actually changed
+    // and avoid "double debounce" since handleSearch has its own debounce
+    if (debouncedSearch !== currentSearch) {
+      handleSearch(debouncedSearch);
+    }
+  }, [debouncedSearch, handleSearch, currentSearch]);
 
   const onClearSearch = useCallback(() => {
     setSearchInput('');
     handleClearSearch();
   }, [handleClearSearch]);
 
-  // Fungsi ini menyatukan logika penyimpanan blockchain, update backend, dan error handling
+  // menyatukan logika penyimpanan blockchain, update backend, dan error handling
   const processBlockchainTransaction = useCallback(
     async (data: BlockchainData) => {
       const { hash, cid, enrollId, participantId } = data;

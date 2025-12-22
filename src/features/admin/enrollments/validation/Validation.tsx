@@ -1,36 +1,31 @@
-'use client';
-
-import { Check, Eye, X } from 'lucide-react';
-import { motion, type Variants } from 'framer-motion';
-import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
-import { formatDate } from '@/utils/common';
-import { useValidation } from './useValidation';
-import GenericEnrollmentTable, { ColumnConfig } from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
+import { useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
-
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
-  },
-};
+import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
+import GenericEnrollmentTable from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
+import { useValidation } from './useValidation';
+import { fadeInUp, getValidationColumns } from './ValidationConstant';
 
 export default function Validation() {
   const {
+    // --- State Data & UI ---
     previewModalOpen,
     detailModalOpen,
-    searchInput,
-    participants, // GenericTable expects "data"
+    participants,
     currentParticipant,
+    isProcessing,
+
+    // --- Pagination & Pencarian ---
+    searchInput,
     totalPages,
     currentLimit,
     currentPage,
     isLoadingEnrollments,
     isRefetchingEnrollments,
-    isProcessing,
+
+    // --- Handler (Fungsi Aksi) ---
     setSearchInput,
     handleOpenPreview,
     handleRefresh,
@@ -43,70 +38,29 @@ export default function Validation() {
     rejectParticipant,
   } = useValidation();
 
-  const columns: ColumnConfig[] = [
-    { uid: 'fullName', name: 'Nama Lengkap', align: 'start' },
-    { uid: 'nim', name: 'NIM', align: 'center' },
-    { uid: 'serviceName', name: 'Layanan', align: 'center' },
-    { 
-        uid: 'scheduleDate', 
-        name: 'Jadwal', 
-        align: 'center',
-        render: (item) => <p className="text-center text-sm text-gray-700">{formatDate(item.scheduleDate)}</p>
-    },
-    { 
-        uid: 'paymentProof', 
-        name: 'Bukti Bayar', 
-        align: 'center',
-        render: (item) => (
-            <div className="flex justify-center-safe">
-              <button
-                // We need index for handleOpenPreview(index) in current implementation of useValidation
-                // But item is cleaner. Let's see if we can perform a findIndex or if handleOpenPreview supports object?
-                // Looking at useValidation (not shown but implied), it takes rowIndex. 
-                // Let's assume we can find the index from the participants array.
-                onClick={() => {
-                    const index = participants.findIndex(p => p.enrollId === item.enrollId);
-                    handleOpenPreview(index >= 0 ? index : 0);
-                }}
-                className="border-info text-info hover:shadow-box inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all"
-              >
-                <Eye className="h-3.5 w-3.5" />
-                Lihat Bukti
-              </button>
-            </div>
-        )
-    },
-    { 
-        uid: 'actions', 
-        name: 'Actions', 
-        align: 'center',
-        render: (item) => (
-            <div className="flex w-full items-center justify-center-safe gap-2">
-              <button
-                onClick={() => approveParticipant(item.enrollId)}
-                disabled={isProcessing}
-                title="Approve"
-                className="border-success text-success hover:shadow-box inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Check className="h-3.5 w-3.5" />
-                Approve
-              </button>
-              <button
-                onClick={() => rejectParticipant(item.enrollId)}
-                disabled={isProcessing}
-                title="Reject"
-                className="border-danger text-danger hover:shadow-box inline-flex items-center gap-1.5 rounded-full border bg-transparent px-3 py-1.5 text-xs font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <X className="h-3.5 w-3.5" />
-                Reject
-              </button>
-            </div>
-        )
-    },
-  ];
+  // Membuat konfigurasi kolom menggunakan fungsi helper dari constant.
+  // Menggunakan useMemo memastikan kolom tidak dibuat ulang (re-created)
+  // pada setiap render, kecuali jika dependensinya (participants, isProcessing, dll) berubah.
+  const columns = useMemo(
+    () =>
+      getValidationColumns({
+        participants,
+        isProcessing,
+        onOpenPreview: handleOpenPreview,
+        onApprove: approveParticipant,
+        onReject: rejectParticipant,
+      }),
+    [
+      participants,
+      isProcessing,
+      handleOpenPreview,
+      approveParticipant,
+      rejectParticipant,
+    ]
+  );
 
   return (
-    <motion.section 
+    <motion.section
       initial="hidden"
       animate="visible"
       variants={fadeInUp}
@@ -118,43 +72,49 @@ export default function Validation() {
         isRefetching={isRefetchingEnrollments}
         columns={columns}
         search={{
-            value: searchInput,
-            onChange: setSearchInput,
-            onClear: handleClearSearch
+          value: searchInput,
+          onChange: setSearchInput,
+          onClear: handleClearSearch,
         }}
         filterContent={
-            <>
-                <LimitFilter value={String(currentLimit)} onChange={handleChangeLimit} />
-                <RefreshButton isRefetching={isRefetchingEnrollments} onRefresh={handleRefresh} />
-            </>
+          <>
+            <LimitFilter
+              value={String(currentLimit)}
+              onChange={handleChangeLimit}
+            />
+            <RefreshButton
+              isRefetching={isRefetchingEnrollments}
+              onRefresh={handleRefresh}
+            />
+          </>
         }
         pagination={{
-            page: Number(currentPage),
-            total: totalPages,
-            onChange: handleChangePage
+          page: Number(currentPage),
+          total: totalPages,
+          onChange: handleChangePage,
         }}
         emptyContent={
-            <div className="flex flex-col items-center justify-center py-12">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                <Check className="h-8 w-8 text-gray-400" />
-                </div>
-                <p className="text-base font-medium text-gray-900">
-                Tidak ada peserta menunggu validasi
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
-                Semua peserta sudah diproses
-                </p>
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+              <Check className="h-8 w-8 text-gray-400" />
             </div>
+            <p className="text-base font-medium text-gray-900">
+              Tidak ada peserta menunggu validasi
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              Semua peserta sudah diproses
+            </p>
+          </div>
         }
       />
 
-      {/* Enrollment Detail / Validation Modal */}
+      {/* Modal Detail & Aksi Validasi */}
       {currentParticipant && (
         <EnrollmentDetailModal
           isOpen={previewModalOpen || detailModalOpen}
           onClose={() => {
-             if (previewModalOpen) handleClosePreview();
-             if (detailModalOpen) handleCloseDetail();
+            if (previewModalOpen) handleClosePreview();
+            if (detailModalOpen) handleCloseDetail();
           }}
           participant={currentParticipant}
           onApprove={(id) => approveParticipant(id)}

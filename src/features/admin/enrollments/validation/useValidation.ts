@@ -19,7 +19,7 @@ export const useValidation = () => {
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
-  
+
   // State pencarian lokal
   const [searchInput, setSearchInput] = useState('');
 
@@ -36,6 +36,7 @@ export const useValidation = () => {
     handleChangePage,
     handleSearch,
     handleClearSearch,
+    currentSearch,
   } = useEnrollments({ fixedStatus: EnrollmentStatus.PENDING });
 
   // --- Logika Pencarian (Search) ---
@@ -43,8 +44,11 @@ export const useValidation = () => {
   const debouncedSearch = useDebounce(searchInput, 500);
 
   useEffect(() => {
-    handleSearch(debouncedSearch);
-  }, [debouncedSearch, handleSearch]);
+    // Prevent infinite loop by checking if value actually changed
+    if (debouncedSearch !== currentSearch) {
+      handleSearch(debouncedSearch);
+    }
+  }, [debouncedSearch, handleSearch, currentSearch]);
 
   const handleClearLocalSearch = useCallback(() => {
     setSearchInput('');
@@ -62,14 +66,20 @@ export const useValidation = () => {
   }, [dataEnrollments]);
 
   const totalPages = dataEnrollments?.pagination?.totalPages || 1;
-  
+
   // Mengambil data peserta yang sedang dipilih berdasarkan index
   const currentParticipant = participants[currentPreviewIndex];
 
   // --- Mutasi (Aksi Validasi) ---
   // Menangani request API untuk menyetujui atau menolak peserta
   const { mutate: processValidation, isPending: isProcessing } = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: ValidationStatus }) => {
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: ValidationStatus;
+    }) => {
       return await enrollmentsService.approve(id, status);
     },
     onSuccess: () => {
@@ -84,17 +94,20 @@ export const useValidation = () => {
       }, 450);
     },
     onError: (error: any) => {
-      const msg = error?.response?.data?.message || error.message || 'Terjadi kesalahan';
+      const msg =
+        error?.response?.data?.message || error.message || 'Terjadi kesalahan';
       alert(`Gagal memproses validasi: ${msg}`);
     },
   });
 
   // Wrapper function untuk mempermudah pemanggilan di UI
-  const approveParticipant = (id: string) => processValidation({ id, status: 'disetujui' });
-  const rejectParticipant = (id: string) => processValidation({ id, status: 'ditolak' });
+  const approveParticipant = (id: string) =>
+    processValidation({ id, status: 'disetujui' });
+  const rejectParticipant = (id: string) =>
+    processValidation({ id, status: 'ditolak' });
 
   // --- Handlers (Navigasi Modal) ---
-  
+
   // Membuka modal preview untuk peserta tertentu
   const handleOpenPreview = useCallback((index: number) => {
     setCurrentPreviewIndex(index);
@@ -108,7 +121,7 @@ export const useValidation = () => {
   // Menutup detail dan kembali ke modal preview (tombol Back)
   const handleCloseDetail = useCallback(() => {
     setDetailModalOpen(false);
-    setPreviewModalOpen(true); 
+    setPreviewModalOpen(true);
   }, []);
 
   const handleRefresh = useCallback(() => {
@@ -122,7 +135,7 @@ export const useValidation = () => {
     previewModalOpen,
     detailModalOpen,
     currentPreviewIndex,
-    
+
     // Status Loading
     isLoadingEnrollments,
     isRefetchingEnrollments,
@@ -135,7 +148,7 @@ export const useValidation = () => {
 
     // Input Search
     searchInput,
-    
+
     // Actions / Handlers
     setSearchInput,
     handleClearSearch: handleClearLocalSearch,
@@ -145,7 +158,7 @@ export const useValidation = () => {
     handleRefresh,
     handleChangeLimit,
     handleChangePage,
-    
+
     // Core Actions (Validation)
     approveParticipant,
     rejectParticipant,

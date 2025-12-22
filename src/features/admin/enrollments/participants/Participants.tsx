@@ -1,54 +1,46 @@
-'use client';
-
-import { Button } from '@heroui/react';
+import { useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { type Variants, motion } from 'framer-motion';
-import { Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { ServiceFilter } from '@/components/ui/Button/Filter/ServiceFilter';
 import { StatusFilter } from '@/components/ui/Button/Filter/StatusFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
-import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
 import EnrollmentDetailModal from '@/components/ui/Modal/EnrollmentDetailModal';
-import GenericEnrollmentTable, {
-  ColumnConfig,
-} from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
-import { formatDate } from '@/utils/common';
+import GenericEnrollmentTable from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
 import { EnrollmentItem } from '../enrollment.types';
+import { fadeInUp, getParticipantColumns } from './ParticipantConstant';
 import { useParticipants } from './useParticipants';
-
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
-  },
-};
 
 export default function Participants() {
   const {
+    // --- Data & Filter State ---
     tableItems,
     statusFilter,
-    statusOptions, // Use options from hook consistent with constants
+    statusOptions,
+    currentServiceId,
+    serviceOptions,
     currentLimitValue,
+
+    // --- Pagination & Search ---
     currentPageNumber,
     totalPages,
+    searchInput,
+    setSearchInput,
+
+    // --- Loading & Modal State ---
     isLoadingEnrollments,
     isRefetchingEnrollments,
     detailModalOpen,
     selectedParticipant,
+
+    // --- Handlers ---
     handleClearSearch,
     handleStatusChange,
     handleChangeLimit,
     handleChangePage,
     handleOpenDetail,
     handleCloseDetail,
-    currentServiceId,
-    serviceOptions,
     handleChangeService,
-    searchInput,
-    setSearchInput,
   } = useParticipants();
 
   const queryClient = useQueryClient();
@@ -57,49 +49,12 @@ export default function Participants() {
     queryClient.invalidateQueries({ queryKey: ['enrollments'] });
   };
 
-  /* Removed renderStatusChip - Replaced by EnrollmentStatusChip component */
-
-  const columns: ColumnConfig[] = [
-    { uid: 'fullName', name: 'Nama Lengkap', align: 'start' },
-    { uid: 'nim', name: 'NIM', align: 'center' },
-    { uid: 'serviceName', name: 'Layanan', align: 'center' },
-    {
-      uid: 'scheduleDate',
-      name: 'Jadwal',
-      align: 'center',
-      render: (item) => (
-        <p className="text-center text-sm text-gray-700">
-          {formatDate(item.scheduleDate)}
-        </p>
-      ),
-    },
-    {
-      uid: 'status',
-      name: 'Status',
-      align: 'center',
-      render: (item) => <EnrollmentStatusChip status={item.status} />,
-    },
-    {
-      uid: 'actions',
-      name: 'Aksi',
-      align: 'center',
-      render: (item) => (
-        <div className="text-center">
-          <Button
-            isIconOnly
-            size="sm"
-            variant="light"
-            radius="full"
-            aria-label="Lihat detail"
-            className="hover:text-primary text-gray-600"
-            onPress={() => handleOpenDetail(item)}
-          >
-            <Eye className="h-4 w-4" />
-          </Button>
-        </div>
-      ),
-    },
-  ];
+  // Membuat konfigurasi kolom dengan useMemo agar efisien
+  // Kolom hanya dibuat ulang jika fungsi handleOpenDetail berubah
+  const columns = useMemo(
+    () => getParticipantColumns({ onOpenDetail: handleOpenDetail }),
+    [handleOpenDetail]
+  );
 
   return (
     <motion.section
