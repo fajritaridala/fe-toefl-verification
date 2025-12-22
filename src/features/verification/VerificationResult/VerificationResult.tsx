@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Spinner } from '@heroui/react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, Home, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 import VerificationCard from '@/components/ui/Card/Verification';
 import useVerificationResult from './useVerificationResult';

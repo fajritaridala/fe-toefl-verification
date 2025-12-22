@@ -1,14 +1,16 @@
 'use client';
 
+import { useMemo } from 'react';
 import { type Variants, motion } from 'framer-motion';
 import { PenSquare } from 'lucide-react';
 import { LimitFilter } from '@/components/ui/Button/Filter/LimitFilter';
 import { RefreshButton } from '@/components/ui/Button/RefreshButton';
-import { EnrollmentStatusChip } from '@/components/ui/Chip/EnrollmentStatusChip';
-import GenericEnrollmentTable, {
-  ColumnConfig,
-} from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
-import { formatDate } from '@/utils/common';
+import GenericEnrollmentTable from '@/components/ui/Table/Enrollments/GenericEnrollmentTable';
+import {
+  EnrollmentItem,
+  EnrollmentStatus,
+} from '@/features/admin/enrollments/enrollment.types';
+import { getScoreColumns } from './ScoreConstant';
 import ScoreInputModal from './ScoreInputModal';
 import { useScores } from './useScores';
 
@@ -23,66 +25,42 @@ const fadeInUp: Variants = {
 
 export default function Scores() {
   const {
-    selectedParticipant,
-    scoreModalOpen,
-    searchInput,
-    participants,
-    totalPages,
-    currentLimit,
-    currentPage,
+    // List & Search Data
+    dataEnrollments,
     isLoadingEnrollments,
     isRefetchingEnrollments,
+    currentLimit,
+    currentPage,
+    handleChangeLimit,
+    handleChangePage,
+    searchInput,
+    setSearchInput,
+    handleClearSearch,
+
+    // Actions
+    selectedParticipant,
+    scoreModalOpen,
     isSubmittingScore,
     blockchainStatus,
     statusMessage,
-    setSearchInput,
     handleOpenScoreModal,
     handleSubmitScore,
     handleRefresh,
     handleCloseModal,
     handleRetryBlockchain,
-    handleChangeLimit,
-    handleChangePage,
-    handleClearSearch,
   } = useScores();
 
-  const columns: ColumnConfig[] = [
-    { uid: 'fullName', name: 'Nama Lengkap', align: 'start' },
-    { uid: 'nim', name: 'NIM', align: 'center' },
-    { uid: 'serviceName', name: 'Layanan', align: 'center' },
-    {
-      uid: 'scheduleDate',
-      name: 'Jadwal',
-      align: 'center',
-      render: (item) => (
-        <p className="text-center text-sm text-gray-700">
-          {formatDate(item.scheduleDate)}
-        </p>
-      ),
-    },
-    {
-      uid: 'status',
-      name: 'Status',
-      align: 'center',
-      render: (item) => <EnrollmentStatusChip status={item.status} />,
-    },
-    {
-      uid: 'actions',
-      name: 'Actions',
-      align: 'center',
-      render: (item) => (
-        <div className="text-center">
-          <button
-            onClick={() => handleOpenScoreModal(item)}
-            className="hover:shadow-box inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 transition-all hover:bg-blue-100"
-          >
-            <PenSquare className="h-3.5 w-3.5" />
-            Input Nilai
-          </button>
-        </div>
-      ),
-    },
-  ];
+  const participants = useMemo(() => {
+    const items = (dataEnrollments?.data as EnrollmentItem[]) || [];
+    return items.map((item, idx) => ({
+      ...item,
+      __rowKey: item.enrollId || item.participantId || `score-${idx}`,
+    }));
+  }, [dataEnrollments]);
+
+  const totalPages = dataEnrollments?.pagination?.totalPages || 1;
+
+  const columns = getScoreColumns(handleOpenScoreModal);
 
   return (
     <motion.section
