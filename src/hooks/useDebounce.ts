@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react';
 import { useEffect, useState } from 'react';
 
 // Debounce hook for values (for search input)
-export function useDebounce<T>(value: T, delay: number = 500): T {
+export function useDebounce<T>(value: T, delay: number = 100): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import {
 } from '@features/admin/enrollments/enrollment.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { enrollmentsService } from '@/domain/enroll.services';
+import { useDebounce } from '@/hooks/useDebounce';
 import useEnrollments from '../shared/useEnrollments';
 
 export const useValidation = () => {
@@ -22,7 +23,6 @@ export const useValidation = () => {
     isRefetchingEnrollments,
     currentLimit,
     currentPage,
-    currentSearch,
     handleChangeLimit,
     handleChangePage,
     handleSearch,
@@ -30,14 +30,16 @@ export const useValidation = () => {
   } = useEnrollments({ fixedStatus: EnrollmentStatus.PENDING });
 
   // Debounced search effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleSearch(searchInput);
-    }, 500);
+  const debouncedSearch = useDebounce(searchInput, 500);
 
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchInput]);
+  useEffect(() => {
+    handleSearch(debouncedSearch);
+  }, [debouncedSearch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleClearLocalSearch = useCallback(() => {
+    setSearchInput('');
+    handleClearSearch();
+  }, [handleClearSearch]);
 
   const participants = useMemo(() => {
     const items = (dataEnrollments?.data as EnrollmentItem[]) || [];
@@ -154,7 +156,7 @@ export const useValidation = () => {
     handleCloseDetail,
     handleChangeLimit,
     handleChangePage,
-    handleClearSearch,
+    handleClearSearch: handleClearLocalSearch,
     approveParticipant,
     rejectParticipant,
   };

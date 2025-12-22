@@ -1,6 +1,6 @@
 'use client';
 
-import { Key, ReactNode, useEffect, useState } from 'react';
+import { Key, ReactNode } from 'react';
 import {
   Input,
   Pagination,
@@ -14,7 +14,6 @@ import {
 } from '@heroui/react';
 import { Search } from 'lucide-react';
 import { EnrollmentItem } from '@/features/admin/enrollments/enrollment.types';
-import { useDebounce } from '@/hooks/useDebounce';
 
 export interface ColumnConfig {
   uid: string;
@@ -64,35 +63,10 @@ export default function GenericEnrollmentTable({
   filterContent,
   pagination,
 }: GenericEnrollmentTableProps) {
-  // Internal debounce for search input to prevent jitter
-  // The parent likely handles debounce for API calls, but UI needs robust handling
-  const [searchInput, setSearchInput] = useState(search.value);
-  const debouncedSearch = useDebounce(searchInput, 500);
-
-  useEffect(() => {
-    // Determine if we should propagate the change
-    // If the parent value changes externally, sync local state
-    if (search.value !== searchInput) {
-      // If parent holds a different value (e.g. from URL or clear action), update local
-      // But be careful not to create loop if parent updates on every keystroke
-      if (search.value !== debouncedSearch) {
-        setSearchInput(search.value);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search.value]);
-
-  useEffect(() => {
-    if (debouncedSearch !== search.value) {
-      search.onChange(debouncedSearch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
-
-  const handleClearSearch = () => {
-    setSearchInput('');
-    search.onClear();
-  };
+  /*
+   * Removed internal debounce.
+   * This component is now fully controlled by the parent.
+   */
 
   const renderCell = (item: EnrollmentItem, columnKey: Key) => {
     const column = columns.find((col) => col.uid === columnKey);
@@ -135,9 +109,9 @@ export default function GenericEnrollmentTable({
           radius="full"
           placeholder={search.placeholder || 'Cari nama atau NIM peserta...'}
           startContent={<Search className="h-4 w-4 text-gray-400" />}
-          value={searchInput}
-          onClear={handleClearSearch}
-          onValueChange={setSearchInput}
+          value={search.value}
+          onClear={search.onClear}
+          onValueChange={search.onChange}
           classNames={{
             base: 'w-1/3 sm:max-w-md',
             inputWrapper: 'h-9 bg-gray-50 border border-gray-200 shadow-sm',

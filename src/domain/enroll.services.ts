@@ -20,7 +20,6 @@ export const enrollmentsService = {
     const url = queryString
       ? `${endpoints.ENROLLMENTS}?${queryString}`
       : endpoints.ENROLLMENTS;
-    console.log(url);
     return instance.get(url);
   },
   // Admin

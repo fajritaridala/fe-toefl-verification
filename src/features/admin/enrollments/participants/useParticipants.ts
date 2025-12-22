@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { EnrollmentItem } from '@features/admin/enrollments/enrollment.types';
 import { useQuery } from '@tanstack/react-query';
 import { FILTER_OPTIONS } from '@/constants/list.constants';
-import { enrollmentsService } from '@/domain/enroll.services';
 import { schedulesService } from '@/domain/schedule.services';
 import { servicesService } from '@/domain/service.services';
+import { useDebounce } from '@/hooks/useDebounce';
 import { formatDate } from '@/utils/common';
 import useEnrollments from '../shared/useEnrollments';
 
@@ -35,6 +35,19 @@ export const useParticipants = () => {
   const [selectedParticipant, setSelectedParticipant] =
     useState<EnrollmentItem | null>(null);
 
+  // --- Search Logic ---
+  const [searchInput, setSearchInput] = useState('');
+  const debouncedSearch = useDebounce(searchInput, 500);
+
+  useEffect(() => {
+    handleSearch(debouncedSearch);
+  }, [debouncedSearch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleClearLocalSearch = useCallback(() => {
+    setSearchInput('');
+    handleClearSearch();
+  }, [handleClearSearch]);
+
   useEffect(() => {
     setStatusFilter(currentStatus ?? 'all');
   }, [currentStatus]);
@@ -56,13 +69,7 @@ export const useParticipants = () => {
   }, [statusFilter, tableData]);
 
   const tableItems = useMemo(() => {
-    return filteredParticipants.map((participant, idx) => {
-      const baseKey =
-        participant.enrollId ||
-        participant.participantId ||
-        `${participant.nim}-${participant.scheduleId}` ||
-        `${participant.fullName}-${participant.scheduleId}`;
-
+    return filteredParticipants.map((participant) => {
       return {
         ...participant,
       };
@@ -163,8 +170,9 @@ export const useParticipants = () => {
     serviceOptions,
 
     // Handlers
+    // Handlers
     handleSearch,
-    handleClearSearch,
+    handleClearSearch: handleClearLocalSearch,
     handleStatusChange,
     handleChangeLimit,
     handleChangePage,
@@ -174,5 +182,8 @@ export const useParticipants = () => {
     currentScheduleId,
     handleChangeSchedule,
     scheduleOptions,
+    // Search State
+    searchInput,
+    setSearchInput,
   };
 };

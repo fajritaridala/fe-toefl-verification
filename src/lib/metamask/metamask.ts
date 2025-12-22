@@ -2,10 +2,6 @@ import { ethers } from 'ethers';
 import MMSDK from './sdk';
 
 const metamask = {
-  /**
-   * Connect to MetaMask and get account address
-   * Does NOT revoke permissions - user stays connected
-   */
   async connect() {
     if (!MMSDK) throw new Error('MetaMask tidak ditemukan');
     try {
@@ -27,14 +23,13 @@ const metamask = {
       const address = accounts[0];
       return { address };
     } catch (error) {
+      if (typeof window !== 'undefined') {
+        alert((error as Error).message);
+      }
       throw error;
     }
   },
 
-  /**
-   * Connect, sign a message, and return signer + provider
-   * Used for transactions that require signing
-   */
   async connectAndSign() {
     try {
       await MMSDK?.connectAndSign({
@@ -49,14 +44,13 @@ const metamask = {
 
       return { signer, provider };
     } catch (error) {
+      if (typeof window !== 'undefined') {
+        alert((error as Error).message);
+      }
       throw error;
     }
   },
 
-  /**
-   * Force disconnect and reconnect - use when user wants to switch wallet
-   * Call this explicitly from a "Switch Wallet" button
-   */
   async switchWallet() {
     if (!MMSDK) throw new Error('MetaMask tidak ditemukan');
     try {

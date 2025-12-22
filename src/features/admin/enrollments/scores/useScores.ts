@@ -143,7 +143,7 @@ export const useScores = () => {
           setBlockchainStatus('idle');
           setStatusMessage('');
         }, 1500);
-      } catch (error: any) {
+      } catch (error) {
         console.error('Blockchain transaction error:', error);
         setBlockchainStatus('error');
 
@@ -151,7 +151,7 @@ export const useScores = () => {
           setStatusMessage('Transaksi dibatalkan oleh pengguna.');
         } else {
           setStatusMessage(
-            `Error Blockchain: ${error.message || 'Unknown error'}`
+            `Error Blockchain: ${(error as any).message || 'Unknown error'}`
           );
         }
 

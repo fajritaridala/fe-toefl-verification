@@ -31,7 +31,6 @@ export default function Participants() {
     tableItems,
     statusFilter,
     statusOptions, // Use options from hook consistent with constants
-    currentSearch,
     currentLimitValue,
     currentPageNumber,
     totalPages,
@@ -39,7 +38,6 @@ export default function Participants() {
     isRefetchingEnrollments,
     detailModalOpen,
     selectedParticipant,
-    handleSearch,
     handleClearSearch,
     handleStatusChange,
     handleChangeLimit,
@@ -49,6 +47,8 @@ export default function Participants() {
     currentServiceId,
     serviceOptions,
     handleChangeService,
+    searchInput,
+    setSearchInput,
   } = useParticipants();
 
   const queryClient = useQueryClient();
@@ -101,8 +101,6 @@ export default function Participants() {
     },
   ];
 
-  console.log(tableItems);
-
   return (
     <motion.section
       initial="hidden"
@@ -116,8 +114,8 @@ export default function Participants() {
         isRefetching={isRefetchingEnrollments}
         columns={columns}
         search={{
-          value: currentSearch,
-          onChange: handleSearch,
+          value: searchInput,
+          onChange: setSearchInput,
           onClear: handleClearSearch,
         }}
         filterContent={
