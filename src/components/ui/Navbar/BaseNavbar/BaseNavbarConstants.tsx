@@ -12,14 +12,14 @@ const NAVBAR_ITEMS = [
 ];
 
 const NAVBAR_DROPDOWN_ITEMS = (router: RouterLike) => [
-  {
-    key: 'user_profile',
-    label: 'Profil saya',
-    icon: <User strokeWidth={2} className="h-4 w-4" />,
-    onPress: () => {
-      router.push('/profile');
-    },
-  },
+  // {
+  //   key: 'user_profile',
+  //   label: 'Profil saya',
+  //   icon: <User strokeWidth={2} className="h-4 w-4" />,
+  //   onPress: () => {
+  //     router.push('/profile');
+  //   },
+  // },
   {
     key: 'user_activity',
     label: 'Aktivitas saya',

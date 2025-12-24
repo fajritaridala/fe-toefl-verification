@@ -1,6 +1,8 @@
 import { ethers } from 'ethers';
 import ToeflRecordABI from '@/abi/ToeflRecord.json';
-import { CONTRACT_ADDRESS, RPC_URL } from '@/utils/config/env';
+
+const CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const RPC_URL = 'http://10.200.1.17:8545';
 
 interface ParamsType {
   hash: string;
@@ -93,23 +95,31 @@ const blockchainService = {
   },
   get: async (hash: string): Promise<string> => {
     try {
+      console.log(hash);
+      console.log(CONTRACT_ADDRESS);
       if (!CONTRACT_ADDRESS) {
         throw new Error('Konfigurasi contract address tidak valid');
       }
 
+      console.log('rpc url');
+      console.log(RPC_URL);
       // Use JsonRpcProvider for read-only access (no MetaMask needed)
       if (!RPC_URL) {
         throw new Error('RPC_URL tidak ditemukan');
       }
 
       const provider = new ethers.JsonRpcProvider(RPC_URL);
+      console.log("provider")
+      console.log(provider)
       const contract = new ethers.Contract(
         CONTRACT_ADDRESS,
         ToeflRecordABI.abi,
         provider
       );
+      console.log(contract)
 
       const cid = await contract.getRecord(hash);
+      console.log(cid)
 
       if (!cid || cid === '') {
         throw new Error('Sertifikat belum tercatat di Blockchain');

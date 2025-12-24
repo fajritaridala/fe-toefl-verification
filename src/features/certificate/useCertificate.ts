@@ -17,6 +17,7 @@ export const useCertificate = () => {
 
   // Hash is now exclusively provided via URL query parameter
   const hash = queryHash as string | undefined;
+  console.log(hash)
 
   // 2. Fetch CID from Blockchain (Dependent on Hash)
   const {
@@ -29,6 +30,7 @@ export const useCertificate = () => {
     enabled: !!hash,
     retry: 1,
   });
+  console.log(cid)
 
   // 3. Fetch Data from IPFS (Dependent on CID)
   const {
